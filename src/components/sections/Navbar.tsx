@@ -30,7 +30,7 @@ function pageHasDarkHero(pathname: string) {
 interface NavItem {
   label: { id: string; en: string };
   href: string;
-  children?: { label: { id: string; en: string }; href: string; desc: { id: string; en: string } }[];
+  children?: { label: { id: string; en: string }; href: string }[];
 }
 
 const NAV: NavItem[] = [
@@ -42,37 +42,17 @@ const NAV: NavItem[] = [
     label: { id: "Layanan", en: "Services" },
     href: "/services",
     children: [
-      {
-        label: { id: "Semua Layanan", en: "All Services" },
-        href: "/services",
-        desc: { id: "Lihat 12+ layanan klinis kami", en: "Browse our 12+ clinical services" },
-      },
-      {
-        label: { id: "Teknologi", en: "Technology" },
-        href: "/services#technology",
-        desc: { id: "Perangkat dental terkini", en: "Our modern dental devices" },
-      },
-      {
-        label: { id: "Care Journey", en: "Care Journey" },
-        href: "/services#journey",
-        desc: { id: "Alur kunjungan dari awal sampai akhir", en: "Your visit flow from start to finish" },
-      },
+      { label: { id: "Semua Layanan", en: "All Services" }, href: "/services" },
+      { label: { id: "Care Journey", en: "Care Journey" }, href: "/services#journey" },
+      { label: { id: "Teknologi", en: "Technology" }, href: "/services#technology" },
     ],
   },
   {
     label: { id: "Dokter", en: "Doctors" },
     href: "/doctors",
     children: [
-      {
-        label: { id: "Tim Dokter", en: "Doctor Team" },
-        href: "/doctors",
-        desc: { id: "7 dokter spesialis & umum", en: "7 specialist & general dentists" },
-      },
-      {
-        label: { id: "Smile Preview", en: "Smile Preview" },
-        href: "/doctors#engagement",
-        desc: { id: "Coba fitur interaktif sebelum kunjungan", en: "Try interactive tools before your visit" },
-      },
+      { label: { id: "Tim Dokter", en: "Doctor Team" }, href: "/doctors" },
+      { label: { id: "Smile Preview", en: "Smile Preview" }, href: "/doctors#engagement" },
     ],
   },
   {
@@ -136,19 +116,16 @@ function Dropdown({ item, isActive, solid }: DropdownProps) {
       </button>
 
       {open && (
-        <div className="absolute left-1/2 top-full mt-2 w-52 -translate-x-1/2 overflow-hidden rounded-xl border border-primary/10 bg-white shadow-xl shadow-primary/12">
-          <div className="py-1.5">
-            {item.children!.map((child, idx) => (
+        <div className="absolute left-1/2 top-full mt-2 w-44 -translate-x-1/2 overflow-hidden rounded-xl border border-primary/10 bg-white shadow-xl shadow-primary/12">
+          <div className="py-1">
+            {item.children!.map((child) => (
               <a
                 key={child.href}
                 href={child.href}
                 onClick={() => setOpen(false)}
-                className={`flex flex-col px-4 py-2.5 transition-colors hover:bg-surface-2 ${
-                  idx !== 0 ? "border-t border-primary/6" : ""
-                }`}
+                className="block px-4 py-2.5 text-sm font-bold text-primary/80 transition-colors hover:bg-surface-2 hover:text-primary"
               >
-                <span className="text-sm font-bold text-primary">{child.label[lang]}</span>
-                <span className="mt-0.5 text-xs text-secondary">{child.desc[lang]}</span>
+                {child.label[lang]}
               </a>
             ))}
           </div>
