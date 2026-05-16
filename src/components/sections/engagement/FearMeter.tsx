@@ -28,7 +28,7 @@ export function FearMeter({
   const { c } = useLanguage();
 
   return (
-    <article className="gs-card rounded-lg border border-white/10 bg-white/[0.06] p-7 backdrop-blur">
+    <article id="fear-meter" className="gs-card rounded-lg border border-white/10 bg-white/[0.06] p-7 backdrop-blur scroll-mt-32">
       <p className="eyebrow text-gold">{c.quizLabel}</p>
       <h2 className="font-display text-3xl leading-tight">{c.quizTitle}</h2>
       <p className="mt-3 text-sm leading-6 text-white/65">{c.quizBody}</p>

@@ -1,7 +1,8 @@
 import { services, doctors, type Service, type Doctor } from "./content";
+import { articles, type Article } from "./articles";
 import type { Language } from "./content";
 
-export type SearchResultGroup = "page" | "service" | "doctor";
+export type SearchResultGroup = "page" | "service" | "doctor" | "article";
 
 export interface SearchResult {
   group: SearchResultGroup;
@@ -34,7 +35,7 @@ const pages: PageEntry[] = [
     id: "about",
     title: { id: "Tentang Kami", en: "About Us" },
     subtitle: { id: "Cerita & nilai Arcade Dental", en: "Arcade Dental story and values" },
-    href: "/#about",
+    href: "/",
     keywords: ["about", "tentang", "story", "klinik"],
   },
   {
@@ -73,6 +74,27 @@ const pages: PageEntry[] = [
     keywords: ["smile", "preview", "fear", "anxiety", "analyzer", "before", "after"],
   },
   {
+    id: "articles-page",
+    title: { id: "Edukasi", en: "Articles" },
+    subtitle: { id: "Panduan perawatan oleh dokter Arcade Dental", en: "Care guides by the Arcade Dental doctors" },
+    href: "/articles",
+    keywords: ["article", "blog", "edukasi", "education", "tips", "guide", "panduan"],
+  },
+  {
+    id: "book-page",
+    title: { id: "Booking Real-time", en: "Real-time Booking" },
+    subtitle: { id: "Pilih dokter & jadwal dalam 4 langkah", en: "Pick doctor & slot in 4 steps" },
+    href: "/book",
+    keywords: ["book", "booking", "janji", "reservasi", "appointment", "schedule", "jadwal"],
+  },
+  {
+    id: "estimator-page",
+    title: { id: "Estimator Biaya", en: "Cost Estimator" },
+    subtitle: { id: "Hitung perkiraan biaya perawatan", en: "Estimate the cost of your treatment" },
+    href: "/services#estimator",
+    keywords: ["price", "estimator", "harga", "biaya", "cost", "estimate", "estimasi"],
+  },
+  {
     id: "gallery",
     title: { id: "Galeri", en: "Gallery" },
     subtitle: { id: "Virtual place tour klinik", en: "Virtual place tour of the clinic" },
@@ -90,7 +112,7 @@ const pages: PageEntry[] = [
     id: "location",
     title: { id: "Lokasi", en: "Location" },
     subtitle: { id: "Bintaro Jaya Sektor 7", en: "Bintaro Jaya Sector 7" },
-    href: "/#location",
+    href: "/",
     keywords: ["location", "lokasi", "bintaro", "alamat", "address", "map"],
   },
   {
@@ -191,6 +213,29 @@ export function searchAll(rawQuery: string, lang: Language): SearchResult[] {
         title: d.name,
         subtitle: d.role[lang],
         href: `/doctors#${d.id}`,
+        score,
+      });
+    }
+  }
+
+  // Articles
+  for (const a of articles as Article[]) {
+    const score = highestMatch(query, [
+      a.title.id,
+      a.title.en,
+      a.dek.id,
+      a.dek.en,
+      a.slug,
+      a.category,
+      a.author.name,
+    ]);
+    if (score > 0) {
+      results.push({
+        group: "article",
+        id: a.slug,
+        title: a.title[lang],
+        subtitle: a.dek[lang],
+        href: `/articles/${a.slug}`,
         score,
       });
     }

@@ -33,7 +33,7 @@ export function ServiceMatcher({
   }
 
   return (
-    <div className="gs-reveal mb-14 grid gap-5 lg:grid-cols-[0.82fr_1.18fr] lg:items-stretch">
+    <div id="treatment-matcher" className="gs-reveal mb-14 scroll-mt-32 grid gap-5 lg:grid-cols-[0.82fr_1.18fr] lg:items-stretch">
       <div className="rounded-lg border border-primary/10 bg-white/92 p-5 shadow-[0_18px_55px_rgba(26,35,50,0.08)] backdrop-blur md:p-6">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>

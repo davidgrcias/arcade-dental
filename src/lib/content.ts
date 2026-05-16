@@ -10,6 +10,13 @@ export type Service = {
   description: LocalizedText;
   category: Exclude<ServiceCategory, "all">;
   icon: "align" | "implant" | "spark" | "shield" | "child" | "surgery" | "scope";
+  /**
+   * Conservative starting price in IDR (Indonesian Rupiah).
+   * These are placeholder figures meant to anchor expectation only.
+   * Final cost is confirmed after in-clinic examination.
+   */
+  priceFrom?: number;
+  priceNote?: LocalizedText;
 };
 
 export type Technology = {
@@ -33,6 +40,18 @@ export type Doctor = {
   languages: string[];
   education: LocalizedText[];
   signature: LocalizedText;
+  /**
+   * Optional headshot path served from /public.
+   * Recommended: 800x800 portrait, neutral background, drop into /public/assets/doctors/.
+   * If undefined, the card falls back to the gradient + initials avatar.
+   */
+  photo?: string;
+  /**
+   * Optional branded poster portrait used in the doctor profile modal header.
+   * Typically a 4:5 marketing portrait with name + specialty baked in.
+   * If undefined, the modal falls back to the headshot (and then to initials).
+   */
+  poster?: string;
 };
 
 export type Testimonial = {
@@ -110,11 +129,11 @@ export const siteAssets = {
 };
 
 export const navItems = [
-  { id: "about", label: { id: "Tentang", en: "About" }, href: "/#about" },
+  { id: "about", label: { id: "Tentang", en: "About" }, href: "/" },
   { id: "services", label: { id: "Layanan", en: "Services" }, href: "/services" },
   { id: "technology", label: { id: "Teknologi", en: "Technology" }, href: "/services#technology" },
   { id: "doctors", label: { id: "Dokter", en: "Doctors" }, href: "/doctors" },
-  { id: "location", label: { id: "Lokasi", en: "Location" }, href: "/#location" },
+  { id: "articles", label: { id: "Edukasi", en: "Articles" }, href: "/articles" },
 ] as const;
 
 export const heroCopy = {
@@ -155,6 +174,11 @@ export const services: Service[] = [
     },
     category: "specialist",
     icon: "align",
+    priceFrom: 8500000,
+    priceNote: {
+      id: "Paket behel konvensional, termasuk pemasangan & 6x kontrol awal.",
+      en: "Conventional braces package, includes installation & first 6 controls.",
+    },
   },
   {
     id: "prostodonti",
@@ -165,6 +189,11 @@ export const services: Service[] = [
     },
     category: "specialist",
     icon: "implant",
+    priceFrom: 1500000,
+    priceNote: {
+      id: "Per gigi, tergantung jenis gigi tiruan (lepasan / cekat / valplast).",
+      en: "Per tooth, depending on denture type (removable / fixed / valplast).",
+    },
   },
   {
     id: "scaling",
@@ -175,6 +204,11 @@ export const services: Service[] = [
     },
     category: "general",
     icon: "spark",
+    priceFrom: 350000,
+    priceNote: {
+      id: "Scaling rahang atas + bawah, termasuk polishing ringan.",
+      en: "Upper + lower jaw scaling, includes light polishing.",
+    },
   },
   {
     id: "odontektomi",
@@ -185,6 +219,11 @@ export const services: Service[] = [
     },
     category: "specialist",
     icon: "surgery",
+    priceFrom: 2500000,
+    priceNote: {
+      id: "Per gigi, tergantung tingkat impaksi (rontgen panoramic dianjurkan).",
+      en: "Per tooth, depending on impaction level (panoramic x-ray recommended).",
+    },
   },
   {
     id: "implan",
@@ -195,6 +234,11 @@ export const services: Service[] = [
     },
     category: "specialist",
     icon: "implant",
+    priceFrom: 12000000,
+    priceNote: {
+      id: "Per implan, belum termasuk crown. Konsultasi & rontgen evaluasi awal.",
+      en: "Per implant, crown billed separately. Includes consultation & evaluation x-ray.",
+    },
   },
   {
     id: "pencabutan",
@@ -205,6 +249,11 @@ export const services: Service[] = [
     },
     category: "general",
     icon: "shield",
+    priceFrom: 250000,
+    priceNote: {
+      id: "Pencabutan ringan per gigi. Kasus kompleks dievaluasi terpisah.",
+      en: "Simple extraction per tooth. Complex cases assessed separately.",
+    },
   },
   {
     id: "estetika",
@@ -215,6 +264,11 @@ export const services: Service[] = [
     },
     category: "aesthetic",
     icon: "spark",
+    priceFrom: 1500000,
+    priceNote: {
+      id: "Bleaching in-office mulai dari Rp 1,5 jt. Veneer dihitung per gigi.",
+      en: "In-office bleaching from Rp 1.5M. Veneers priced per tooth.",
+    },
   },
   {
     id: "periodonsia",
@@ -225,6 +279,11 @@ export const services: Service[] = [
     },
     category: "specialist",
     icon: "shield",
+    priceFrom: 600000,
+    priceNote: {
+      id: "Konsultasi & deep scaling per kuadran. Bedah periodontal dievaluasi terpisah.",
+      en: "Consultation & deep scaling per quadrant. Periodontal surgery quoted separately.",
+    },
   },
   {
     id: "konservasi",
@@ -235,6 +294,11 @@ export const services: Service[] = [
     },
     category: "specialist",
     icon: "shield",
+    priceFrom: 350000,
+    priceNote: {
+      id: "Tambal estetik mulai Rp 350 rb. Saluran akar mulai Rp 1,5 jt per gigi.",
+      en: "Aesthetic filling from Rp 350K. Root canal from Rp 1.5M per tooth.",
+    },
   },
   {
     id: "anak",
@@ -245,6 +309,11 @@ export const services: Service[] = [
     },
     category: "kids",
     icon: "child",
+    priceFrom: 200000,
+    priceNote: {
+      id: "Konsultasi awal & cek-up anak. Tindakan disesuaikan dengan umur.",
+      en: "Initial consultation & check-up for kids. Treatment varies by age.",
+    },
   },
   {
     id: "penyakit-mulut",
@@ -255,6 +324,11 @@ export const services: Service[] = [
     },
     category: "specialist",
     icon: "scope",
+    priceFrom: 400000,
+    priceNote: {
+      id: "Konsultasi spesialis penyakit mulut. Pemeriksaan lanjut sesuai indikasi.",
+      en: "Oral medicine specialist consultation. Further exams depend on findings.",
+    },
   },
   {
     id: "bedah-mulut",
@@ -265,6 +339,11 @@ export const services: Service[] = [
     },
     category: "specialist",
     icon: "surgery",
+    priceFrom: 3500000,
+    priceNote: {
+      id: "Estimasi awal. Biaya final tergantung kompleksitas tindakan.",
+      en: "Initial estimate. Final cost depends on procedure complexity.",
+    },
   },
 ];
 
@@ -359,6 +438,86 @@ export const whyUs = [
     },
   },
 ];
+
+export type Credential = {
+  id: string;
+  /** Short label suitable for a chip / badge. */
+  label: LocalizedText;
+  /** One-line plain-language explanation of what it means for a patient. */
+  description: LocalizedText;
+  icon: "shield" | "scope" | "spark" | "heart" | "sterile" | "calendar";
+  /** Optional document number or membership reference, displayed verbatim. */
+  reference?: string;
+};
+
+/**
+ * Trust credentials surfaced in the Credentials strip.
+ * Patient-side trust filters (PDGI / specialist association membership, izin operasional,
+ * sterilization standard, insurance partnership). Numbers/IDs left as placeholders so
+ * the clinic team can fill them with the actual STR / SIP references when ready.
+ */
+export const credentials: Credential[] = [
+  {
+    id: "pdgi",
+    label: { id: "Anggota PDGI", en: "PDGI Member" },
+    description: {
+      id: "Setiap dokter Arcade Dental terdaftar di Persatuan Dokter Gigi Indonesia.",
+      en: "Every Arcade Dental doctor is registered with the Indonesian Dental Association.",
+    },
+    icon: "shield",
+  },
+  {
+    id: "spesialis",
+    label: { id: "Sertifikasi Spesialis", en: "Specialist Certified" },
+    description: {
+      id: "Tim spesialis bersertifikasi: Sp.Ort, Sp.KG, Sp.KGA, dan Periodonsia.",
+      en: "Certified specialist team: orthodontics, conservative, pediatric, and periodontics.",
+    },
+    icon: "spark",
+  },
+  {
+    id: "str",
+    label: { id: "STR & SIP Aktif", en: "Active STR & SIP" },
+    description: {
+      id: "Surat Tanda Registrasi dan Surat Izin Praktik tiap dokter aktif dan dapat diverifikasi.",
+      en: "Each doctor holds an active practice license verifiable on request.",
+    },
+    icon: "scope",
+  },
+  {
+    id: "izin",
+    label: { id: "Izin Klinik Resmi", en: "Licensed Clinic" },
+    description: {
+      id: "Klinik beroperasi dengan izin Dinas Kesehatan Tangerang Selatan.",
+      en: "Operating under the South Tangerang Health Authority permit.",
+    },
+    icon: "heart",
+    reference: "Klinik Utama Arcade Dental",
+  },
+  {
+    id: "sterilisasi",
+    label: { id: "Sterilisasi Autoclave", en: "Autoclave Sterilization" },
+    description: {
+      id: "Setiap instrumen melewati siklus autoclave bersertifikat sebelum digunakan.",
+      en: "Every instrument passes a certified autoclave cycle before patient use.",
+    },
+    icon: "sterile",
+  },
+  {
+    id: "bca-life",
+    label: { id: "Rekanan BCA Life", en: "BCA Life Partner" },
+    description: {
+      id: "Terdaftar sebagai klinik rekanan resmi BCA Life untuk kemudahan klaim.",
+      en: "Listed as an official BCA Life provider for streamlined claims.",
+    },
+    icon: "calendar",
+  },
+];
+
+export const priceDisclaimer = {
+  id: "Estimasi awal. Biaya final ditentukan setelah pemeriksaan langsung oleh dokter.",
+  en: "Initial estimate. Final cost confirmed after an in-person examination.",
+} as const;
 
 export const careJourney: CareJourneyStep[] = [
   {
@@ -571,6 +730,8 @@ export const doctors: Doctor[] = [
       id: "Gusi sehat adalah fondasi senyum yang awet. Kita rawat dari akarnya.",
       en: "Healthy gums are the foundation of a lasting smile. Let's care for them at the root.",
     },
+    photo: "/assets/doctors/ryan.png",
+    poster: "/assets/doctors/ryan-post.png",
   },
   {
     id: "chitra",
@@ -595,6 +756,8 @@ export const doctors: Doctor[] = [
       id: "Setiap senyum punya cetakan unik. Kita rapikan tanpa terburu-buru.",
       en: "Every smile has a unique blueprint. We straighten it without rushing.",
     },
+    photo: "/assets/doctors/chitra.png",
+    poster: "/assets/doctors/chitra-post.png",
   },
   {
     id: "indra",
@@ -619,6 +782,8 @@ export const doctors: Doctor[] = [
       id: "Pertahankan gigi alami selama mungkin. Itu prinsip pertama saya.",
       en: "Preserve the natural tooth for as long as possible. That's my first rule.",
     },
+    photo: "/assets/doctors/indra.png",
+    poster: "/assets/doctors/indra-post.png",
   },
   {
     id: "yoana",
@@ -643,6 +808,8 @@ export const doctors: Doctor[] = [
       id: "Anak datang takut, pulang ingin balik lagi. Itu target saya.",
       en: "Kids come scared and leave wanting to return. That's my target.",
     },
+    photo: "/assets/doctors/yoana.png",
+    poster: "/assets/doctors/yoana-post.png",
   },
   {
     id: "oktarina",
@@ -667,6 +834,8 @@ export const doctors: Doctor[] = [
       id: "Datang rutin tiap 6 bulan. Itu rahasia gigi yang awet.",
       en: "Visit every 6 months. That's the secret of long-lasting teeth.",
     },
+    photo: "/assets/doctors/okarina.png",
+    poster: "/assets/doctors/okarina-post.png",
   },
   {
     id: "kharisya",
@@ -691,6 +860,8 @@ export const doctors: Doctor[] = [
       id: "Senyum cerah dimulai dari kebiasaan kecil yang konsisten.",
       en: "A bright smile starts from small habits done consistently.",
     },
+    photo: "/assets/doctors/kharisya.png",
+    poster: "/assets/doctors/kharisya-post.png",
   },
   {
     id: "amelia",
@@ -715,6 +886,8 @@ export const doctors: Doctor[] = [
       id: "Tidak ada pertanyaan yang konyol. Cerita aja, kita kerjakan bareng.",
       en: "No question is silly here. Just share, we'll work it out together.",
     },
+    photo: "/assets/doctors/amelia.png",
+    poster: "/assets/doctors/amelia-post.png",
   },
 ];
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { type Language, type LocalizedText } from "@/lib/content";
 
 interface LanguageContextType {
@@ -98,7 +98,35 @@ export const copy = {
     googleReviews: "Lihat semua ulasan di Google",
     close: "Tutup",
     locationLabelFooter: "Lokasi & Kontak",
-    contactLabelFooter: "Kontak"
+    contactLabelFooter: "Kontak",
+    priceFromLabel: "Mulai dari",
+    priceConsultLabel: "Konsultasi dulu",
+    priceDisclaimer:
+      "Estimasi awal. Biaya final ditentukan setelah pemeriksaan langsung oleh dokter.",
+    credentialsLabel: "Kredensial & Izin",
+    credentialsTitle: "Klinik resmi, dokter bersertifikasi, dapat diverifikasi.",
+    credentialsBody:
+      "Setiap dokter Arcade Dental bersertifikasi dan klinik beroperasi dengan izin resmi. Tim admin siap membantu verifikasi STR / SIP saat dibutuhkan.",
+    credentialsVerifyCta: "Minta dokumen verifikasi",
+    articlesLabel: "Edukasi",
+    articlesTitle: "Panduan jujur tentang perawatan gigi Anda.",
+    articlesBody:
+      "Artikel ditulis langsung oleh tim dokter Arcade Dental. Mencakup prosedur, risiko, durasi, biaya, dan aftercare dengan bahasa yang mudah dimengerti.",
+    articlesTeaserTitle: "Pelajari sebelum kursi pasien.",
+    articlesTeaserBody:
+      "Tim dokter kami menulis panduan singkat agar Anda datang dengan ekspektasi yang jelas dan pertanyaan yang lebih terarah.",
+    estimatorLabel: "Estimator Biaya",
+    estimatorTitle: "Susun rencana perawatan, lihat estimasinya langsung.",
+    estimatorBody:
+      "Pilih layanan yang Anda pertimbangkan. Total update otomatis, dan rincian bisa langsung dikirim ke admin via WhatsApp.",
+    bookingLabel: "Booking Real-time",
+    bookingTitle: "Pilih dokter, jadwal, dan konfirmasi dalam 4 langkah.",
+    bookingBody:
+      "Kalender tiap dokter ter-update sesuai slot yang sudah terisi. Pilih waktu yang cocok, isi data singkat, dan kami amankan jadwalnya.",
+    bookNavLabel: "Booking",
+    liveChatOpen: "Chat dengan kami",
+    liveChatStatus: "Online · biasanya balas dalam hitungan menit",
+    liveChatPlaceholder: "Ketik pertanyaan Anda..."
   },
   en: {
     language: "ID",
@@ -184,37 +212,78 @@ export const copy = {
     googleReviews: "View all Google reviews",
     close: "Close",
     locationLabelFooter: "Location & Contact",
-    contactLabelFooter: "Contact"
+    contactLabelFooter: "Contact",
+    priceFromLabel: "From",
+    priceConsultLabel: "Quoted on consult",
+    priceDisclaimer:
+      "Initial estimate. Final cost confirmed after an in-person examination.",
+    credentialsLabel: "Credentials & Licensing",
+    credentialsTitle: "A licensed clinic with certified, verifiable specialists.",
+    credentialsBody:
+      "Every Arcade Dental doctor is certified and the clinic operates under official licensing. Our admin can share STR / SIP verification on request.",
+    credentialsVerifyCta: "Request verification docs",
+    articlesLabel: "Education",
+    articlesTitle: "Honest guides to your dental care.",
+    articlesBody:
+      "Articles written by the Arcade Dental doctor team. Covers procedures, risks, duration, cost, and aftercare in plain language.",
+    articlesTeaserTitle: "Read before the chair.",
+    articlesTeaserBody:
+      "Our doctors write short guides so you arrive with clear expectations and sharper questions.",
+    estimatorLabel: "Cost Estimator",
+    estimatorTitle: "Build your treatment plan, see the estimate live.",
+    estimatorBody:
+      "Pick the treatments you're considering. The total updates instantly, and you can send the exact list to our admin via WhatsApp.",
+    bookingLabel: "Real-time Booking",
+    bookingTitle: "Pick your doctor, time, and confirm in 4 steps.",
+    bookingBody:
+      "Each doctor's calendar updates live based on what's already taken. Choose a slot, share basic details, and we will lock it in.",
+    bookNavLabel: "Book Now",
+    liveChatOpen: "Chat with us",
+    liveChatStatus: "Online · typically replies in minutes",
+    liveChatPlaceholder: "Type your question..."
   },
 } as const;
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState<Language>("id");
+  const [lang, setLangState] = useState<Language>("en");
   const [languageReady, setLanguageReady] = useState(false);
 
+  // Hydrate from localStorage on mount, but don't block first paint behind it.
   useEffect(() => {
-    const frame = window.requestAnimationFrame(() => {
+    try {
       const stored = window.localStorage.getItem("arcade-dental-language");
       if (stored === "id" || stored === "en") {
-        setLang(stored);
+        setLangState(stored);
       }
-      setLanguageReady(true);
-    });
-    return () => window.cancelAnimationFrame(frame);
+    } catch {
+      // localStorage may be blocked (private mode, sandboxed iframe). Safe to ignore.
+    }
+    setLanguageReady(true);
   }, []);
 
-  useEffect(() => {
-    if (!languageReady) return;
-    window.localStorage.setItem("arcade-dental-language", lang);
-  }, [lang, languageReady]);
+  const setLang = useCallback((next: Language) => {
+    setLangState(next);
+    try {
+      window.localStorage.setItem("arcade-dental-language", next);
+    } catch {
+      // Ignore quota / privacy errors.
+    }
+  }, []);
 
-  const t = (localized: LocalizedText) => localized[lang];
-  const c = copy[lang];
+  // Memoise context value so consumers only re-render when language actually flips.
+  const contextValue = useMemo<LanguageContextType>(() => {
+    const c = copy[lang];
+    return {
+      lang,
+      setLang,
+      t: (localized: LocalizedText) => localized[lang],
+      c,
+      languageReady,
+    };
+  }, [lang, setLang, languageReady]);
 
   return (
-    <LanguageContext.Provider value={{ lang, setLang, t, c, languageReady }}>
-      {children}
-    </LanguageContext.Provider>
+    <LanguageContext.Provider value={contextValue}>{children}</LanguageContext.Provider>
   );
 }
 

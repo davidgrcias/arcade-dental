@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import { getInitials } from "@/lib/utils";
 import { Icon } from "@/components/ui/Icon";
@@ -56,19 +58,36 @@ export function DoctorCard({ doctor, index, onOpen }: DoctorCardProps) {
 
       <div className="p-6">
         <div className="flex items-start justify-between gap-3">
-          {/* Avatar */}
-          <div
-            className={`relative grid h-20 w-20 shrink-0 place-items-center rounded-2xl bg-gradient-to-br ${tokens.avatarFrom} ${tokens.avatarTo} shadow-inner`}
-          >
-            <span className={`font-display text-2xl font-bold ${tokens.avatarText}`}>
-              {getInitials(doctor.name)}
-            </span>
-            <span
-              className={`absolute -bottom-2 -right-2 grid h-9 w-9 place-items-center rounded-full ring-4 ring-white ${tokens.iconBg}`}
+          {/* Avatar — real photo when available, gradient fallback otherwise */}
+          {doctor.photo ? (
+            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl shadow-inner ring-1 ring-primary/8">
+              <Image
+                src={doctor.photo}
+                alt={doctor.name}
+                fill
+                sizes="80px"
+                className="object-cover"
+              />
+              <span
+                className={`absolute -bottom-2 -right-2 grid h-9 w-9 place-items-center rounded-full ring-4 ring-white ${tokens.iconBg}`}
+              >
+                <Icon name={doctor.icon} className="h-4 w-4" />
+              </span>
+            </div>
+          ) : (
+            <div
+              className={`relative grid h-20 w-20 shrink-0 place-items-center rounded-2xl bg-gradient-to-br ${tokens.avatarFrom} ${tokens.avatarTo} shadow-inner`}
             >
-              <Icon name={doctor.icon} className="h-4 w-4" />
-            </span>
-          </div>
+              <span className={`font-display text-2xl font-bold ${tokens.avatarText}`}>
+                {getInitials(doctor.name)}
+              </span>
+              <span
+                className={`absolute -bottom-2 -right-2 grid h-9 w-9 place-items-center rounded-full ring-4 ring-white ${tokens.iconBg}`}
+              >
+                <Icon name={doctor.icon} className="h-4 w-4" />
+              </span>
+            </div>
+          )}
 
           <span
             className={`shrink-0 rounded-full px-2.5 py-1 font-accent text-[10px] font-bold uppercase tracking-[0.18em] ${tokens.soft}`}
@@ -97,19 +116,34 @@ export function DoctorCard({ doctor, index, onOpen }: DoctorCardProps) {
         </ul>
       </div>
 
-      <div className="mt-auto flex items-center justify-between gap-3 border-t border-primary/8 bg-surface-2/40 px-6 py-3">
+      <div className="mt-auto flex items-center justify-between gap-2 border-t border-primary/8 bg-surface-2/40 px-6 py-3">
         <div className="flex items-center gap-1.5 text-[11px] font-bold text-primary/70">
           <Icon name="language" className="h-3.5 w-3.5 text-primary/50" />
           <span>{doctor.languages.join(" · ")}</span>
         </div>
-        <button
-          type="button"
-          onClick={() => onOpen(doctor)}
-          className="inline-flex items-center gap-1 rounded-full bg-primary px-3.5 py-1.5 text-xs font-bold text-white transition-all hover:bg-primary/85"
-        >
-          <span>{lang === "id" ? "Lihat profil" : "View profile"}</span>
-          <Icon name="arrow" className="h-3 w-3" />
-        </button>
+        <div className="flex items-center gap-1.5">
+          <Link
+            href={`/book?doctor=${doctor.id}`}
+            onClick={(event) => event.stopPropagation()}
+            aria-label={
+              lang === "id"
+                ? `Booking dengan ${doctor.name}`
+                : `Book with ${doctor.name}`
+            }
+            className="inline-flex items-center gap-1 rounded-full bg-cta px-3 py-1.5 text-xs font-bold text-white transition-all hover:-translate-y-0.5 hover:bg-primary"
+          >
+            <Icon name="calendar" className="h-3 w-3" />
+            <span>{lang === "id" ? "Booking" : "Book"}</span>
+          </Link>
+          <button
+            type="button"
+            onClick={() => onOpen(doctor)}
+            className="inline-flex items-center gap-1 rounded-full border border-primary/12 bg-white px-3 py-1.5 text-xs font-bold text-primary transition-all hover:border-gold/60"
+          >
+            <span>{lang === "id" ? "Profil" : "Profile"}</span>
+            <Icon name="arrow" className="h-3 w-3" />
+          </button>
+        </div>
       </div>
     </article>
   );

@@ -13,12 +13,14 @@ const groupLabels: Record<SearchResultGroup, { id: string; en: string }> = {
   page: { id: "Halaman & Bagian", en: "Pages & Sections" },
   service: { id: "Layanan", en: "Services" },
   doctor: { id: "Dokter", en: "Doctors" },
+  article: { id: "Edukasi", en: "Articles" },
 };
 
 const groupIcons: Record<SearchResultGroup, React.ComponentProps<typeof Icon>["name"]> = {
   page: "scan",
   service: "spark",
   doctor: "heart",
+  article: "quote",
 };
 
 function highlightMatch(text: string, query: string) {
@@ -47,14 +49,14 @@ export function NavSearch({ solid }: NavSearchProps) {
   const results = useMemo(() => searchAll(query, lang), [query, lang]);
 
   const grouped = useMemo(() => {
-    const map: Record<SearchResultGroup, SearchResult[]> = { page: [], service: [], doctor: [] };
+    const map: Record<SearchResultGroup, SearchResult[]> = { page: [], service: [], doctor: [], article: [] };
     results.forEach((r) => map[r.group].push(r));
     return map;
   }, [results]);
 
   // Flat list (in render order) so arrow keys can step through groups seamlessly
   const flatList = useMemo<SearchResult[]>(
-    () => [...grouped.page, ...grouped.service, ...grouped.doctor],
+    () => [...grouped.page, ...grouped.service, ...grouped.doctor, ...grouped.article],
     [grouped],
   );
 
@@ -210,7 +212,7 @@ export function NavSearch({ solid }: NavSearchProps) {
 
               {query && results.length > 0 && (
                 <div className="py-2">
-                  {(["page", "service", "doctor"] as SearchResultGroup[]).map((group) => {
+                  {(["page", "service", "doctor", "article"] as SearchResultGroup[]).map((group) => {
                     const items = grouped[group];
                     if (!items.length) return null;
                     return (
@@ -296,7 +298,7 @@ function EmptyState({ lang }: { lang: "id" | "en" }) {
     { label: { id: "Implan Gigi", en: "Dental Implant" }, href: "/services#implan" },
     { label: { id: "Whitening", en: "Whitening" }, href: "/services#estetika" },
     { label: { id: "Dokter Anak", en: "Pediatric Doctor" }, href: "/doctors" },
-    { label: { id: "Lokasi", en: "Location" }, href: "/#location" },
+    { label: { id: "Edukasi", en: "Articles" }, href: "/articles" },
     { label: { id: "Care Journey", en: "Care Journey" }, href: "/services#journey" },
   ];
 

@@ -1,12 +1,12 @@
 "use client";
 
-import { useArcadeDental } from "@/hooks/useArcadeDental";
+import { useDoctorsState } from "@/hooks/useArcadeDental";
 import { PageShell } from "./PageShell";
 import { Doctors } from "./sections/Doctors";
 import Engagement from "./sections/Engagement";
 
 export function DoctorsPage() {
-  const { state, actions } = useArcadeDental();
+  const { state, actions } = useDoctorsState();
 
   return (
     <PageShell>

@@ -139,6 +139,12 @@ export function Services({
           selectedService={selectedService}
           setSelectedService={setSelectedService}
         />
+
+        {/* Price disclaimer — calibrates expectation without making each card noisy */}
+        <p className="mt-6 flex items-start gap-2 rounded-lg border border-dashed border-primary/15 bg-white/70 p-4 text-xs leading-5 text-secondary">
+          <span aria-hidden className="mt-0.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-cta" />
+          {c.priceDisclaimer}
+        </p>
       </div>
     </section>
   );

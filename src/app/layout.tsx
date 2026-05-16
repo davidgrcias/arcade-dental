@@ -111,7 +111,7 @@ export default function RootLayout({
 
   return (
     <html
-      lang="id"
+      lang="en"
       className={`${dmSans.variable} ${playfair.variable} ${spaceMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">

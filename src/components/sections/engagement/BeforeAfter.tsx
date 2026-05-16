@@ -66,7 +66,7 @@ export function BeforeAfter({ sliderValue, setSliderValue }: BeforeAfterProps) {
   const tipLabel = lang === "id" ? "Geser untuk bandingkan" : "Drag to compare";
 
   return (
-    <article className="gs-card rounded-lg border border-white/10 bg-white/[0.06] p-7 backdrop-blur">
+    <article id="before-after" className="gs-card rounded-lg border border-white/10 bg-white/[0.06] p-7 backdrop-blur scroll-mt-32">
       <p className="eyebrow text-gold">{c.beforeAfterLabel}</p>
       <h2 className="font-display text-3xl leading-tight">{c.beforeAfterTitle}</h2>
 

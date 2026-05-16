@@ -1,8 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import { business } from "@/lib/content";
 import { Icon } from "@/components/ui/Icon";
 import { NavLogo } from "./navbar/NavLogo";
 import { NavActions } from "./navbar/NavActions";
@@ -37,13 +37,15 @@ interface NavItem {
 const NAV: NavItem[] = [
   {
     label: { id: "Tentang", en: "About" },
-    href: "/#about",
+    href: "/",
   },
   {
     label: { id: "Layanan", en: "Services" },
     href: "/services",
     children: [
       { label: { id: "Semua Layanan", en: "All Services" }, href: "/services" },
+      { label: { id: "Treatment Matcher", en: "Treatment Matcher" }, href: "/services#treatment-matcher" },
+      { label: { id: "Estimator Biaya", en: "Cost Estimator" }, href: "/services#estimator" },
       { label: { id: "Care Journey", en: "Care Journey" }, href: "/services#journey" },
       { label: { id: "Teknologi", en: "Technology" }, href: "/services#technology" },
     ],
@@ -57,16 +59,19 @@ const NAV: NavItem[] = [
     ],
   },
   {
-    label: { id: "Lokasi", en: "Location" },
-    href: "/#location",
+    label: { id: "Edukasi", en: "Articles" },
+    href: "/articles",
   },
 ];
 
 // ─── active detection ────────────────────────────────────────────────────────
 
 function isItemActive(item: NavItem, pathname: string): boolean {
-  if (item.href === "/#about" || item.href === "/#location") return pathname === "/";
+  if (item.href === "/") return pathname === "/";
   const page = item.href.split("#")[0];
+  if (page === "/articles") {
+    return pathname === "/articles" || pathname.startsWith("/articles/");
+  }
   return pathname === page;
 }
 
@@ -117,7 +122,7 @@ function Dropdown({ item, isActive, solid }: DropdownProps) {
       </button>
 
       {open && (
-        <div className="absolute left-1/2 top-full mt-2 w-44 -translate-x-1/2 overflow-hidden rounded-xl border border-primary/10 bg-white shadow-xl shadow-primary/12">
+        <div className="absolute left-1/2 top-full mt-2 w-56 -translate-x-1/2 overflow-hidden rounded-xl border border-primary/10 bg-white shadow-xl shadow-primary/12">
           <div className="py-1">
             {item.children!.map((child) => (
               <a
@@ -195,12 +200,6 @@ function MobileDrawer({ open, onClose, pathname }: MobileDrawerProps) {
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
-  const bookingUrl = `https://wa.me/${business.whatsapp}?text=${encodeURIComponent(
-    lang === "id"
-      ? "Halo Arcade Dental, saya ingin membuat janji temu."
-      : "Hello Arcade Dental, I would like to book an appointment.",
-  )}`;
-
   return (
     <>
       {/* Backdrop */}
@@ -273,14 +272,14 @@ function MobileDrawer({ open, onClose, pathname }: MobileDrawerProps) {
 
         {/* Footer */}
         <div className="mt-auto space-y-2 border-t border-primary/8 px-5 py-5">
-          <a
-            href={bookingUrl}
+          <Link
+            href="/book"
             onClick={onClose}
             className="flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-cta font-bold text-white shadow-lg shadow-cta/25 transition-all hover:bg-primary"
           >
-            <Icon name="message" className="h-5 w-5" />
+            <Icon name="calendar" className="h-5 w-5" />
             {c.book}
-          </a>
+          </Link>
           <button
             type="button"
             onClick={() => setLang(lang === "id" ? "en" : "id")}
