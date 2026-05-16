@@ -243,10 +243,6 @@ label {
   will-change: transform;
 }
 
-.gallery-marquee-track {
-  will-change: transform;
-}
-
 .no-scrollbar {
   scrollbar-width: none;
 }

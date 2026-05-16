@@ -834,6 +834,190 @@ export const gallery: GalleryItem[] = [
   },
 ];
 
+export type PlaceTourStop = {
+  id: string;
+  src: string;
+  focus?: string;
+  label: LocalizedText;
+  caption: LocalizedText;
+  cue: LocalizedText;
+  highlights: LocalizedText[];
+  icon: "map" | "heart" | "spark" | "scope" | "shield" | "calendar" | "child" | "scan" | "sterile";
+};
+
+export const placeTour: PlaceTourStop[] = [
+  {
+    id: "facade",
+    src: "/assets/real/unnamed (1).webp",
+    focus: "center center",
+    label: { id: "Fasad klinik", en: "Clinic facade" },
+    caption: {
+      id: "Pintu masuk Arcade Dental di Ruko Kebayoran Arcade 2, Bintaro Jaya Sektor 7. Fasad bersih dengan signage gold yang mudah dikenali.",
+      en: "Arcade Dental's entrance at Ruko Kebayoran Arcade 2, Bintaro Jaya Sector 7. Clean facade with a recognisable gold signage.",
+    },
+    cue: { id: "Anda ada di sini", en: "You are here" },
+    highlights: [
+      { id: "Mudah ditemukan", en: "Easy to find" },
+      { id: "Parkir tersedia", en: "Parking available" },
+      { id: "Akses Bintaro", en: "Bintaro access" },
+    ],
+    icon: "map",
+  },
+  {
+    id: "brand-wall",
+    src: "/assets/real/unnamed (8).webp",
+    focus: "center center",
+    label: { id: "Brand wall & lobby", en: "Brand wall & lobby" },
+    caption: {
+      id: "Begitu masuk, Anda disambut brand wall Arcade Dental dengan pencahayaan hangat. Tim resepsi langsung menyambut dengan ramah.",
+      en: "Step inside and you are greeted by Arcade Dental's brand wall under warm lighting. The reception team welcomes you right away.",
+    },
+    cue: { id: "Sambutan tim", en: "Team welcome" },
+    highlights: [
+      { id: "Cek-in cepat", en: "Quick check-in" },
+      { id: "Logo highlight", en: "Logo feature" },
+      { id: "Foto worthy", en: "Photo worthy" },
+    ],
+    icon: "heart",
+  },
+  {
+    id: "reception",
+    src: "/assets/real/unnamed.webp",
+    focus: "center center",
+    label: { id: "Reception utama", en: "Main reception" },
+    caption: {
+      id: "Reception modern dengan tone netral. Admin membantu pendaftaran, konfirmasi asuransi, dan panduan pertama Anda.",
+      en: "A modern reception in neutral tones. Our admin team handles registration, insurance checks, and your first guidance.",
+    },
+    cue: { id: "Pendaftaran", en: "Check-in desk" },
+    highlights: [
+      { id: "Admin ramah", en: "Friendly admin" },
+      { id: "Rekanan BCA Life", en: "BCA Life partner" },
+      { id: "Antrian rapi", en: "Orderly queue" },
+    ],
+    icon: "calendar",
+  },
+  {
+    id: "waiting",
+    src: "/assets/real/unnamed (7).webp",
+    focus: "center center",
+    label: { id: "Ruang tunggu", en: "Waiting lounge" },
+    caption: {
+      id: "Ruang tunggu nyaman dengan kursi empuk dan pencahayaan hangat. Cocok untuk Anda yang datang bareng keluarga.",
+      en: "A comfortable waiting lounge with cushioned seats and warm lighting. Great for visits with your family.",
+    },
+    cue: { id: "Lounge nyaman", en: "Cozy lounge" },
+    highlights: [
+      { id: "Kursi empuk", en: "Soft seating" },
+      { id: "Air mineral", en: "Mineral water" },
+      { id: "WiFi gratis", en: "Free WiFi" },
+    ],
+    icon: "heart",
+  },
+  {
+    id: "consult",
+    src: "/assets/real/unnamed (2).webp",
+    focus: "center center",
+    label: { id: "Consult corner", en: "Consult corner" },
+    caption: {
+      id: "Sudut konsultasi privat untuk diskusi awal bersama dokter. Anda bisa cerita keluhan dan rencana perawatan dengan tenang.",
+      en: "A private consult corner for the first conversation with your doctor. Share your concern and explore the plan calmly.",
+    },
+    cue: { id: "Konsultasi privat", en: "Private consult" },
+    highlights: [
+      { id: "Privasi terjaga", en: "Private setting" },
+      { id: "Diskusi tenang", en: "Calm discussion" },
+      { id: "Tanpa terburu", en: "Unhurried" },
+    ],
+    icon: "scope",
+  },
+  {
+    id: "calm",
+    src: "/assets/real/unnamed (5).webp",
+    focus: "center center",
+    label: { id: "Calm corner", en: "Calm corner" },
+    caption: {
+      id: "Sudut tenang sebelum tindakan. Pasien yang cemas bisa duduk dulu, mengatur napas, lalu siap untuk perawatan.",
+      en: "A calm corner before treatment. Anxious patients can sit, breathe, and feel ready before going in.",
+    },
+    cue: { id: "Untuk yang cemas", en: "For anxious patients" },
+    highlights: [
+      { id: "Tone tenang", en: "Calm tones" },
+      { id: "Cahaya lembut", en: "Soft light" },
+      { id: "Privasi", en: "Private" },
+    ],
+    icon: "spark",
+  },
+  {
+    id: "prep",
+    src: "/assets/real/unnamed (4).webp",
+    focus: "center center",
+    label: { id: "Prep station", en: "Prep station" },
+    caption: {
+      id: "Area persiapan dengan instrumen tersterilisasi. Setiap alat melewati autoclave sebelum digunakan untuk Anda.",
+      en: "Prep station with sterilised instruments. Every tool passes the autoclave before being used for you.",
+    },
+    cue: { id: "Sterilisasi", en: "Sterilization" },
+    highlights: [
+      { id: "Instrumen steril", en: "Sterile tools" },
+      { id: "Standar autoclave", en: "Autoclave grade" },
+      { id: "Tray rapi", en: "Tidy tray" },
+    ],
+    icon: "sterile",
+  },
+  {
+    id: "treatment",
+    src: "/assets/real/20210914_202935.webp",
+    focus: "center center",
+    label: { id: "Ruang tindakan", en: "Treatment room" },
+    caption: {
+      id: "Ruang tindakan dengan dental unit modern. Pencahayaan, microscope, dan peralatan dirancang untuk presisi.",
+      en: "Treatment room with a modern dental unit. Lighting, microscope, and tools are tuned for precision.",
+    },
+    cue: { id: "Painless treatment", en: "Painless treatment" },
+    highlights: [
+      { id: "Dental unit modern", en: "Modern unit" },
+      { id: "Microscope siap", en: "Microscope ready" },
+      { id: "Standar painless", en: "Painless standard" },
+    ],
+    icon: "shield",
+  },
+  {
+    id: "care",
+    src: "/assets/real/unnamed (10).webp",
+    focus: "center center",
+    label: { id: "Care in progress", en: "Care in progress" },
+    caption: {
+      id: "Momen tindakan langsung. Dokter dan perawat bekerja bertahap dengan komunikasi yang jelas ke pasien.",
+      en: "A real treatment moment. The doctor and nurse work step by step with clear communication.",
+    },
+    cue: { id: "Tindakan presisi", en: "Precision care" },
+    highlights: [
+      { id: "Tim berdua", en: "Doctor + nurse" },
+      { id: "Komunikasi jelas", en: "Clear comms" },
+      { id: "Step by step", en: "Step by step" },
+    ],
+    icon: "scan",
+  },
+  {
+    id: "family",
+    src: "/assets/real/unnamed (9).webp",
+    focus: "center center",
+    label: { id: "Family lounge", en: "Family lounge" },
+    caption: {
+      id: "Sudut ramah keluarga. Anak-anak bisa menunggu dengan tenang sebelum giliran perawatan mereka.",
+      en: "A family-friendly corner. Kids can wait peacefully before their turn.",
+    },
+    cue: { id: "Ramah keluarga", en: "Family friendly" },
+    highlights: [
+      { id: "Untuk anak", en: "Kid friendly" },
+      { id: "Suasana hangat", en: "Warm vibe" },
+      { id: "Dekat ortu", en: "Close to parents" },
+    ],
+    icon: "child",
+  },
+];
+
 export const smileConcerns = [
   {
     id: "alignment",
