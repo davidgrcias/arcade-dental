@@ -100,6 +100,8 @@ export const siteAssets = {
   brandWall: "/assets/real/unnamed (8).webp",
   calmCorner: "/assets/real/unnamed (5).webp",
   smileTransform: "/assets/smile-transform-preview.png",
+  smileBefore: "/assets/before-transform.png",
+  smileAfter: "/assets/after-transform.png",
   techLab: "/assets/real/20210914_202935.webp",
   techTexture: "/assets/real/unnamed (8).webp",
 };
