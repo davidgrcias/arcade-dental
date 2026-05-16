@@ -416,7 +416,6 @@ export function ArcadeDentalSite() {
   /* ── GSAP refs ── */
   const heroRef = useRef<HTMLElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
-  const heroImageRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLElement>(null);
   const servicesRef = useRef<HTMLElement>(null);
   const whyRef = useRef<HTMLElement>(null);
@@ -425,9 +424,6 @@ export function ArcadeDentalSite() {
   const testimonialsRef = useRef<HTMLElement>(null);
   const galleryRef = useRef<HTMLElement>(null);
   const ctaRef = useRef<HTMLElement>(null);
-  const orb1Ref = useRef<HTMLDivElement>(null);
-  const orb2Ref = useRef<HTMLDivElement>(null);
-  const orb3Ref = useRef<HTMLDivElement>(null);
 
   const t = (localized: LocalizedText) => localized[lang];
   const c = copy[lang];
@@ -487,41 +483,6 @@ export function ArcadeDentalSite() {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-
-      /* ── Hero floating orbs ── */
-      if (orb1Ref.current) {
-        gsap.to(orb1Ref.current, {
-          y: -28,
-          x: 12,
-          duration: 6,
-          ease: "sine.inOut",
-          yoyo: true,
-          repeat: -1,
-        });
-      }
-      if (orb2Ref.current) {
-        gsap.to(orb2Ref.current, {
-          y: 22,
-          x: -18,
-          duration: 8,
-          ease: "sine.inOut",
-          yoyo: true,
-          repeat: -1,
-          delay: 1.2,
-        });
-      }
-      if (orb3Ref.current) {
-        gsap.to(orb3Ref.current, {
-          y: -16,
-          x: 8,
-          duration: 7,
-          ease: "sine.inOut",
-          yoyo: true,
-          repeat: -1,
-          delay: 2.5,
-        });
-      }
-
       /* ── Hero text stagger ── */
       if (heroTextRef.current) {
         const words = heroTextRef.current.querySelectorAll(".gs-word");
@@ -545,16 +506,6 @@ export function ArcadeDentalSite() {
           { opacity: 1, y: 0, duration: 0.7, stagger: 0.1, ease: "power2.out", delay: 0.8 }
         );
       }
-
-      /* ── Hero image ── */
-      if (heroImageRef.current) {
-        gsap.fromTo(
-          heroImageRef.current,
-          { opacity: 0, scale: 0.93, y: 20 },
-          { opacity: 1, scale: 1, y: 0, duration: 1.1, ease: "power3.out", delay: 0.5 }
-        );
-      }
-
       /* ── About section ── */
       ScrollTrigger.create({
         trigger: aboutRef.current,
@@ -719,12 +670,18 @@ export function ArcadeDentalSite() {
       >
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 md:px-8">
           <a href="#hero" className="group flex items-center gap-3" aria-label="Arcade Dental home">
-            <span className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-gold shadow-lg shadow-primary/20 transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-xl">
+            <span
+              className={`grid h-11 w-11 place-items-center rounded-xl text-gold shadow-lg transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-xl ${
+                scrolled
+                  ? "bg-primary shadow-primary/20"
+                  : "border border-white/15 bg-white/12 shadow-black/20 backdrop-blur"
+              }`}
+            >
               <Icon name="spark" className="h-6 w-6" />
             </span>
             <span>
-              <span className="block font-display text-xl leading-none tracking-normal text-primary">{business.name}</span>
-              <span className="mt-1 hidden text-[10px] font-bold uppercase tracking-[0.3em] text-secondary sm:block">
+              <span className={`block font-display text-xl leading-none tracking-normal ${scrolled ? "text-primary" : "text-white"}`}>{business.name}</span>
+              <span className={`mt-1 hidden text-[10px] font-bold uppercase tracking-[0.3em] sm:block ${scrolled ? "text-secondary" : "text-white/60"}`}>
                 Bintaro · Spesialis
               </span>
             </span>
@@ -735,7 +692,9 @@ export function ArcadeDentalSite() {
               <a
                 key={item.id}
                 href={`#${item.id}`}
-                className="group relative text-sm font-semibold text-primary/70 transition-colors duration-200 hover:text-cta"
+                className={`group relative text-sm font-semibold transition-colors duration-200 ${
+                  scrolled ? "text-primary/70 hover:text-cta" : "text-white/78 hover:text-gold"
+                }`}
               >
                 {t(item.label)}
                 <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-gold transition-all duration-300 group-hover:w-full" />
@@ -744,14 +703,24 @@ export function ArcadeDentalSite() {
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="hidden items-center gap-2 rounded-full border border-cta/20 bg-highlight px-3 py-2 text-xs font-bold text-cta sm:flex">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-cta" />
+            <div
+              className={`hidden items-center gap-2 rounded-full border px-3 py-2 text-xs font-bold backdrop-blur sm:flex ${
+                scrolled
+                  ? "border-cta/20 bg-highlight text-cta"
+                  : "border-white/18 bg-white/12 text-white"
+              }`}
+            >
+              <span className={`h-2 w-2 animate-pulse rounded-full ${scrolled ? "bg-cta" : "bg-gold"}`} />
               {t(heroCopy.status)}
             </div>
             <button
               type="button"
               onClick={toggleLanguage}
-              className="icon-button"
+              className={`inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full border px-4 transition-all duration-200 hover:-translate-y-0.5 ${
+                scrolled
+                  ? "border-primary/12 bg-white/72 text-primary hover:border-gold hover:bg-white hover:shadow-md"
+                  : "border-white/18 bg-white/12 text-white backdrop-blur hover:border-gold/70 hover:bg-white/18"
+              }`}
               aria-label="Switch language"
             >
               <Icon name="language" className="h-4.5 w-4.5" />
@@ -759,7 +728,11 @@ export function ArcadeDentalSite() {
             </button>
             <a
               href={buildWhatsAppUrl(smartMessage)}
-              className="hidden items-center gap-2 rounded-full bg-cta px-5 py-3 text-sm font-bold text-white shadow-lg shadow-cta/25 transition-all duration-200 hover:-translate-y-0.5 hover:bg-primary hover:shadow-xl sm:inline-flex"
+              className={`hidden items-center gap-2 rounded-full px-5 py-3 text-sm font-bold shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl sm:inline-flex ${
+                scrolled
+                  ? "bg-cta text-white shadow-cta/25 hover:bg-primary"
+                  : "bg-gold text-primary shadow-black/20 hover:bg-white"
+              }`}
             >
               <Icon name="message" className="h-4 w-4" />
               {c.book}
@@ -769,38 +742,53 @@ export function ArcadeDentalSite() {
       </header>
 
       {/* ══ HERO ══════════════════════════════════════════ */}
-      <section id="hero" ref={heroRef} className="relative isolate min-h-[95vh] overflow-hidden pt-24">
-        {/* Background gradients */}
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_80%_10%,rgba(200,169,110,0.18),transparent_45%),radial-gradient(ellipse_at_10%_90%,rgba(45,125,107,0.12),transparent_45%),linear-gradient(160deg,#faf8f5_0%,#f0ece6_55%,#e8f4f0_100%)]" />
+      <section id="hero" ref={heroRef} className="relative isolate min-h-[92vh] overflow-hidden bg-primary pt-24 text-white">
+        <video
+          aria-hidden="true"
+          autoPlay
+          className="absolute inset-0 h-full w-full object-cover object-[57%_center] md:object-center"
+          loop
+          muted
+          playsInline
+          preload="metadata"
+        >
+          <source src="/assets/herovideo.mp4" type="video/mp4" />
+        </video>
+        <div className="pointer-events-none absolute inset-0 bg-primary/78 md:bg-primary/48" />
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(13, 21, 32, 0.92) 0%, rgba(13, 21, 32, 0.76) 38%, rgba(13, 21, 32, 0.42) 68%, rgba(13, 21, 32, 0.62) 100%)",
+          }}
+        />
+        <div
+          className="pointer-events-none absolute inset-0 mix-blend-soft-light"
+          style={{
+            background:
+              "radial-gradient(circle at 18% 42%, rgba(200, 169, 110, 0.34), transparent 34%), radial-gradient(circle at 78% 22%, rgba(232, 244, 240, 0.16), transparent 35%)",
+          }}
+        />
 
-        {/* Floating decorative orbs */}
-        <div ref={orb1Ref} className="pointer-events-none absolute right-[12%] top-[18%] -z-10 h-64 w-64 rounded-full bg-gold/10 blur-3xl" />
-        <div ref={orb2Ref} className="pointer-events-none absolute left-[8%] top-[35%] -z-10 h-80 w-80 rounded-full bg-cta/8 blur-3xl" />
-        <div ref={orb3Ref} className="pointer-events-none absolute right-[28%] bottom-[20%] -z-10 h-48 w-48 rounded-full bg-gold/14 blur-2xl" />
-
-        {/* Decorative grid dots */}
-        <div className="pointer-events-none absolute left-0 top-24 -z-10 h-full w-full opacity-[0.025]"
-          style={{ backgroundImage: "radial-gradient(circle, #1a2332 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
-
-        <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 pb-16 pt-8 md:px-8 lg:grid-cols-[1fr_0.95fr] lg:pb-20 lg:pt-12">
+        <div className="relative z-10 mx-auto flex min-h-[calc(92vh-5rem)] max-w-7xl items-center px-5 pb-16 pt-8 md:px-8 lg:pb-20 lg:pt-12">
 
           {/* ── Text side ── */}
-          <div ref={heroTextRef} className="max-w-2xl" style={{ perspective: "800px" }}>
-            <p className="gs-word eyebrow">{t(heroCopy.eyebrow)}</p>
-            <h1 className="mt-3 font-display leading-[0.96] text-primary">
+          <div ref={heroTextRef} className="max-w-3xl" style={{ perspective: "800px" }}>
+            <p className="gs-word eyebrow text-gold">{t(heroCopy.eyebrow)}</p>
+            <h1 className="mt-3 max-w-3xl font-display leading-[0.96] text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.32)]">
               {t(heroCopy.title).split(" ").map((word, i) => (
                 <span key={i} className="gs-word inline-block pr-[0.22em] text-5xl md:text-6xl lg:text-7xl">
                   {word}
                 </span>
               ))}
             </h1>
-            <p className="gs-sub mt-7 max-w-xl text-lg leading-8 text-secondary md:text-xl">
+            <p className="gs-sub mt-7 max-w-2xl text-lg leading-8 text-white/82 md:text-xl">
               {t(heroCopy.description)}
             </p>
             <div className="gs-sub mt-8 flex flex-col gap-3 sm:flex-row">
               <a
                 href="#contact"
-                className="group inline-flex min-h-14 items-center justify-center gap-2.5 rounded-full bg-cta px-7 text-base font-bold text-white shadow-xl shadow-cta/30 transition-all duration-300 hover:-translate-y-1 hover:bg-primary hover:shadow-2xl"
+                className="group inline-flex min-h-14 items-center justify-center gap-2.5 rounded-full bg-gold px-7 text-base font-bold text-primary shadow-xl shadow-black/20 transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-2xl"
               >
                 <Icon name="calendar" className="h-5 w-5" />
                 {t(heroCopy.primaryCta)}
@@ -810,7 +798,7 @@ export function ArcadeDentalSite() {
               </a>
               <a
                 href="#services"
-                className="inline-flex min-h-14 items-center justify-center rounded-full border border-primary/12 bg-white/80 px-7 text-base font-bold text-primary shadow-sm backdrop-blur transition-all duration-200 hover:-translate-y-0.5 hover:border-gold hover:shadow-md"
+                className="inline-flex min-h-14 items-center justify-center rounded-full border border-white/25 bg-white/10 px-7 text-base font-bold text-white shadow-sm backdrop-blur transition-all duration-200 hover:-translate-y-0.5 hover:border-gold hover:bg-white/16"
               >
                 {t(heroCopy.secondaryCta)}
               </a>
@@ -819,9 +807,9 @@ export function ArcadeDentalSite() {
               {trustBadges.map((badge) => (
                 <span
                   key={badge.id}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-primary/10 bg-white/80 px-4 py-2 text-xs font-bold text-primary/80 shadow-sm backdrop-blur"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-white/18 bg-white/12 px-4 py-2 text-xs font-bold text-white/88 shadow-sm backdrop-blur"
                 >
-                  <span className="h-1.5 w-1.5 rounded-full bg-cta" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-gold" />
                   {badge[lang]}
                 </span>
               ))}
@@ -829,46 +817,6 @@ export function ArcadeDentalSite() {
             <p className="gs-sub mt-8 font-accent text-xs font-bold uppercase tracking-[0.32em] text-gold">{business.hashtag}</p>
           </div>
 
-          {/* ── Image side ── */}
-          <div ref={heroImageRef} className="relative">
-            {/* Floating badge: hours */}
-            <div className="absolute -left-4 top-10 z-20 hidden rounded-2xl border border-white/70 bg-white/90 p-4 shadow-2xl shadow-primary/12 backdrop-blur md:block">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-secondary">Buka setiap</p>
-              <p className="mt-0.5 font-display text-2xl text-primary">{business.shortHours}</p>
-              <p className="mt-0.5 text-xs font-semibold text-cta">Senin – Sabtu</p>
-            </div>
-
-            {/* Floating badge: rating */}
-            <div className="absolute -right-3 bottom-16 z-20 hidden rounded-2xl border border-white/70 bg-white/90 p-4 shadow-2xl shadow-primary/12 backdrop-blur md:block">
-              <div className="flex gap-0.5">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Icon key={i} name="star" className="h-4 w-4 fill-current text-gold" />
-                ))}
-              </div>
-              <p className="mt-1.5 text-sm font-bold text-primary">Google Reviews</p>
-              <p className="text-xs text-secondary">Highly rated</p>
-            </div>
-
-            {/* Main image frame */}
-            <div className="relative overflow-hidden rounded-[2rem] border border-white/80 bg-white/60 p-3 shadow-2xl shadow-primary/20 backdrop-blur">
-              <div className="overflow-hidden rounded-[1.5rem]">
-                <Image
-                  src="https://images.unsplash.com/photo-1606811841689-23dfddce3e1c?w=900&q=85&auto=format&fit=crop"
-                  alt={lang === "id" ? "Perawatan dental modern di Arcade Dental Bintaro" : "Modern dental care at Arcade Dental Bintaro"}
-                  width={760}
-                  height={580}
-                  priority
-                  className="h-auto w-full object-cover transition-transform duration-700 hover:scale-105"
-                />
-              </div>
-              {/* Image overlay gradient */}
-              <div className="pointer-events-none absolute inset-3 rounded-[1.5rem] bg-gradient-to-t from-primary/20 via-transparent to-transparent" />
-            </div>
-
-            {/* Decorative ring */}
-            <div className="pointer-events-none absolute -right-6 -top-6 h-36 w-36 rounded-full border-2 border-dashed border-gold/30" />
-            <div className="pointer-events-none absolute -bottom-4 -left-4 h-24 w-24 rounded-full border border-cta/20" />
-          </div>
         </div>
 
         {/* Wave divider */}
