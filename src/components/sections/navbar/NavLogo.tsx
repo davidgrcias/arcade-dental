@@ -1,7 +1,7 @@
 "use client";
 
+import Image from "next/image";
 import { business } from "@/lib/content";
-import { Icon } from "@/components/ui/Icon";
 
 interface NavLogoProps {
   scrolled: boolean;
@@ -11,13 +11,20 @@ export function NavLogo({ scrolled }: NavLogoProps) {
   return (
     <a href="/" className="flex items-center gap-3">
       <span
-        className={`grid h-11 w-11 place-items-center rounded-lg border ${
+        className={`relative grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-lg border ${
           scrolled
-            ? "border-primary/10 bg-primary text-gold"
-            : "border-white/20 bg-white/10 text-gold backdrop-blur"
+            ? "border-primary/10 bg-white"
+            : "border-white/20 bg-white/95 backdrop-blur"
         }`}
       >
-        <Icon name="spark" className="h-5 w-5" />
+        <Image
+          src="/assets/logo.jpg"
+          alt={business.name}
+          fill
+          sizes="44px"
+          className="object-cover"
+          priority
+        />
       </span>
       <span>
         <span className={`block font-display text-xl leading-none ${scrolled ? "text-primary" : "text-white"}`}>

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { business } from "@/lib/content";
 import { useLanguage } from "@/context/LanguageContext";
 import { Icon } from "@/components/ui/Icon";
@@ -12,14 +13,20 @@ export default function Footer() {
       <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-[1.2fr_0.8fr_0.8fr]">
         <div>
           <div className="flex items-center gap-3">
-            <span className="grid h-10 w-10 place-items-center rounded-lg bg-white/10 text-gold"><Icon name="spark" className="h-5 w-5" /></span>
+            <span className="relative grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-lg border border-white/12 bg-white">
+              <Image src="/assets/logo.jpg" alt={business.name} fill sizes="48px" className="object-cover" />
+            </span>
             <h2 className="font-display text-2xl">{business.name}</h2>
           </div>
           <p className="mt-4 max-w-sm text-sm leading-7 text-white/55">{business.tagline[lang]}</p>
           <p className="mt-5 font-accent text-[10px] font-bold uppercase tracking-[0.28em] text-gold">{business.hashtag}</p>
           <div className="mt-5 flex gap-3">
-            <a href={business.instagram} target="_blank" rel="noreferrer" className="grid h-10 w-10 place-items-center rounded-lg border border-white/10 text-white/50 transition-all duration-200 hover:border-gold hover:text-gold"><Icon name="instagram" className="h-5 w-5" /></a>
-            <a href={business.facebook} target="_blank" rel="noreferrer" className="grid h-10 w-10 place-items-center rounded-lg border border-white/10 text-white/50 transition-all duration-200 hover:border-gold hover:text-gold"><Icon name="facebook" className="h-5 w-5" /></a>
+            <a href={business.instagram} target="_blank" rel="noreferrer" aria-label="Instagram" className="grid h-10 w-10 place-items-center rounded-lg border border-white/10 text-white/50 transition-all duration-200 hover:border-gold hover:text-gold">
+              <Icon name="instagram" className="h-5 w-5" />
+            </a>
+            <a href={business.facebook} target="_blank" rel="noreferrer" aria-label="Facebook" className="grid h-10 w-10 place-items-center rounded-lg border border-white/10 text-white/50 transition-all duration-200 hover:border-gold hover:text-gold">
+              <Icon name="facebook" className="h-5 w-5" />
+            </a>
           </div>
         </div>
         <div>
@@ -36,8 +43,19 @@ export default function Footer() {
         </div>
       </div>
       <div className="mx-auto mt-10 flex max-w-7xl flex-col items-start justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/35 md:flex-row md:items-center">
-        <p>(c) 2026 Arcade Dental. All rights reserved.</p>
-        <a href={business.website} target="_blank" rel="noreferrer" className="hover:text-white/60">{business.website.replace("https://", "")}</a>
+        <p>© 2026 Arcade Dental. All rights reserved.</p>
+        <p className="flex flex-wrap items-center gap-2">
+          <span>{lang === "id" ? "Dikembangkan oleh" : "Developed by"}</span>
+          <a
+            href="https://www.linkedin.com/in/davidgrcias/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 font-bold text-white/75 transition-all hover:-translate-y-0.5 hover:border-gold hover:bg-white/10 hover:text-gold"
+          >
+            <span>David Garcia Saragih</span>
+            <Icon name="arrow" className="h-3 w-3" />
+          </a>
+        </p>
       </div>
     </footer>
   );

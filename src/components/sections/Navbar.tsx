@@ -6,6 +6,7 @@ import { business } from "@/lib/content";
 import { Icon } from "@/components/ui/Icon";
 import { NavLogo } from "./navbar/NavLogo";
 import { NavActions } from "./navbar/NavActions";
+import { NavSearch } from "./navbar/NavSearch";
 
 // ─── helpers ────────────────────────────────────────────────────────────────
 
@@ -330,6 +331,7 @@ export function Navbar() {
           <NavLogo scrolled={solid} />
           <DesktopNav pathname={pathname} solid={solid} />
           <div className="flex items-center gap-2">
+            <NavSearch solid={solid} />
             <NavActions scrolled={solid} />
             {/* Hamburger */}
             <button
