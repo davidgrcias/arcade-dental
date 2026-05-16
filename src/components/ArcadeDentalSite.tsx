@@ -18,7 +18,6 @@ import { Technology } from "./sections/Technology";
 import { Doctors } from "./sections/Doctors";
 import { Testimonials } from "./sections/Testimonials";
 import { Gallery } from "./sections/Gallery";
-import { Insurance } from "./sections/Insurance";
 import { Location } from "./sections/Location";
 import { Contact } from "./sections/Contact";
 import BookingCTA from "./sections/BookingCTA";
@@ -120,7 +119,6 @@ export function ArcadeDentalSite() {
         setSliderValue={actions.setSliderValue}
       />
       <Gallery />
-      <Insurance />
       <Location />
       <Contact
         selectedService={state.selectedService}

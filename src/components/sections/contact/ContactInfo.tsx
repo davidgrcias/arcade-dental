@@ -3,6 +3,7 @@
 import { business } from "@/lib/content";
 import { useLanguage } from "@/context/LanguageContext";
 import { Icon } from "@/components/ui/Icon";
+import { InsuranceBadge } from "./InsuranceBadge";
 
 export function ContactInfo() {
   const { lang, c } = useLanguage();
@@ -12,9 +13,9 @@ export function ContactInfo() {
       <p className="eyebrow">{c.locationLabel}</p>
       <h2 className="font-display text-4xl leading-tight text-primary md:text-5xl">{c.contactTitle}</h2>
       <p className="mt-5 text-lg leading-8 text-secondary">{c.contactBody}</p>
+
       <div className="mt-8 flex flex-col gap-3">
         {([
-          { icon: "shield" as const, text: lang === "id" ? "Rekanan resmi BCA Life" : "Official BCA Life partner" },
           { icon: "spark" as const, text: lang === "id" ? "Teknologi painless terkini" : "Latest painless technology" },
           { icon: "calendar" as const, text: business.hours[lang] },
         ] as const).map((item) => (
@@ -25,6 +26,10 @@ export function ContactInfo() {
             {item.text}
           </div>
         ))}
+      </div>
+
+      <div className="mt-6">
+        <InsuranceBadge />
       </div>
     </div>
   );
