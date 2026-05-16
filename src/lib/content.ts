@@ -36,6 +36,12 @@ export type CareJourneyStep = {
   body: LocalizedText;
   metric: string;
   icon: "heart" | "scope" | "spark" | "shield" | "calendar";
+  image: string;
+  imageAlt: LocalizedText;
+  accent: "cta" | "gold";
+  duration: LocalizedText;
+  highlights: LocalizedText[];
+  tip: LocalizedText;
 };
 
 export type TechMetric = {
@@ -344,6 +350,22 @@ export const careJourney: CareJourneyStep[] = [
     },
     metric: "01",
     icon: "heart",
+    image: "/assets/real/unnamed (2).webp",
+    imageAlt: {
+      id: "Sesi sambutan dan diskusi awal di Arcade Dental",
+      en: "Welcome and intake conversation at Arcade Dental",
+    },
+    accent: "cta",
+    duration: { id: "± 10 menit", en: "± 10 minutes" },
+    highlights: [
+      { id: "Sambutan hangat", en: "Warm welcome" },
+      { id: "Tanpa terburu", en: "Unhurried pace" },
+      { id: "Catatan riwayat", en: "Patient history" },
+    ],
+    tip: {
+      id: "Anda boleh cerita sebebasnya. Tidak ada keluhan yang dianggap remeh.",
+      en: "Speak freely. No concern is too small here.",
+    },
   },
   {
     id: "scan",
@@ -355,6 +377,22 @@ export const careJourney: CareJourneyStep[] = [
     },
     metric: "02",
     icon: "scope",
+    image: "/assets/real/20210914_202935.webp",
+    imageAlt: {
+      id: "Pemeriksaan dengan teknologi dental Arcade Dental",
+      en: "Dental scan and diagnostic technology at Arcade Dental",
+    },
+    accent: "cta",
+    duration: { id: "± 15 menit", en: "± 15 minutes" },
+    highlights: [
+      { id: "Visual scan", en: "Visual scan" },
+      { id: "Radiografi", en: "Radiography" },
+      { id: "Diagnosa jelas", en: "Clear diagnosis" },
+    ],
+    tip: {
+      id: "Hasil pindai ditunjukkan langsung ke Anda agar tidak ada yang tertinggal.",
+      en: "Scan results are shown to you directly. Nothing stays hidden.",
+    },
   },
   {
     id: "plan",
@@ -366,6 +404,22 @@ export const careJourney: CareJourneyStep[] = [
     },
     metric: "03",
     icon: "spark",
+    image: "/assets/real/unnamed (10).webp",
+    imageAlt: {
+      id: "Dokter menjelaskan rencana perawatan kepada pasien",
+      en: "Doctor explaining the treatment plan to a patient",
+    },
+    accent: "gold",
+    duration: { id: "± 15 menit", en: "± 15 minutes" },
+    highlights: [
+      { id: "Opsi realistis", en: "Realistic options" },
+      { id: "Estimasi biaya", en: "Cost estimate" },
+      { id: "Timeline jelas", en: "Clear timeline" },
+    ],
+    tip: {
+      id: "Tidak ada paksaan. Pilih opsi yang paling masuk akal untuk Anda.",
+      en: "No pressure. Pick the option that fits you best.",
+    },
   },
   {
     id: "treat",
@@ -377,6 +431,22 @@ export const careJourney: CareJourneyStep[] = [
     },
     metric: "04",
     icon: "shield",
+    image: "/assets/real/unnamed (4).webp",
+    imageAlt: {
+      id: "Tindakan presisi di ruang perawatan Arcade Dental",
+      en: "Precision treatment inside an Arcade Dental room",
+    },
+    accent: "cta",
+    duration: { id: "Sesuai rencana", en: "Per plan" },
+    highlights: [
+      { id: "Painless control", en: "Painless control" },
+      { id: "Sterilisasi penuh", en: "Full sterilization" },
+      { id: "Per tahap", en: "Step by step" },
+    ],
+    tip: {
+      id: "Setiap tahap dijelaskan sebelum dimulai. Anda tetap pegang kendali.",
+      en: "Every step is explained before it starts. You stay in control.",
+    },
   },
   {
     id: "aftercare",
@@ -388,6 +458,22 @@ export const careJourney: CareJourneyStep[] = [
     },
     metric: "05",
     icon: "calendar",
+    image: "/assets/real/unnamed (5).webp",
+    imageAlt: {
+      id: "Sudut tunggu dan area kontrol lanjutan Arcade Dental",
+      en: "Aftercare and follow-up area at Arcade Dental",
+    },
+    accent: "gold",
+    duration: { id: "Jadwal terjadwal", en: "Scheduled" },
+    highlights: [
+      { id: "Kontrol lanjut", en: "Follow-up" },
+      { id: "Panduan harian", en: "Daily habits" },
+      { id: "Reminder admin", en: "Admin reminder" },
+    ],
+    tip: {
+      id: "Tim admin akan mengingatkan jadwal kontrol Anda lewat WhatsApp.",
+      en: "Our admin team reminds your follow-up schedule via WhatsApp.",
+    },
   },
 ];
 
