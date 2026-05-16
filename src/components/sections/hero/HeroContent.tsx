@@ -22,14 +22,14 @@ export function HeroContent() {
         </h1>
         <p className="gs-sub mt-7 max-w-2xl text-lg leading-8 text-white/80 md:text-xl">{t(heroCopy.description)}</p>
         <div className="gs-sub mt-8 flex flex-col gap-3 sm:flex-row">
-          <a href="#contact" className="magnetic-cta group inline-flex min-h-14 items-center justify-center gap-2.5 rounded-full bg-gold px-7 text-base font-bold text-primary shadow-xl shadow-black/20 transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-2xl">
+          <a href="/#contact" className="magnetic-cta group inline-flex min-h-14 items-center justify-center gap-2.5 rounded-full bg-gold px-7 text-base font-bold text-primary shadow-xl shadow-black/20 transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-2xl">
             <Icon name="calendar" className="h-5 w-5" />
             {t(heroCopy.primaryCta)}
             <span className="transition-transform duration-200 group-hover:translate-x-1">
               <Icon name="arrow" className="h-4 w-4" />
             </span>
           </a>
-          <a href="#services" className="inline-flex min-h-14 items-center justify-center rounded-full border border-white/25 bg-white/10 px-7 text-base font-bold text-white shadow-sm backdrop-blur transition-all duration-200 hover:-translate-y-0.5 hover:border-gold hover:bg-white/16">
+          <a href="/services" className="inline-flex min-h-14 items-center justify-center rounded-full border border-white/25 bg-white/10 px-7 text-base font-bold text-white shadow-sm backdrop-blur transition-all duration-200 hover:-translate-y-0.5 hover:border-gold hover:bg-white/16">
             {t(heroCopy.secondaryCta)}
           </a>
         </div>

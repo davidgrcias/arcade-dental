@@ -110,11 +110,11 @@ export const siteAssets = {
 };
 
 export const navItems = [
-  { id: "about", label: { id: "Tentang", en: "About" } },
-  { id: "services", label: { id: "Layanan", en: "Services" } },
-  { id: "technology", label: { id: "Teknologi", en: "Technology" } },
-  { id: "doctors", label: { id: "Dokter", en: "Doctors" } },
-  { id: "location", label: { id: "Lokasi", en: "Location" } },
+  { id: "about", label: { id: "Tentang", en: "About" }, href: "/#about" },
+  { id: "services", label: { id: "Layanan", en: "Services" }, href: "/services" },
+  { id: "technology", label: { id: "Teknologi", en: "Technology" }, href: "/services#technology" },
+  { id: "doctors", label: { id: "Dokter", en: "Doctors" }, href: "/doctors" },
+  { id: "location", label: { id: "Lokasi", en: "Location" }, href: "/#location" },
 ] as const;
 
 export const heroCopy = {

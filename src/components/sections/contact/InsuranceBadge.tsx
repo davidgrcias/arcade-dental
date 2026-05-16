@@ -36,7 +36,7 @@ export function InsuranceBadge() {
       </div>
 
       <a
-        href="#booking-cta"
+        href="/#booking-cta"
         className="relative mt-4 inline-flex min-h-10 items-center gap-2 rounded-full bg-primary px-4 text-xs font-bold text-white transition-all hover:-translate-y-0.5 hover:bg-cta"
       >
         <Icon name="shield" className="h-4 w-4" />

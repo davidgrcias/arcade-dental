@@ -112,7 +112,7 @@ export function ServiceMatcher({
                 <Icon name="message" className="h-5 w-5" />
                 {c.matcherCta}
               </a>
-              <a href="#contact" className="inline-flex min-h-12 items-center gap-2 rounded-full border border-white/18 bg-white/8 px-5 text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:bg-white hover:text-primary">
+              <a href="/#contact" className="inline-flex min-h-12 items-center gap-2 rounded-full border border-white/18 bg-white/8 px-5 text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:bg-white hover:text-primary">
                 <Icon name="calendar" className="h-5 w-5" />
                 {lang === "id" ? "Isi form" : "Fill form"}
               </a>

@@ -29,7 +29,7 @@ export default function BookingCTA({ smartMessage, ctaRef }: BookingCTAProps) {
             <Icon name="message" className="h-5 w-5" />
             WhatsApp
           </a>
-          <a href="#contact" className="inline-flex min-h-14 items-center justify-center rounded-full border border-white/20 px-8 font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:border-gold hover:text-gold">
+          <a href="/#contact" className="inline-flex min-h-14 items-center justify-center rounded-full border border-white/20 px-8 font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:border-gold hover:text-gold">
             {c.formReservation}
           </a>
         </div>
