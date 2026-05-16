@@ -517,6 +517,7 @@ export function ArcadeDentalSite() {
     };
   }, [preview]);
 
+
   useEffect(() => {
     if (!languageReady) return;
 
@@ -536,14 +537,20 @@ export function ArcadeDentalSite() {
 
     const cleanupFns: Array<() => void> = [];
     const ctx = gsap.context(() => {
+      const isAtTop = window.scrollY < 120;
       const heroTl = gsap.timeline({ defaults: { ease: "power3.out" } });
-      heroTl
-        .fromTo(".hero-title-word", { opacity: 0, y: 46, rotateX: -16 }, { opacity: 1, y: 0, rotateX: 0, duration: 0.9, stagger: 0.08 })
-        .fromTo(".gs-sub", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.1 }, "-=0.35")
-        .fromTo(".hero-chip", { opacity: 0, y: 18, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, stagger: 0.08 }, "-=0.35");
+      
+      if (isAtTop) {
+        heroTl
+          .fromTo(".hero-title-word", { opacity: 0, y: 46, rotateX: -16 }, { opacity: 1, y: 0, rotateX: 0, duration: 0.9, stagger: 0.08 })
+          .fromTo(".gs-sub", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.1 }, "-=0.35")
+          .fromTo(".hero-chip", { opacity: 0, y: 18, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, stagger: 0.08 }, "-=0.35");
+      } else {
+        gsap.set(".hero-title-word, .gs-sub, .hero-chip", { opacity: 1, y: 0, rotateX: 0, scale: 1 });
+      }
 
       ScrollTrigger.batch(".gs-reveal, .gs-card", {
-        start: "top 84%",
+        start: "top 92%",
         once: true,
         onEnter: (batch) => {
           gsap.to(batch, {
@@ -574,7 +581,7 @@ export function ArcadeDentalSite() {
             },
             scrollTrigger: {
               trigger: element,
-              start: "top 88%",
+              start: "top 94%",
               once: true,
             },
           },
@@ -647,18 +654,20 @@ export function ArcadeDentalSite() {
           card.removeEventListener("mouseleave", onLeave);
         });
       });
+
+      ScrollTrigger.refresh();
     }, root);
 
     return () => {
-      cleanupFns.forEach((cleanup) => cleanup());
+      cleanupFns.forEach((fn) => fn());
       ctx.revert();
     };
   }, [languageReady]);
 
-  const filteredServices = useMemo(
-    () => services.filter((service) => serviceFilter === "all" || service.category === serviceFilter),
-    [serviceFilter],
-  );
+  const filteredServices = useMemo(() => {
+    if (serviceFilter === "all") return services;
+    return services.filter((s) => s.category === serviceFilter);
+  }, [serviceFilter]);
 
   const selectedServiceTitle = t(services.find((service) => service.id === selectedService)?.title ?? services[0].title);
   const selectedSmileConcern = smileConcerns.find((concern) => concern.id === smileConcern) ?? smileConcerns[0];
@@ -794,7 +803,7 @@ export function ArcadeDentalSite() {
               {t(heroCopy.title)
                 .split(" ")
                 .map((word, i) => (
-                  <span key={`${word}-${i}`} className="hero-title-word inline-block pr-[0.22em] text-5xl md:text-6xl lg:text-7xl">
+                  <span key={i} className="hero-title-word inline-block pr-[0.22em] text-5xl md:text-6xl lg:text-7xl">
                     {word}
                   </span>
                 ))}
