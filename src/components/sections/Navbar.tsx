@@ -131,27 +131,24 @@ function Dropdown({ item, isActive, solid }: DropdownProps) {
         {item.label[lang]}
         <Icon
           name="chevron"
-          className={`h-3.5 w-3.5 transition-transform duration-200 ${open ? "rotate-90" : "-rotate-90"}`}
+          className={`h-3.5 w-3.5 transition-transform duration-200 ${open ? "-rotate-90" : "rotate-90"}`}
         />
       </button>
 
       {open && (
-        <div className="absolute left-1/2 top-full mt-2 w-64 -translate-x-1/2 overflow-hidden rounded-2xl border border-primary/10 bg-white shadow-2xl shadow-primary/15 ring-1 ring-primary/5">
-          <div className="p-2">
-            {item.children!.map((child) => (
+        <div className="absolute left-1/2 top-full mt-2 w-52 -translate-x-1/2 overflow-hidden rounded-xl border border-primary/10 bg-white shadow-xl shadow-primary/12">
+          <div className="py-1.5">
+            {item.children!.map((child, idx) => (
               <a
                 key={child.href}
                 href={child.href}
                 onClick={() => setOpen(false)}
-                className="group flex items-start gap-3 rounded-xl px-3 py-3 transition-all hover:bg-surface-2"
+                className={`flex flex-col px-4 py-2.5 transition-colors hover:bg-surface-2 ${
+                  idx !== 0 ? "border-t border-primary/6" : ""
+                }`}
               >
-                <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-highlight text-cta transition-colors group-hover:bg-cta group-hover:text-white">
-                  <Icon name="spark" className="h-4 w-4" />
-                </span>
-                <span>
-                  <span className="block text-sm font-bold text-primary">{child.label[lang]}</span>
-                  <span className="mt-0.5 block text-xs leading-4 text-secondary">{child.desc[lang]}</span>
-                </span>
+                <span className="text-sm font-bold text-primary">{child.label[lang]}</span>
+                <span className="mt-0.5 text-xs text-secondary">{child.desc[lang]}</span>
               </a>
             ))}
           </div>
