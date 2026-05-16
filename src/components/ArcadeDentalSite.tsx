@@ -440,6 +440,7 @@ function getInitials(name: string) {
 
 export function ArcadeDentalSite() {
   const [lang, setLang] = useState<Language>("id");
+  const [languageReady, setLanguageReady] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showFloating, setShowFloating] = useState(false);
   const [serviceFilter, setServiceFilter] = useState<ServiceCategory>("all");
@@ -469,15 +470,20 @@ export function ArcadeDentalSite() {
   const c = copy[lang];
 
   useEffect(() => {
-    const stored = window.localStorage.getItem("arcade-dental-language");
-    if (stored === "id" || stored === "en") {
-      window.requestAnimationFrame(() => setLang(stored));
-    }
+    const frame = window.requestAnimationFrame(() => {
+      const stored = window.localStorage.getItem("arcade-dental-language");
+      if (stored === "id" || stored === "en") {
+        setLang(stored);
+      }
+      setLanguageReady(true);
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   useEffect(() => {
+    if (!languageReady) return;
     window.localStorage.setItem("arcade-dental-language", lang);
-  }, [lang]);
+  }, [lang, languageReady]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -512,6 +518,8 @@ export function ArcadeDentalSite() {
   }, [preview]);
 
   useEffect(() => {
+    if (!languageReady) return;
+
     gsap.registerPlugin(ScrollTrigger);
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -519,7 +527,7 @@ export function ArcadeDentalSite() {
     if (!root) return;
 
     if (reduceMotion) {
-      gsap.set(root.querySelectorAll(".gs-word, .gs-sub, .gs-reveal, .gs-card, .gs-counter"), {
+      gsap.set(root.querySelectorAll(".gs-word, .gs-sub, .hero-title-word, .hero-chip, .gs-reveal, .gs-card, .gs-counter"), {
         clearProps: "all",
         opacity: 1,
       });
@@ -530,7 +538,7 @@ export function ArcadeDentalSite() {
     const ctx = gsap.context(() => {
       const heroTl = gsap.timeline({ defaults: { ease: "power3.out" } });
       heroTl
-        .fromTo(".gs-word", { opacity: 0, y: 46, rotateX: -16 }, { opacity: 1, y: 0, rotateX: 0, duration: 0.9, stagger: 0.08 })
+        .fromTo(".hero-title-word", { opacity: 0, y: 46, rotateX: -16 }, { opacity: 1, y: 0, rotateX: 0, duration: 0.9, stagger: 0.08 })
         .fromTo(".gs-sub", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.1 }, "-=0.35")
         .fromTo(".hero-chip", { opacity: 0, y: 18, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, stagger: 0.08 }, "-=0.35");
 
@@ -645,7 +653,7 @@ export function ArcadeDentalSite() {
       cleanupFns.forEach((cleanup) => cleanup());
       ctx.revert();
     };
-  }, []);
+  }, [languageReady]);
 
   const filteredServices = useMemo(
     () => services.filter((service) => serviceFilter === "all" || service.category === serviceFilter),
@@ -671,7 +679,11 @@ export function ArcadeDentalSite() {
       : `Hello Arcade Dental, I would like to consult for: ${t(selectedMatcher.label)}. ${t(selectedMatcher.result)}`;
 
   function toggleLanguage() {
-    setLang((current) => (current === "id" ? "en" : "id"));
+    setLang((current) => {
+      const next = current === "id" ? "en" : "id";
+      window.localStorage.setItem("arcade-dental-language", next);
+      return next;
+    });
   }
 
   function handleMatcherSelect(id: string, serviceId: string) {
@@ -691,7 +703,11 @@ export function ArcadeDentalSite() {
   }
 
   return (
-    <main ref={mainRef} className="min-h-screen bg-surface text-primary">
+    <main
+      ref={mainRef}
+      className="min-h-screen bg-surface text-primary"
+      style={{ visibility: languageReady ? "visible" : "hidden" }}
+    >
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
           scrolled ? "bg-white/90 shadow-lg shadow-primary/10 backdrop-blur-xl" : "bg-transparent"
@@ -704,8 +720,8 @@ export function ArcadeDentalSite() {
             </span>
             <span>
               <span className={`block font-display text-xl leading-none ${scrolled ? "text-primary" : "text-white"}`}>{business.name}</span>
-              <span className={`hidden text-[10px] font-bold uppercase tracking-[0.2em] md:block ${scrolled ? "text-secondary" : "text-white/58"}`}>
-                Premium Dental Care
+              <span className={`hidden text-[10px] font-bold uppercase tracking-[0.24em] md:block ${scrolled ? "text-secondary" : "text-white/58"}`}>
+                Bintaro - Spesialis
               </span>
             </span>
           </a>
@@ -725,6 +741,14 @@ export function ArcadeDentalSite() {
           </nav>
 
           <div className="flex items-center gap-2">
+            <span
+              className={`hidden min-h-11 items-center gap-2 rounded-full border px-4 text-xs font-bold shadow-sm backdrop-blur md:inline-flex ${
+                scrolled ? "border-primary/10 bg-white text-primary" : "border-white/20 bg-white/10 text-white"
+              }`}
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-gold" />
+              {t(heroCopy.status)}
+            </span>
             <button
               type="button"
               onClick={toggleLanguage}
@@ -755,22 +779,22 @@ export function ArcadeDentalSite() {
           loop
           muted
           playsInline
-          preload="metadata"
+          preload="auto"
         >
           <source src="/assets/herovideo.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-primary/78 md:bg-primary/48" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(13,21,32,0.92)_0%,rgba(13,21,32,0.76)_38%,rgba(13,21,32,0.42)_68%,rgba(13,21,32,0.62)_100%)]" />
+        <div className="absolute inset-0 bg-primary/58 md:bg-primary/22" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(13,21,32,0.84)_0%,rgba(13,21,32,0.58)_37%,rgba(13,21,32,0.14)_68%,rgba(13,21,32,0.28)_100%)]" />
         <div className="pointer-events-none absolute inset-0 mix-blend-soft-light [background:radial-gradient(circle_at_18%_42%,rgba(200,169,110,0.34),transparent_34%),radial-gradient(circle_at_78%_22%,rgba(232,244,240,0.16),transparent_35%)]" />
 
         <div className="relative z-10 mx-auto flex min-h-[calc(92vh-5rem)] max-w-7xl items-center px-5 pb-16 pt-8 md:px-8 lg:pb-20 lg:pt-12">
           <div ref={heroTextRef} className="max-w-3xl" style={{ perspective: "900px" }}>
-            <p className="gs-word eyebrow text-gold">{t(heroCopy.eyebrow)}</p>
+            <p className="gs-sub eyebrow text-gold">{t(heroCopy.eyebrow)}</p>
             <h1 className="mt-3 max-w-3xl font-display leading-[0.96] text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.32)]">
               {t(heroCopy.title)
                 .split(" ")
                 .map((word, i) => (
-                  <span key={`${word}-${i}`} className="gs-word inline-block pr-[0.22em] text-5xl md:text-6xl lg:text-7xl">
+                  <span key={`${word}-${i}`} className="hero-title-word inline-block pr-[0.22em] text-5xl md:text-6xl lg:text-7xl">
                     {word}
                   </span>
                 ))}

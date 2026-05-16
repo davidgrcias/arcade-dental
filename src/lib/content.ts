@@ -83,7 +83,6 @@ export const siteAssets = {
 export const navItems = [
   { id: "about", label: { id: "Tentang", en: "About" } },
   { id: "services", label: { id: "Layanan", en: "Services" } },
-  { id: "journey", label: { id: "Journey", en: "Journey" } },
   { id: "technology", label: { id: "Teknologi", en: "Technology" } },
   { id: "doctors", label: { id: "Dokter", en: "Doctors" } },
   { id: "location", label: { id: "Lokasi", en: "Location" } },
