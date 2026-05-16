@@ -1,26 +1,350 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #faf8f5;
+  --foreground: #1a2332;
+  --primary: #1a2332;
+  --accent: #c8a96e;
+  --surface: #faf8f5;
+  --surface-2: #f0ece6;
+  --text-primary: #1a2332;
+  --text-secondary: #6b7280;
+  --highlight: #e8f4f0;
+  --cta: #2d7d6b;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: var(--primary);
+  --color-gold: var(--accent);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-secondary: var(--text-secondary);
+  --color-highlight: var(--highlight);
+  --color-cta: var(--cta);
+  --color-mint: var(--highlight);
+  --font-sans: var(--font-dm-sans);
+  --font-display: var(--font-playfair);
+  --font-accent: var(--font-space-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 96px;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-dm-sans), Arial, Helvetica, sans-serif;
+  letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(200, 169, 110, 0.35);
+}
+
+/* ── GSAP animation defaults (hidden until GSAP reveals) ── */
+.gs-word,
+.gs-sub,
+.gs-about-item,
+.gs-stat,
+.gs-card,
+.gs-why,
+.gs-tech,
+.gs-doctor,
+.gs-testi,
+.gs-gallery,
+.gs-cta,
+.gs-heading {
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* Allow re-reveal on language toggle without flash */
+.gs-heading {
+  opacity: 1;
+}
+
+/* ── Sections ── */
+.section-shell {
+  padding: 5rem 0;
+}
+
+@media (min-width: 768px) {
+  .section-shell {
+    padding: 7rem 0;
+  }
+}
+
+/* ── Eyebrow label ── */
+.eyebrow {
+  margin-bottom: 0.9rem;
+  color: var(--cta);
+  font-family: var(--font-space-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+
+/* ── Icon button ── */
+.icon-button {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border: 1px solid rgba(26, 35, 50, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--primary);
+  padding: 0 0.9rem;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.icon-button:hover {
+  transform: translateY(-2px);
+  border-color: rgba(200, 169, 110, 0.8);
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(26, 35, 50, 0.08);
+}
+
+/* ── Service card ── */
+.reveal-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(26, 35, 50, 0.08);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.88);
+  padding: 1.6rem;
+  box-shadow: 0 4px 24px rgba(26, 35, 50, 0.05);
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 280ms ease,
+              box-shadow 280ms ease;
+}
+
+/* Gradient bar at bottom */
+.reveal-card::before {
+  position: absolute;
+  inset: auto 0 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--cta));
+  content: "";
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  border-radius: 0 0 1rem 1rem;
+}
+
+/* Shimmer overlay */
+.reveal-card::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(200, 169, 110, 0.06) 50%,
+    transparent 60%
+  );
+  content: "";
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.reveal-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(200, 169, 110, 0.6);
+  box-shadow: 0 16px 48px rgba(26, 35, 50, 0.1), 0 0 0 1px rgba(200, 169, 110, 0.15);
+}
+
+.reveal-card:hover::before {
+  transform: scaleX(1);
+}
+
+.reveal-card:hover::after {
+  transform: translateX(100%);
+}
+
+/* ── Doctor card ── */
+.doctor-card {
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 280ms ease,
+              box-shadow 280ms ease;
+}
+
+.doctor-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(200, 169, 110, 0.6);
+  box-shadow: 0 20px 48px rgba(26, 35, 50, 0.1);
+}
+
+/* ── Dental anatomy background decoration ── */
+.tooth-anatomy-bg {
+  position: absolute;
+  right: -9rem;
+  top: 4rem;
+  width: min(46rem, 82vw);
+  aspect-ratio: 1;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 48% 52% 44% 56%;
+  opacity: 0.22;
+}
+
+.tooth-anatomy-bg::before,
+.tooth-anatomy-bg::after {
+  position: absolute;
+  border: 1px solid rgba(200, 169, 110, 0.35);
+  border-radius: 50%;
+  content: "";
+}
+
+.tooth-anatomy-bg::before {
+  inset: 15%;
+}
+
+.tooth-anatomy-bg::after {
+  inset: 31%;
+  border-color: rgba(232, 244, 240, 0.45);
+}
+
+/* ── Quiz / form elements ── */
+.choice-button {
+  min-height: 2.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.875rem;
+  font-weight: 700;
+  transition: background 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.choice-button:hover {
+  transform: translateY(-1px);
+}
+
+.choice-active {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--primary);
+}
+
+/* ── Form inputs ── */
+.form-label {
+  display: block;
+  color: var(--primary);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.form-control {
+  margin-top: 0.5rem;
+  min-height: 3.25rem;
+  width: 100%;
+  border: 1.5px solid rgba(26, 35, 50, 0.1);
+  border-radius: 0.75rem;
+  background: #fafafa;
+  color: var(--primary);
+  outline: none;
+  padding: 0.85rem 1rem;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.form-control:focus {
+  border-color: var(--cta);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(45, 125, 107, 0.1);
+}
+
+/* ── Scrollbar ── */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Custom scrollbar for page ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(26, 35, 50, 0.2);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(200, 169, 110, 0.6);
+}
+
+/* ── Gallery image scale on hover ── */
+.group:hover .group-hover\:scale-108 {
+  transform: scale(1.08);
+}
+
+/* ── Hero image hover ── */
+.hover\:scale-105:hover {
+  transform: scale(1.05);
+}
+
+/* ── Pulse animation for status dot ── */
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(45, 125, 107, 0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(45, 125, 107, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(45, 125, 107, 0); }
+}
+
+/* ── Line animation ── */
+@keyframes line-grow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* ── Accessibility: reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .gs-word,
+  .gs-sub,
+  .gs-about-item,
+  .gs-stat,
+  .gs-card,
+  .gs-why,
+  .gs-tech,
+  .gs-doctor,
+  .gs-testi,
+  .gs-gallery,
+  .gs-cta {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }

@@ -1,0 +1,13 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#1A2332"/>
+  <circle cx="1020" cy="120" r="210" fill="#243148"/>
+  <circle cx="120" cy="590" r="260" fill="#243148"/>
+  <rect x="70" y="70" width="1060" height="490" rx="38" fill="#FAF8F5"/>
+  <path d="M755 162c64 0 114 50 114 114 0 96-70 109-70 200 0 48-20 88-44 88s-44-40-44-88c0-91-70-104-70-200 0-64 50-114 114-114Z" fill="#E8F4F0" stroke="#1A2332" stroke-width="14"/>
+  <path d="M235 235h312M235 318h240" stroke="#C8A96E" stroke-width="22" stroke-linecap="round"/>
+  <text x="235" y="188" fill="#1A2332" font-family="Georgia, serif" font-size="78" font-weight="700">Arcade Dental</text>
+  <text x="235" y="402" fill="#1A2332" font-family="Arial, sans-serif" font-size="34" font-weight="700">Klinik Gigi Spesialis - Bintaro</text>
+  <text x="235" y="455" fill="#6B7280" font-family="Arial, sans-serif" font-size="28">Teknologi painless, dokter ahli, rekanan BCA Life.</text>
+  <rect x="235" y="494" width="300" height="62" rx="31" fill="#2D7D6B"/>
+  <text x="274" y="535" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="24" font-weight="700">Buat Janji Sekarang</text>
+</svg>
