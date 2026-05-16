@@ -75,7 +75,8 @@ export function PlaceTour() {
     if (rail) {
       const thumb = rail.querySelector<HTMLElement>(`[data-tour-thumb="${active}"]`);
       if (thumb) {
-        thumb.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+        const target = thumb.offsetLeft - (rail.clientWidth - thumb.clientWidth) / 2;
+        rail.scrollTo({ left: Math.max(0, target), behavior: "smooth" });
       }
     }
   }, [active]);

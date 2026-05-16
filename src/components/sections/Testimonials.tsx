@@ -69,14 +69,14 @@ export function Testimonials({
     return () => cancelAnimationFrame(raf);
   }, [pausedCarousel, testimonialIndex, next]);
 
-  // Scroll active card into view in the rail
+  // Scroll active card into view in the rail (horizontal only, never the page)
   useEffect(() => {
     const rail = railRef.current;
     if (!rail) return;
     const card = rail.querySelector<HTMLElement>(`[data-tcard="${testimonialIndex}"]`);
-    if (card) {
-      card.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-    }
+    if (!card) return;
+    const target = card.offsetLeft - (rail.clientWidth - card.clientWidth) / 2;
+    rail.scrollTo({ left: Math.max(0, target), behavior: "smooth" });
   }, [testimonialIndex]);
 
   // Animate hero body when the active testimonial changes
