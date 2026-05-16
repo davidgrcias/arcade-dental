@@ -1,10 +1,10 @@
 "use client";
 
 import { useLanguage } from "@/context/LanguageContext";
-import { TranslationKey } from "@/lib/content";
+import type { LocalizedText } from "@/lib/content";
 
 interface StatCardProps {
-  label: TranslationKey;
+  label: LocalizedText;
   value: string;
 }
 

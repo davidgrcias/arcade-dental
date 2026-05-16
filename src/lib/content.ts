@@ -73,11 +73,18 @@ export const business = {
 };
 
 export const siteAssets = {
-  clinicInterior: "/assets/clinic-interior-premium.png",
-  techLab: "/assets/tech-lab-equipment.png",
-  careJourney: "/assets/care-journey-consult.png",
+  clinicExterior: "/assets/real/unnamed (1).webp",
+  clinicInterior: "/assets/real/unnamed.webp",
+  waitingLounge: "/assets/real/unnamed (7).webp",
+  consultationLounge: "/assets/real/unnamed (2).webp",
+  treatmentRoom: "/assets/real/20210914_202935.webp",
+  prepStation: "/assets/real/unnamed (4).webp",
+  careJourney: "/assets/real/unnamed (10).webp",
+  brandWall: "/assets/real/unnamed (8).webp",
+  calmCorner: "/assets/real/unnamed (5).webp",
   smileTransform: "/assets/smile-transform-preview.png",
-  techTexture: "/assets/dental-tech-texture.png",
+  techLab: "/assets/real/20210914_202935.webp",
+  techTexture: "/assets/real/unnamed (8).webp",
 };
 
 export const navItems = [
@@ -495,38 +502,103 @@ export const testimonials: Testimonial[] = [
   },
 ];
 
-export const gallery = [
+export type GalleryItem = {
+  src: string;
+  alt: LocalizedText;
+  label: LocalizedText;
+  focus?: string;
+};
+
+export const gallery: GalleryItem[] = [
   {
     src: siteAssets.clinicInterior,
     alt: {
-      id: "Area resepsionis premium Arcade Dental yang modern dan nyaman",
-      en: "Arcade Dental premium modern and comfortable reception area",
+      id: "Area resepsionis Arcade Dental yang modern dan rapi",
+      en: "Modern and polished Arcade Dental reception area",
     },
-    label: { id: "Premium reception", en: "Premium reception" },
+    label: { id: "Reception utama", en: "Main reception" },
+    focus: "center center",
   },
   {
-    src: siteAssets.techLab,
+    src: siteAssets.clinicExterior,
     alt: {
-      id: "Peralatan teknologi dental canggih di Arcade Dental",
-      en: "Advanced dental technology equipment at Arcade Dental",
+      id: "Fasad Arcade Dental di Bintaro",
+      en: "Arcade Dental facade in Bintaro",
     },
-    label: { id: "Tech lab", en: "Tech lab" },
+    label: { id: "Fasad klinik", en: "Clinic facade" },
+    focus: "center top",
+  },
+  {
+    src: siteAssets.waitingLounge,
+    alt: {
+      id: "Ruang tunggu Arcade Dental yang nyaman dan hangat",
+      en: "Warm and comfortable Arcade Dental waiting lounge",
+    },
+    label: { id: "Ruang tunggu", en: "Waiting lounge" },
+    focus: "center center",
+  },
+  {
+    src: siteAssets.treatmentRoom,
+    alt: {
+      id: "Ruang tindakan dengan dental unit dan peralatan Arcade Dental",
+      en: "Treatment room with Arcade Dental dental unit and equipment",
+    },
+    label: { id: "Ruang tindakan", en: "Treatment room" },
+    focus: "center center",
+  },
+  {
+    src: siteAssets.prepStation,
+    alt: {
+      id: "Area persiapan dan peralatan klinik Arcade Dental",
+      en: "Arcade Dental clinical prep and equipment area",
+    },
+    label: { id: "Prep station", en: "Prep station" },
+    focus: "center center",
+  },
+  {
+    src: siteAssets.consultationLounge,
+    alt: {
+      id: "Area konsultasi dan ruang tunggu privat Arcade Dental",
+      en: "Arcade Dental consultation and private waiting area",
+    },
+    label: { id: "Consult corner", en: "Consult corner" },
+    focus: "center center",
   },
   {
     src: siteAssets.careJourney,
     alt: {
-      id: "Momen konsultasi hangat dengan perencanaan perawatan dental",
-      en: "Warm consultation moment with dental care planning",
+      id: "Momen perawatan pasien bersama tim Arcade Dental",
+      en: "Patient care moment with the Arcade Dental team",
     },
-    label: { id: "Care journey", en: "Care journey" },
+    label: { id: "Care in progress", en: "Care in progress" },
+    focus: "center center",
   },
   {
-    src: siteAssets.smileTransform,
+    src: siteAssets.brandWall,
     alt: {
-      id: "Preview transformasi senyum untuk perawatan estetika",
-      en: "Smile transformation preview for aesthetic dental care",
+      id: "Logo Arcade Dental di interior klinik",
+      en: "Arcade Dental logo inside the clinic",
     },
-    label: { id: "Smile preview", en: "Smile preview" },
+    label: { id: "Brand wall", en: "Brand wall" },
+    focus: "center center",
+  },
+  {
+    src: siteAssets.calmCorner,
+    alt: {
+      id: "Sudut tunggu tenang di Arcade Dental",
+      en: "Calm waiting corner at Arcade Dental",
+    },
+    label: { id: "Calm corner", en: "Calm corner" },
+    focus: "center center",
+  },
+  {
+    src: "/assets/real/unnamed (9).webp",
+    alt: {
+      id: "Interior klinik Arcade Dental dengan area duduk keluarga",
+      en: "Arcade Dental clinic interior with family seating",
+    },
+    label: { id: "Family lounge", en: "Family lounge" },
+    focus: "center center",
   },
 ];
 

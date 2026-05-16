@@ -1,11 +1,11 @@
 "use client";
 
 import { useLanguage } from "@/context/LanguageContext";
-import { TranslationKey } from "@/lib/content";
+import type { LocalizedText } from "@/lib/content";
 
 interface WhyUsCardProps {
-  title: TranslationKey;
-  description: TranslationKey;
+  title: LocalizedText;
+  description: LocalizedText;
   index: number;
 }
 

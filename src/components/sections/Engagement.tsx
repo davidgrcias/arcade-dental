@@ -1,5 +1,7 @@
 "use client";
 
+import type { LocalizedText } from "@/lib/content";
+
 // Sub-components
 import { FearMeter } from "./engagement/FearMeter";
 import { SmileAnalyzer } from "./engagement/SmileAnalyzer";
@@ -18,7 +20,11 @@ interface EngagementProps {
   handlePreview: (file: File | undefined) => void;
   smileConcern: string;
   setSmileConcern: (val: string) => void;
-  selectedSmileConcern: any;
+  selectedSmileConcern: {
+    id: string;
+    label: LocalizedText;
+    result: LocalizedText;
+  };
   sliderValue: number;
   setSliderValue: (val: number) => void;
 }
@@ -70,4 +76,3 @@ export default function Engagement({
     </section>
   );
 }
-

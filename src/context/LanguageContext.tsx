@@ -49,7 +49,7 @@ export const copy = {
     galleryLabel: "Galeri",
     galleryTitle: "Klinik premium yang tetap terasa hangat.",
     galleryBody:
-      "Asset dummy lokal ini menjaga visual tetap konsisten tanpa bergantung pada URL eksternal.",
+      "Lihat suasana asli Arcade Dental: fasad klinik, reception, ruang tunggu, ruang tindakan, dan momen perawatan pasien.",
     insuranceLabel: "Asuransi",
     insuranceTitle: "Rekanan resmi BCA Life.",
     insuranceBody:
@@ -135,7 +135,7 @@ export const copy = {
     galleryLabel: "Gallery",
     galleryTitle: "A premium clinic that still feels warm.",
     galleryBody:
-      "Local dummy assets keep the visual direction consistent without relying on external URLs.",
+      "Explore the real Arcade Dental atmosphere: clinic facade, reception, waiting lounge, treatment rooms, and patient care moments.",
     insuranceLabel: "Insurance",
     insuranceTitle: "Official BCA Life provider.",
     insuranceBody:

@@ -10,6 +10,7 @@ export function HeroVisuals() {
         loop
         muted
         playsInline
+        poster="/assets/real/unnamed.webp"
         preload="auto"
       >
         <source src="/assets/herovideo.mp4" type="video/mp4" />

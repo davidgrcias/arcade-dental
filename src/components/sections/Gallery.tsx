@@ -17,13 +17,11 @@ export function Gallery({ setGalleryIndex }: GalleryProps) {
     <section id="gallery" className="section-shell overflow-hidden">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <SectionHeading eyebrow={c.galleryLabel} title={c.galleryTitle} body={c.galleryBody} />
-        <div className="grid gap-4 md:grid-cols-4">
+        <div className="grid auto-rows-[260px] gap-4 md:grid-cols-4">
           {gallery.map((item, index) => (
             <GalleryCard
               key={item.src}
-              src={item.src}
-              alt={item.alt}
-              label={item.label}
+              item={item}
               index={index}
               onClick={() => setGalleryIndex(index)}
             />
@@ -34,4 +32,3 @@ export function Gallery({ setGalleryIndex }: GalleryProps) {
     </section>
   );
 }
-

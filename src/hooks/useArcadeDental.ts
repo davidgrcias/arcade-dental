@@ -5,12 +5,13 @@ import {
   services,
   treatmentMatcher,
   smileConcerns,
+  type ServiceCategory,
 } from "@/lib/content";
 import { useLanguage } from "@/context/LanguageContext";
 
 export function useArcadeDental() {
   const { lang, t, c, languageReady } = useLanguage();
-  const [serviceFilter, setServiceFilter] = useState<any>("all");
+  const [serviceFilter, setServiceFilter] = useState<ServiceCategory>("all");
   const [selectedService, setSelectedService] = useState(services[0].id);
   const [matcherId, setMatcherId] = useState(treatmentMatcher[0].id);
   const [patientName, setPatientName] = useState("");
@@ -108,4 +109,3 @@ export function useArcadeDental() {
     languageReady,
   };
 }
-

@@ -1,7 +1,7 @@
 "use client";
 
 import { Icon } from "@/components/ui/Icon";
-import { smileConcerns } from "@/lib/content";
+import { smileConcerns, type LocalizedText } from "@/lib/content";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface SmileAnalyzerProps {
@@ -9,7 +9,11 @@ interface SmileAnalyzerProps {
   handlePreview: (file: File | undefined) => void;
   smileConcern: string;
   setSmileConcern: (val: string) => void;
-  selectedSmileConcern: any;
+  selectedSmileConcern: {
+    id: string;
+    label: LocalizedText;
+    result: LocalizedText;
+  };
 }
 
 export function SmileAnalyzer({

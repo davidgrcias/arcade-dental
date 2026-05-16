@@ -29,7 +29,7 @@ import Engagement from "./sections/Engagement";
 
 export function ArcadeDentalSite() {
   const { state, actions, languageReady } = useArcadeDental();
-  const { c, t, lang } = useLanguage();
+  const { c, t } = useLanguage();
   const mainRef = useRef<HTMLElement>(null);
   const ctaRef = useRef<HTMLElement | null>(null);
 
@@ -178,4 +178,3 @@ export function ArcadeDentalSite() {
     </main>
   );
 }
-

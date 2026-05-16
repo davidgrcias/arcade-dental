@@ -2,12 +2,12 @@
 
 import { useLanguage } from "@/context/LanguageContext";
 import { getInitials } from "@/lib/utils";
-import { TranslationKey } from "@/lib/content";
+import type { LocalizedText } from "@/lib/content";
 
 interface DoctorCardProps {
   name: string;
-  role: TranslationKey;
-  availability: TranslationKey;
+  role: LocalizedText;
+  availability: LocalizedText;
   index: number;
 }
 

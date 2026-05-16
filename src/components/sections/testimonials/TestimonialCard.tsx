@@ -2,12 +2,10 @@
 
 import { Icon } from "@/components/ui/Icon";
 import { useLanguage } from "@/context/LanguageContext";
+import type { Testimonial } from "@/lib/content";
 
 interface TestimonialCardProps {
-  testimonial: {
-    name: string;
-    quote: any;
-  };
+  testimonial: Testimonial;
   isActive: boolean;
 }
 

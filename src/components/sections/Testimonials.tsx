@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, type Dispatch, type SetStateAction } from "react";
 import { testimonials } from "@/lib/content";
 import { useLanguage } from "@/context/LanguageContext";
 import { Icon } from "@/components/ui/Icon";
@@ -7,7 +7,7 @@ import { TestimonialCard } from "./testimonials/TestimonialCard";
 
 interface TestimonialsProps {
   testimonialIndex: number;
-  setTestimonialIndex: (index: number) => void;
+  setTestimonialIndex: Dispatch<SetStateAction<number>>;
   pausedCarousel: boolean;
   setPausedCarousel: (paused: boolean) => void;
 }
