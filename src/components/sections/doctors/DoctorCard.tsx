@@ -46,7 +46,7 @@ export function DoctorCard({ doctor, index, onOpen }: DoctorCardProps) {
 
   return (
     <article
-      className="gs-card doctor-card group relative flex h-full flex-col overflow-hidden rounded-xl border border-primary/8 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-gold/50 hover:shadow-xl"
+      className="doctor-card group relative flex h-full flex-col overflow-hidden rounded-xl border border-primary/8 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-gold/50 hover:shadow-xl"
     >
       {/* Top accent bar */}
       <span

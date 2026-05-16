@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import gsap from "gsap";
 import { doctors, type Doctor, type DoctorCategory } from "@/lib/content";
 import { useLanguage } from "@/context/LanguageContext";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -20,6 +21,7 @@ export function Doctors() {
   const { c, lang } = useLanguage();
   const [filter, setFilter] = useState<Filter>("all");
   const [selected, setSelected] = useState<Doctor | null>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   const stats = useMemo(() => {
     const specialistCount = doctors.filter((d) => d.category === "specialist").length;
@@ -63,6 +65,38 @@ export function Doctors() {
     }),
     [],
   );
+
+  // Animate cards in on mount and whenever the filter changes
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
+    const cards = grid.querySelectorAll<HTMLElement>(".doctor-card");
+    if (!cards.length) return;
+
+    const reduceMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (reduceMotion) {
+      gsap.set(cards, { opacity: 1, y: 0, scale: 1, clearProps: "all" });
+      return;
+    }
+
+    gsap.fromTo(
+      cards,
+      { opacity: 0, y: 20, scale: 0.97 },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.55,
+        ease: "power2.out",
+        stagger: 0.06,
+        overwrite: true,
+        clearProps: "transform,opacity",
+      },
+    );
+  }, [filter]);
 
   return (
     <section id="doctors" className="section-shell">
@@ -127,8 +161,8 @@ export function Doctors() {
         </div>
 
         {/* Cards */}
-        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filtered.map((doctor, index) => (
+        <div ref={gridRef} className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filtered.map((doctor) => (
             <DoctorCard
               key={doctor.id}
               doctor={doctor}
