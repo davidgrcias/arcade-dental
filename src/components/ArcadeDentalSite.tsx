@@ -8,16 +8,20 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { FormEvent, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import {
   business,
+  careJourney,
   doctors,
   gallery,
   heroCopy,
   navItems,
   services,
   serviceCategories,
+  siteAssets,
   smileConcerns,
   stats,
+  techMetrics,
   technologies,
   testimonials,
+  treatmentMatcher,
   trustBadges,
   whyUs,
   type Language,
@@ -48,7 +52,10 @@ type IconName =
   | "language"
   | "heart"
   | "phone"
-  | "arrow";
+  | "arrow"
+  | "check"
+  | "clock"
+  | "scan";
 
 const copy = {
   id: {
@@ -62,12 +69,21 @@ const copy = {
     servicesTitle: "Solusi lengkap untuk setiap kebutuhan senyum.",
     servicesBody:
       "Dari penyembuhan, perbaikan, hingga estetika, pilih kategori yang paling relevan untuk kebutuhan Anda.",
+    matcherLabel: "Treatment Matcher",
+    matcherTitle: "Pilih tujuan senyum, kami arahkan jalurnya.",
+    matcherBody:
+      "Matcher ini bukan diagnosis medis, tetapi membantu membuat konsultasi awal lebih fokus.",
+    matcherCta: "Konsultasikan jalur ini",
+    journeyLabel: "Signature Care Journey",
+    journeyTitle: "Setiap kunjungan punya ritme yang jelas.",
+    journeyBody:
+      "Dari rasa cemas pertama sampai kontrol lanjutan, pengalaman dirancang agar pasien tahu apa yang sedang terjadi dan apa langkah berikutnya.",
     whyLabel: "Mengapa Arcade Dental",
     whyTitle: "Perawatan dibuat lebih tenang, jelas, dan personal.",
-    techLabel: "Teknologi",
-    techTitle: "5 teknologi mutakhir untuk perawatan yang lebih nyaman.",
+    techLabel: "Tech Lab",
+    techTitle: "Teknologi klinik dibuat terasa mudah dipahami.",
     techBody:
-      "Teknologi terdepan yang membantu dokter memberikan hasil terbaik dengan rasa sakit minimal.",
+      "Perangkat modern membantu dokter membaca detail, menjaga sterilisasi, dan menyusun tindakan yang lebih presisi.",
     doctorsLabel: "Tim Dokter",
     doctorsTitle: "Didampingi dokter ahli di bidangnya.",
     doctorsBody:
@@ -75,9 +91,9 @@ const copy = {
     testimonialsLabel: "Testimoni",
     testimonialsTitle: "Cerita pasien yang sudah merasakan perawatan.",
     galleryLabel: "Galeri",
-    galleryTitle: "Kunjungan yang terasa lebih hangat.",
+    galleryTitle: "Klinik premium yang tetap terasa hangat.",
     galleryBody:
-      "Fasilitas modern dan ramah pasien untuk pengalaman dental yang nyaman.",
+      "Asset dummy lokal ini menjaga visual tetap konsisten tanpa bergantung pada URL eksternal.",
     insuranceLabel: "Asuransi",
     insuranceTitle: "Rekanan resmi BCA Life.",
     insuranceBody:
@@ -115,8 +131,8 @@ const copy = {
       "Bukan diagnosis medis. Rekomendasi ini hanya arahan awal dan harus dikonsultasikan dengan dokter Arcade Dental.",
     concernLabel: "Fokus perhatian",
     chooseFile: "Pilih foto",
-    beforeAfterLabel: "Before / After",
-    beforeAfterTitle: "Preview hasil estetika.",
+    beforeAfterLabel: "Smile Preview",
+    beforeAfterTitle: "Preview transformasi estetika.",
     before: "Sebelum",
     after: "Sesudah",
     finalTitle: "Siap untuk Senyummu yang Terbaik?",
@@ -137,12 +153,21 @@ const copy = {
     servicesTitle: "Complete solutions for every smile need.",
     servicesBody:
       "From healing and restoration to aesthetics, choose the category that best matches your needs.",
+    matcherLabel: "Treatment Matcher",
+    matcherTitle: "Choose your smile goal, we map the path.",
+    matcherBody:
+      "This matcher is not a medical diagnosis, but it helps make the first consultation more focused.",
+    matcherCta: "Consult this path",
+    journeyLabel: "Signature Care Journey",
+    journeyTitle: "Every visit has a clear rhythm.",
+    journeyBody:
+      "From first anxiety to aftercare, the experience is designed so patients understand what is happening and what comes next.",
     whyLabel: "Why Arcade Dental",
     whyTitle: "Care designed to feel calmer, clearer, and personal.",
-    techLabel: "Technology",
-    techTitle: "5 modern technologies for more comfortable care.",
+    techLabel: "Tech Lab",
+    techTitle: "Clinic technology made easier to understand.",
     techBody:
-      "Leading technology that helps our doctors deliver the best results with minimal discomfort.",
+      "Modern devices help doctors read details, maintain sterilization, and plan more precise treatment.",
     doctorsLabel: "Doctor Team",
     doctorsTitle: "Guided by doctors in their respective fields.",
     doctorsBody:
@@ -150,9 +175,9 @@ const copy = {
     testimonialsLabel: "Testimonials",
     testimonialsTitle: "Patient stories from real care experiences.",
     galleryLabel: "Gallery",
-    galleryTitle: "A warmer dental visit awaits.",
+    galleryTitle: "A premium clinic that still feels warm.",
     galleryBody:
-      "Modern, patient-friendly facilities for a comfortable dental experience.",
+      "Local dummy assets keep the visual direction consistent without relying on external URLs.",
     insuranceLabel: "Insurance",
     insuranceTitle: "Official BCA Life provider.",
     insuranceBody:
@@ -190,8 +215,8 @@ const copy = {
       "Not a medical diagnosis. This recommendation is only early guidance and must be discussed with an Arcade Dental doctor.",
     concernLabel: "Focus area",
     chooseFile: "Choose photo",
-    beforeAfterLabel: "Before / After",
-    beforeAfterTitle: "Aesthetic preview.",
+    beforeAfterLabel: "Smile Preview",
+    beforeAfterTitle: "Aesthetic transformation preview.",
     before: "Before",
     after: "After",
     finalTitle: "Ready for Your Best Smile?",
@@ -202,6 +227,16 @@ const copy = {
     close: "Close",
   },
 } satisfies Record<Language, Record<string, string>>;
+
+const doctorColors = [
+  { bg: "from-emerald-100 to-teal-200", text: "text-teal-800" },
+  { bg: "from-violet-100 to-purple-200", text: "text-purple-800" },
+  { bg: "from-amber-100 to-yellow-200", text: "text-amber-800" },
+  { bg: "from-sky-100 to-blue-200", text: "text-blue-800" },
+  { bg: "from-rose-100 to-pink-200", text: "text-rose-800" },
+  { bg: "from-lime-100 to-green-200", text: "text-green-800" },
+  { bg: "from-orange-100 to-red-100", text: "text-orange-800" },
+];
 
 function Icon({ name, className = "" }: { name: IconName; className?: string }) {
   const paths: Record<IconName, ReactNode> = {
@@ -303,15 +338,9 @@ function Icon({ name, className = "" }: { name: IconName; className?: string }) 
         <path d="M16.5 7.5h.01" />
       </>
     ),
-    facebook: (
-      <>
-        <path d="M14 8h3V4h-3c-3 0-5 2-5 5v3H6v4h3v5h4v-5h3l1-4h-4V9c0-.6.4-1 1-1Z" />
-      </>
-    ),
+    facebook: <path d="M14 8h3V4h-3c-3 0-5 2-5 5v3H6v4h3v5h4v-5h3l1-4h-4V9c0-.6.4-1 1-1Z" />,
     chevron: <path d="m9 18 6-6-6-6" />,
-    star: (
-      <path d="m12 3 2.5 5 5.5.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.5-.8L12 3Z" />
-    ),
+    star: <path d="m12 3 2.5 5 5.5.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.5-.8L12 3Z" />,
     upload: (
       <>
         <path d="M12 16V4" />
@@ -326,16 +355,30 @@ function Icon({ name, className = "" }: { name: IconName; className?: string }) 
         <path d="M14 21l4-9 4 9M15.5 18h5" />
       </>
     ),
-    heart: (
-      <path d="M20 8.5c0 5.5-8 10.5-8 10.5S4 14 4 8.5A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 8 2.5Z" />
-    ),
-    phone: (
-      <path d="M6.5 4h4l1.5 4-2.5 1.5a12 12 0 0 0 5 5L16 12l4 1.5v4c0 1-1 2-2 2C10 19.5 4.5 14 4.5 6c0-1 1-2 2-2Z" />
-    ),
+    heart: <path d="M20 8.5c0 5.5-8 10.5-8 10.5S4 14 4 8.5A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 8 2.5Z" />,
+    phone: <path d="M6.5 4h4l1.5 4-2.5 1.5a12 12 0 0 0 5 5L16 12l4 1.5v4c0 1-1 2-2 2C10 19.5 4.5 14 4.5 6c0-1 1-2 2-2Z" />,
     arrow: (
       <>
         <path d="M5 12h14" />
         <path d="m12 5 7 7-7 7" />
+      </>
+    ),
+    check: (
+      <>
+        <path d="M20 6 9 17l-5-5" />
+      </>
+    ),
+    clock: (
+      <>
+        <circle cx="12" cy="12" r="8" />
+        <path d="M12 8v5l3 2" />
+      </>
+    ),
+    scan: (
+      <>
+        <path d="M7 4H5a1 1 0 0 0-1 1v2M17 4h2a1 1 0 0 1 1 1v2M7 20H5a1 1 0 0 1-1-1v-2M17 20h2a1 1 0 0 0 1-1v-2" />
+        <path d="M7 12h10" />
+        <path d="M9 9h6M9 15h6" />
       </>
     ),
   };
@@ -370,12 +413,14 @@ function SectionHeading({
   align?: "center" | "left";
 }) {
   return (
-    <div className={`gs-heading mb-12 max-w-3xl ${align === "center" ? "mx-auto text-center" : ""}`}>
+    <div className={`gs-reveal mb-12 max-w-3xl ${align === "center" ? "mx-auto text-center" : ""}`}>
       <p className={`eyebrow ${dark ? "text-gold" : ""}`}>{eyebrow}</p>
       <h2 className={`font-display text-4xl leading-tight md:text-5xl ${dark ? "text-white" : "text-primary"}`}>
         {title}
       </h2>
-      {body ? <p className={`mt-4 text-base leading-7 ${dark ? "text-white/70" : "text-secondary"}`}>{body}</p> : null}
+      {body ? (
+        <p className={`mt-4 text-base leading-7 ${dark ? "text-white/70" : "text-secondary"}`}>{body}</p>
+      ) : null}
     </div>
   );
 }
@@ -384,16 +429,14 @@ function buildWhatsAppUrl(message: string) {
   return `https://wa.me/${business.whatsapp}?text=${encodeURIComponent(message)}`;
 }
 
-/* ─── Doctor Avatar Colors ─── */
-const doctorColors = [
-  { bg: "from-emerald-100 to-teal-200", text: "text-teal-800" },
-  { bg: "from-violet-100 to-purple-200", text: "text-purple-800" },
-  { bg: "from-amber-100 to-yellow-200", text: "text-amber-800" },
-  { bg: "from-sky-100 to-blue-200", text: "text-blue-800" },
-  { bg: "from-rose-100 to-pink-200", text: "text-rose-800" },
-  { bg: "from-lime-100 to-green-200", text: "text-green-800" },
-  { bg: "from-orange-100 to-red-100", text: "text-orange-800" },
-];
+function getInitials(name: string) {
+  return name
+    .split(" ")
+    .filter((word) => word !== "drg.")
+    .slice(0, 2)
+    .map((word) => word[0])
+    .join("");
+}
 
 export function ArcadeDentalSite() {
   const [lang, setLang] = useState<Language>("id");
@@ -401,6 +444,9 @@ export function ArcadeDentalSite() {
   const [showFloating, setShowFloating] = useState(false);
   const [serviceFilter, setServiceFilter] = useState<ServiceCategory>("all");
   const [selectedService, setSelectedService] = useState(services[0].id);
+  const [matcherId, setMatcherId] = useState(treatmentMatcher[0].id);
+  const [activeJourney, setActiveJourney] = useState(0);
+  const [activeTech, setActiveTech] = useState(0);
   const [patientName, setPatientName] = useState("");
   const [schedule, setSchedule] = useState("");
   const [quizFear, setQuizFear] = useState(3);
@@ -413,22 +459,15 @@ export function ArcadeDentalSite() {
   const [smileConcern, setSmileConcern] = useState(smileConcerns[0].id);
   const [preview, setPreview] = useState<string | null>(null);
 
-  /* ── GSAP refs ── */
+  const mainRef = useRef<HTMLElement>(null);
   const heroRef = useRef<HTMLElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
-  const aboutRef = useRef<HTMLElement>(null);
-  const servicesRef = useRef<HTMLElement>(null);
-  const whyRef = useRef<HTMLElement>(null);
-  const techRef = useRef<HTMLElement>(null);
-  const doctorsRef = useRef<HTMLElement>(null);
-  const testimonialsRef = useRef<HTMLElement>(null);
-  const galleryRef = useRef<HTMLElement>(null);
+  const journeyRef = useRef<HTMLElement>(null);
   const ctaRef = useRef<HTMLElement>(null);
 
   const t = (localized: LocalizedText) => localized[lang];
   const c = copy[lang];
 
-  /* ── Persist language ── */
   useEffect(() => {
     const stored = window.localStorage.getItem("arcade-dental-language");
     if (stored === "id" || stored === "en") {
@@ -440,18 +479,16 @@ export function ArcadeDentalSite() {
     window.localStorage.setItem("arcade-dental-language", lang);
   }, [lang]);
 
-  /* ── Scroll listener ── */
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 24);
-      setShowFloating(window.scrollY > 300);
+      setShowFloating(window.scrollY > 380);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  /* ── Testimonial auto-advance ── */
   useEffect(() => {
     if (pausedCarousel) return;
     const timer = window.setInterval(() => {
@@ -460,7 +497,6 @@ export function ArcadeDentalSite() {
     return () => window.clearInterval(timer);
   }, [pausedCarousel]);
 
-  /* ── Gallery keyboard close ── */
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") setGalleryIndex(null);
@@ -469,158 +505,148 @@ export function ArcadeDentalSite() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  /* ── Preview cleanup ── */
   useEffect(() => {
     return () => {
       if (preview) URL.revokeObjectURL(preview);
     };
   }, [preview]);
 
-  /* ────────────────────────────────────────────
-     GSAP Animations
-  ──────────────────────────────────────────── */
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const root = mainRef.current;
+    if (!root) return;
+
+    if (reduceMotion) {
+      gsap.set(root.querySelectorAll(".gs-word, .gs-sub, .gs-reveal, .gs-card, .gs-counter"), {
+        clearProps: "all",
+        opacity: 1,
+      });
+      return;
+    }
+
+    const cleanupFns: Array<() => void> = [];
     const ctx = gsap.context(() => {
-      /* ── Hero text stagger ── */
-      if (heroTextRef.current) {
-        const words = heroTextRef.current.querySelectorAll(".gs-word");
-        gsap.fromTo(
-          words,
-          { opacity: 0, y: 40, rotateX: -12 },
-          {
+      const heroTl = gsap.timeline({ defaults: { ease: "power3.out" } });
+      heroTl
+        .fromTo(".gs-word", { opacity: 0, y: 46, rotateX: -16 }, { opacity: 1, y: 0, rotateX: 0, duration: 0.9, stagger: 0.08 })
+        .fromTo(".gs-sub", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.1 }, "-=0.35")
+        .fromTo(".hero-chip", { opacity: 0, y: 18, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, stagger: 0.08 }, "-=0.35");
+
+      ScrollTrigger.batch(".gs-reveal, .gs-card", {
+        start: "top 84%",
+        once: true,
+        onEnter: (batch) => {
+          gsap.to(batch, {
             opacity: 1,
             y: 0,
+            scale: 1,
             rotateX: 0,
-            duration: 0.9,
-            stagger: 0.12,
-            ease: "power3.out",
-            delay: 0.3,
-          }
-        );
-        const sub = heroTextRef.current.querySelectorAll(".gs-sub");
+            duration: 0.72,
+            stagger: 0.07,
+            ease: "power2.out",
+          });
+        },
+      });
+
+      root.querySelectorAll<HTMLElement>(".gs-counter").forEach((element) => {
+        const target = Number(element.dataset.count ?? "0");
+        const suffix = element.dataset.suffix ?? "";
         gsap.fromTo(
-          sub,
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: 0.7, stagger: 0.1, ease: "power2.out", delay: 0.8 }
+          element,
+          { innerText: "0" },
+          {
+            innerText: target,
+            duration: 1.25,
+            snap: { innerText: 1 },
+            ease: "power2.out",
+            onUpdate() {
+              element.textContent = `${Math.round(Number(element.innerText))}${suffix}`;
+            },
+            scrollTrigger: {
+              trigger: element,
+              start: "top 88%",
+              once: true,
+            },
+          },
         );
+      });
+
+      if (journeyRef.current && window.innerWidth >= 1024) {
+        const progress = root.querySelector<HTMLElement>(".journey-progress-bar");
+        ScrollTrigger.create({
+          trigger: journeyRef.current,
+          start: "top top",
+          end: () => `+=${window.innerHeight * 2.6}`,
+          pin: ".journey-pin",
+          scrub: 0.35,
+          onUpdate(self) {
+            const index = Math.min(careJourney.length - 1, Math.floor(self.progress * careJourney.length));
+            setActiveJourney(index);
+            if (progress) {
+              gsap.to(progress, { scaleX: self.progress, duration: 0.12, overwrite: true, ease: "none" });
+            }
+          },
+        });
+
+        gsap.to(".journey-image", {
+          yPercent: -10,
+          ease: "none",
+          scrollTrigger: {
+            trigger: journeyRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      } else {
+        gsap.set(".journey-progress-bar", { scaleX: 1 });
       }
-      /* ── About section ── */
-      ScrollTrigger.create({
-        trigger: aboutRef.current,
-        start: "top 82%",
-        onEnter: () => {
-          gsap.fromTo(
-            aboutRef.current!.querySelectorAll(".gs-about-item"),
-            { opacity: 0, y: 36 },
-            { opacity: 1, y: 0, duration: 0.7, stagger: 0.12, ease: "power2.out" }
-          );
-          gsap.fromTo(
-            aboutRef.current!.querySelectorAll(".gs-stat"),
-            { opacity: 0, y: 24, scale: 0.94 },
-            { opacity: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.1, ease: "back.out(1.5)", delay: 0.3 }
-          );
-        },
+
+      gsap.to(".tech-diagnostic-line", {
+        xPercent: 120,
+        repeat: -1,
+        duration: 3.6,
+        ease: "power1.inOut",
+        yoyo: true,
       });
 
-      /* ── Services cards ── */
-      ScrollTrigger.create({
-        trigger: servicesRef.current,
-        start: "top 80%",
-        onEnter: () => {
-          gsap.fromTo(
-            servicesRef.current!.querySelectorAll(".gs-card"),
-            { opacity: 0, y: 40, scale: 0.96 },
-            { opacity: 1, y: 0, scale: 1, duration: 0.65, stagger: 0.07, ease: "power2.out" }
-          );
-        },
+      gsap.to(".gallery-marquee-track", {
+        xPercent: -50,
+        duration: 28,
+        repeat: -1,
+        ease: "none",
       });
 
-      /* ── Why Us ── */
-      ScrollTrigger.create({
-        trigger: whyRef.current,
-        start: "top 80%",
-        onEnter: () => {
-          gsap.fromTo(
-            whyRef.current!.querySelectorAll(".gs-why"),
-            { opacity: 0, x: -30 },
-            { opacity: 1, x: 0, duration: 0.7, stagger: 0.15, ease: "power2.out" }
-          );
-        },
+      const tiltCards = root.querySelectorAll<HTMLElement>(".tilt-card");
+      tiltCards.forEach((card) => {
+        const onMove = (event: MouseEvent) => {
+          const rect = card.getBoundingClientRect();
+          const x = event.clientX - rect.left;
+          const y = event.clientY - rect.top;
+          const rotateY = ((x / rect.width) - 0.5) * 7;
+          const rotateX = ((y / rect.height) - 0.5) * -7;
+          gsap.to(card, { rotateX, rotateY, transformPerspective: 800, duration: 0.35, ease: "power2.out" });
+        };
+        const onLeave = () => {
+          gsap.to(card, { rotateX: 0, rotateY: 0, duration: 0.45, ease: "power2.out" });
+        };
+        card.addEventListener("mousemove", onMove);
+        card.addEventListener("mouseleave", onLeave);
+        cleanupFns.push(() => {
+          card.removeEventListener("mousemove", onMove);
+          card.removeEventListener("mouseleave", onLeave);
+        });
       });
+    }, root);
 
-      /* ── Technology ── */
-      ScrollTrigger.create({
-        trigger: techRef.current,
-        start: "top 80%",
-        onEnter: () => {
-          gsap.fromTo(
-            techRef.current!.querySelectorAll(".gs-tech"),
-            { opacity: 0, y: 30, scale: 0.95 },
-            { opacity: 1, y: 0, scale: 1, duration: 0.65, stagger: 0.1, ease: "back.out(1.4)" }
-          );
-        },
-      });
-
-      /* ── Doctors ── */
-      ScrollTrigger.create({
-        trigger: doctorsRef.current,
-        start: "top 80%",
-        onEnter: () => {
-          gsap.fromTo(
-            doctorsRef.current!.querySelectorAll(".gs-doctor"),
-            { opacity: 0, y: 50, rotateY: 8 },
-            { opacity: 1, y: 0, rotateY: 0, duration: 0.75, stagger: 0.1, ease: "power3.out" }
-          );
-        },
-      });
-
-      /* ── Testimonials ── */
-      ScrollTrigger.create({
-        trigger: testimonialsRef.current,
-        start: "top 82%",
-        onEnter: () => {
-          gsap.fromTo(
-            testimonialsRef.current!.querySelectorAll(".gs-testi"),
-            { opacity: 0, y: 30 },
-            { opacity: 1, y: 0, duration: 0.65, stagger: 0.15, ease: "power2.out" }
-          );
-        },
-      });
-
-      /* ── Gallery ── */
-      ScrollTrigger.create({
-        trigger: galleryRef.current,
-        start: "top 82%",
-        onEnter: () => {
-          gsap.fromTo(
-            galleryRef.current!.querySelectorAll(".gs-gallery"),
-            { opacity: 0, scale: 0.92, y: 20 },
-            { opacity: 1, scale: 1, y: 0, duration: 0.7, stagger: 0.1, ease: "power2.out" }
-          );
-        },
-      });
-
-      /* ── CTA section ── */
-      ScrollTrigger.create({
-        trigger: ctaRef.current,
-        start: "top 85%",
-        onEnter: () => {
-          gsap.fromTo(
-            ctaRef.current!.querySelectorAll(".gs-cta"),
-            { opacity: 0, y: 28 },
-            { opacity: 1, y: 0, duration: 0.7, stagger: 0.12, ease: "power2.out" }
-          );
-        },
-      });
-
-    });
-
-    return () => ctx.revert();
+    return () => {
+      cleanupFns.forEach((cleanup) => cleanup());
+      ctx.revert();
+    };
   }, []);
 
-  /* ── Computed values ── */
   const filteredServices = useMemo(
     () => services.filter((service) => serviceFilter === "all" || service.category === serviceFilter),
     [serviceFilter],
@@ -628,6 +654,7 @@ export function ArcadeDentalSite() {
 
   const selectedServiceTitle = t(services.find((service) => service.id === selectedService)?.title ?? services[0].title);
   const selectedSmileConcern = smileConcerns.find((concern) => concern.id === smileConcern) ?? smileConcerns[0];
+  const selectedMatcher = treatmentMatcher.find((item) => item.id === matcherId) ?? treatmentMatcher[0];
   const quizScore = quizFear + (badExperience ? 2 : 0) + (quizConcern === "pain" ? 1 : 0);
   const quizResult = quizScore >= 6 ? c.resultHigh : quizScore >= 4 ? c.resultMid : c.resultLow;
   const smartMessage =
@@ -638,9 +665,18 @@ export function ArcadeDentalSite() {
     lang === "id"
       ? `Halo Arcade Dental, saya ingin konsultasi. Tingkat cemas saya ${quizFear}/5, kekhawatiran utama saya ${c[quizConcern]}. ${quizResult}`
       : `Hello Arcade Dental, I would like to consult. My anxiety level is ${quizFear}/5, and my main concern is ${c[quizConcern]}. ${quizResult}`;
+  const matcherMessage =
+    lang === "id"
+      ? `Halo Arcade Dental, saya ingin konsultasi untuk: ${t(selectedMatcher.label)}. ${t(selectedMatcher.result)}`
+      : `Hello Arcade Dental, I would like to consult for: ${t(selectedMatcher.label)}. ${t(selectedMatcher.result)}`;
 
   function toggleLanguage() {
     setLang((current) => (current === "id" ? "en" : "id"));
+  }
+
+  function handleMatcherSelect(id: string, serviceId: string) {
+    setMatcherId(id);
+    setSelectedService(serviceId);
   }
 
   function handleSmartSubmit(event: FormEvent<HTMLFormElement>) {
@@ -654,84 +690,54 @@ export function ArcadeDentalSite() {
     setPreview(URL.createObjectURL(file));
   }
 
-  /* ─────────────────────────────────────────────────────────
-     RENDER
-  ───────────────────────────────────────────────────────── */
   return (
-    <main className="min-h-screen overflow-hidden bg-surface text-primary">
-
-      {/* ══ NAV ══════════════════════════════════════════ */}
+    <main ref={mainRef} className="min-h-screen bg-surface text-primary">
       <header
-        className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
-          scrolled
-            ? "border-b border-primary/8 bg-surface/94 shadow-lg shadow-primary/5 backdrop-blur-xl"
-            : "bg-transparent"
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+          scrolled ? "bg-white/90 shadow-lg shadow-primary/10 backdrop-blur-xl" : "bg-transparent"
         }`}
       >
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 md:px-8">
-          <a href="#hero" className="group flex items-center gap-3" aria-label="Arcade Dental home">
-            <span
-              className={`grid h-11 w-11 place-items-center rounded-xl text-gold shadow-lg transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-xl ${
-                scrolled
-                  ? "bg-primary shadow-primary/20"
-                  : "border border-white/15 bg-white/12 shadow-black/20 backdrop-blur"
-              }`}
-            >
-              <Icon name="spark" className="h-6 w-6" />
+        <div className="mx-auto flex min-h-20 max-w-7xl items-center justify-between gap-4 px-5 md:px-8">
+          <a href="#hero" className="flex items-center gap-3">
+            <span className={`grid h-11 w-11 place-items-center rounded-lg border ${scrolled ? "border-primary/10 bg-primary text-gold" : "border-white/20 bg-white/10 text-gold backdrop-blur"}`}>
+              <Icon name="spark" className="h-5 w-5" />
             </span>
             <span>
-              <span className={`block font-display text-xl leading-none tracking-normal ${scrolled ? "text-primary" : "text-white"}`}>{business.name}</span>
-              <span className={`mt-1 hidden text-[10px] font-bold uppercase tracking-[0.3em] sm:block ${scrolled ? "text-secondary" : "text-white/60"}`}>
-                Bintaro · Spesialis
+              <span className={`block font-display text-xl leading-none ${scrolled ? "text-primary" : "text-white"}`}>{business.name}</span>
+              <span className={`hidden text-[10px] font-bold uppercase tracking-[0.2em] md:block ${scrolled ? "text-secondary" : "text-white/58"}`}>
+                Premium Dental Care
               </span>
             </span>
           </a>
 
-          <nav className="hidden items-center gap-8 lg:flex" aria-label="Main navigation">
+          <nav className="hidden items-center gap-1 lg:flex">
             {navItems.map((item) => (
               <a
                 key={item.id}
                 href={`#${item.id}`}
-                className={`group relative text-sm font-semibold transition-colors duration-200 ${
-                  scrolled ? "text-primary/70 hover:text-cta" : "text-white/78 hover:text-gold"
+                className={`rounded-full px-4 py-2 text-sm font-bold transition-colors ${
+                  scrolled ? "text-primary/68 hover:bg-primary/5 hover:text-primary" : "text-white/72 hover:bg-white/10 hover:text-white"
                 }`}
               >
                 {t(item.label)}
-                <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-gold transition-all duration-300 group-hover:w-full" />
               </a>
             ))}
           </nav>
 
-          <div className="flex items-center gap-2 sm:gap-3">
-            <div
-              className={`hidden items-center gap-2 rounded-full border px-3 py-2 text-xs font-bold backdrop-blur sm:flex ${
-                scrolled
-                  ? "border-cta/20 bg-highlight text-cta"
-                  : "border-white/18 bg-white/12 text-white"
-              }`}
-            >
-              <span className={`h-2 w-2 animate-pulse rounded-full ${scrolled ? "bg-cta" : "bg-gold"}`} />
-              {t(heroCopy.status)}
-            </div>
+          <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={toggleLanguage}
-              className={`inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full border px-4 transition-all duration-200 hover:-translate-y-0.5 ${
-                scrolled
-                  ? "border-primary/12 bg-white/72 text-primary hover:border-gold hover:bg-white hover:shadow-md"
-                  : "border-white/18 bg-white/12 text-white backdrop-blur hover:border-gold/70 hover:bg-white/18"
-              }`}
+              className={`icon-button ${scrolled ? "" : "border-white/20 bg-white/10 text-white backdrop-blur hover:bg-white/20"}`}
               aria-label="Switch language"
             >
-              <Icon name="language" className="h-4.5 w-4.5" />
+              <Icon name="language" className="h-4 w-4" />
               <span className="text-xs font-bold">{c.language}</span>
             </button>
             <a
               href={buildWhatsAppUrl(smartMessage)}
-              className={`hidden items-center gap-2 rounded-full px-5 py-3 text-sm font-bold shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl sm:inline-flex ${
-                scrolled
-                  ? "bg-cta text-white shadow-cta/25 hover:bg-primary"
-                  : "bg-gold text-primary shadow-black/20 hover:bg-white"
+              className={`hidden min-h-11 items-center gap-2 rounded-full px-5 text-sm font-bold shadow-lg transition-all duration-200 hover:-translate-y-0.5 sm:inline-flex ${
+                scrolled ? "bg-cta text-white shadow-cta/20 hover:bg-primary" : "bg-gold text-primary shadow-black/20 hover:bg-white"
               }`}
             >
               <Icon name="message" className="h-4 w-4" />
@@ -741,12 +747,11 @@ export function ArcadeDentalSite() {
         </div>
       </header>
 
-      {/* ══ HERO ══════════════════════════════════════════ */}
       <section id="hero" ref={heroRef} className="relative isolate min-h-[92vh] overflow-hidden bg-primary pt-24 text-white">
         <video
           aria-hidden="true"
           autoPlay
-          className="absolute inset-0 h-full w-full object-cover object-[57%_center] md:object-center"
+          className="hero-video absolute inset-0 h-full w-full object-cover object-[57%_center] md:object-center"
           loop
           muted
           playsInline
@@ -754,61 +759,38 @@ export function ArcadeDentalSite() {
         >
           <source src="/assets/herovideo.mp4" type="video/mp4" />
         </video>
-        <div className="pointer-events-none absolute inset-0 bg-primary/78 md:bg-primary/48" />
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(90deg, rgba(13, 21, 32, 0.92) 0%, rgba(13, 21, 32, 0.76) 38%, rgba(13, 21, 32, 0.42) 68%, rgba(13, 21, 32, 0.62) 100%)",
-          }}
-        />
-        <div
-          className="pointer-events-none absolute inset-0 mix-blend-soft-light"
-          style={{
-            background:
-              "radial-gradient(circle at 18% 42%, rgba(200, 169, 110, 0.34), transparent 34%), radial-gradient(circle at 78% 22%, rgba(232, 244, 240, 0.16), transparent 35%)",
-          }}
-        />
+        <div className="absolute inset-0 bg-primary/78 md:bg-primary/48" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(13,21,32,0.92)_0%,rgba(13,21,32,0.76)_38%,rgba(13,21,32,0.42)_68%,rgba(13,21,32,0.62)_100%)]" />
+        <div className="pointer-events-none absolute inset-0 mix-blend-soft-light [background:radial-gradient(circle_at_18%_42%,rgba(200,169,110,0.34),transparent_34%),radial-gradient(circle_at_78%_22%,rgba(232,244,240,0.16),transparent_35%)]" />
 
         <div className="relative z-10 mx-auto flex min-h-[calc(92vh-5rem)] max-w-7xl items-center px-5 pb-16 pt-8 md:px-8 lg:pb-20 lg:pt-12">
-
-          {/* ── Text side ── */}
-          <div ref={heroTextRef} className="max-w-3xl" style={{ perspective: "800px" }}>
+          <div ref={heroTextRef} className="max-w-3xl" style={{ perspective: "900px" }}>
             <p className="gs-word eyebrow text-gold">{t(heroCopy.eyebrow)}</p>
             <h1 className="mt-3 max-w-3xl font-display leading-[0.96] text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.32)]">
-              {t(heroCopy.title).split(" ").map((word, i) => (
-                <span key={i} className="gs-word inline-block pr-[0.22em] text-5xl md:text-6xl lg:text-7xl">
-                  {word}
-                </span>
-              ))}
+              {t(heroCopy.title)
+                .split(" ")
+                .map((word, i) => (
+                  <span key={`${word}-${i}`} className="gs-word inline-block pr-[0.22em] text-5xl md:text-6xl lg:text-7xl">
+                    {word}
+                  </span>
+                ))}
             </h1>
-            <p className="gs-sub mt-7 max-w-2xl text-lg leading-8 text-white/82 md:text-xl">
-              {t(heroCopy.description)}
-            </p>
+            <p className="gs-sub mt-7 max-w-2xl text-lg leading-8 text-white/80 md:text-xl">{t(heroCopy.description)}</p>
             <div className="gs-sub mt-8 flex flex-col gap-3 sm:flex-row">
-              <a
-                href="#contact"
-                className="group inline-flex min-h-14 items-center justify-center gap-2.5 rounded-full bg-gold px-7 text-base font-bold text-primary shadow-xl shadow-black/20 transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-2xl"
-              >
+              <a href="#contact" className="magnetic-cta group inline-flex min-h-14 items-center justify-center gap-2.5 rounded-full bg-gold px-7 text-base font-bold text-primary shadow-xl shadow-black/20 transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-2xl">
                 <Icon name="calendar" className="h-5 w-5" />
                 {t(heroCopy.primaryCta)}
                 <span className="transition-transform duration-200 group-hover:translate-x-1">
                   <Icon name="arrow" className="h-4 w-4" />
                 </span>
               </a>
-              <a
-                href="#services"
-                className="inline-flex min-h-14 items-center justify-center rounded-full border border-white/25 bg-white/10 px-7 text-base font-bold text-white shadow-sm backdrop-blur transition-all duration-200 hover:-translate-y-0.5 hover:border-gold hover:bg-white/16"
-              >
+              <a href="#services" className="inline-flex min-h-14 items-center justify-center rounded-full border border-white/25 bg-white/10 px-7 text-base font-bold text-white shadow-sm backdrop-blur transition-all duration-200 hover:-translate-y-0.5 hover:border-gold hover:bg-white/16">
                 {t(heroCopy.secondaryCta)}
               </a>
             </div>
             <div className="gs-sub mt-8 flex flex-wrap gap-2.5">
               {trustBadges.map((badge) => (
-                <span
-                  key={badge.id}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-white/18 bg-white/12 px-4 py-2 text-xs font-bold text-white/88 shadow-sm backdrop-blur"
-                >
+                <span key={badge.id} className="hero-chip inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold text-white/90 shadow-sm backdrop-blur">
                   <span className="h-1.5 w-1.5 rounded-full bg-gold" />
                   {badge[lang]}
                 </span>
@@ -816,10 +798,8 @@ export function ArcadeDentalSite() {
             </div>
             <p className="gs-sub mt-8 font-accent text-xs font-bold uppercase tracking-[0.32em] text-gold">{business.hashtag}</p>
           </div>
-
         </div>
 
-        {/* Wave divider */}
         <div className="relative h-20 overflow-hidden">
           <svg viewBox="0 0 1440 80" className="absolute bottom-0 w-full" preserveAspectRatio="none">
             <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="#1a2332" />
@@ -827,60 +807,83 @@ export function ArcadeDentalSite() {
         </div>
       </section>
 
-      {/* ══ ABOUT ═════════════════════════════════════════ */}
-      <section id="about" ref={aboutRef} className="bg-primary py-20 text-white md:py-28">
-        <div className="mx-auto max-w-7xl px-5 md:px-8">
-          <div className="grid gap-14 lg:grid-cols-[0.85fr_1fr] lg:items-center">
-            <div className="gs-about-item">
-              <p className="eyebrow text-gold">{c.aboutLabel}</p>
-              <h2 className="font-display text-4xl leading-tight text-white md:text-5xl lg:text-6xl">{c.aboutTitle}</h2>
-            </div>
-            <div className="gs-about-item">
-              <p className="text-lg leading-8 text-white/72">{c.aboutBody}</p>
-              <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                {[
-                  { icon: "shield" as const, text: { id: "Dokter spesialis ahli", en: "Specialist doctors" } },
-                  { icon: "spark" as const, text: { id: "Teknologi painless", en: "Painless technology" } },
-                  { icon: "calendar" as const, text: { id: business.hours.id, en: business.hours.en } },
-                ].map((item) => (
-                  <div
-                    key={item.text.id}
-                    className="rounded-xl border border-white/10 bg-white/[0.07] p-5 transition-all duration-200 hover:border-gold/30 hover:bg-white/[0.1]"
-                  >
-                    <Icon name={item.icon} className="h-6 w-6 text-gold" />
-                    <p className="mt-3 text-sm font-bold text-white/86">{t(item.text)}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
+      <section id="about" className="bg-primary py-20 text-white md:py-28">
+        <div className="mx-auto grid max-w-7xl gap-12 px-5 md:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+          <div className="gs-reveal">
+            <p className="eyebrow text-gold">{c.aboutLabel}</p>
+            <h2 className="font-display text-4xl leading-tight md:text-5xl lg:text-6xl">{c.aboutTitle}</h2>
+            <p className="mt-6 text-lg leading-8 text-white/72">{c.aboutBody}</p>
           </div>
-
-          {/* Stats */}
-          <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {stats.map((stat) => (
-              <div
-                key={stat.label.id}
-                className="gs-stat group rounded-xl border border-white/10 bg-white/[0.07] p-6 backdrop-blur transition-all duration-300 hover:border-gold/40 hover:bg-white/[0.1]"
-              >
-                <div className="font-display text-5xl text-gold">{stat.value}</div>
-                <p className="mt-3 text-sm font-semibold text-white/70">{t(stat.label)}</p>
-                <div className="mt-4 h-px w-0 bg-gold/50 transition-all duration-500 group-hover:w-full" />
-              </div>
-            ))}
+          <div className="grid gap-4 sm:grid-cols-2">
+            {stats.map((stat) => {
+              const numeric = stat.value.match(/^(\d+)(.*)$/);
+              return (
+                <div key={stat.label.id} className="gs-card rounded-lg border border-white/10 bg-white/[0.07] p-6 backdrop-blur">
+                  <div className="font-display text-5xl text-gold">
+                    {numeric ? (
+                      <span className="gs-counter" data-count={numeric[1]} data-suffix={numeric[2]}>
+                        0{numeric[2]}
+                      </span>
+                    ) : (
+                      stat.value
+                    )}
+                  </div>
+                  <p className="mt-3 text-sm font-semibold text-white/70">{t(stat.label)}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* ══ SERVICES ══════════════════════════════════════ */}
-      <section id="services" ref={servicesRef} className="section-shell">
+      <section id="services" className="section-shell">
         <div className="mx-auto max-w-7xl px-5 md:px-8">
           <SectionHeading eyebrow={c.servicesLabel} title={c.servicesTitle} body={c.servicesBody} />
 
-          {/* Filter tabs */}
-          <div
-            className="mx-auto mb-10 flex max-w-3xl gap-2 overflow-x-auto rounded-full border border-primary/10 bg-white/80 p-2 shadow-sm backdrop-blur no-scrollbar"
-            role="tablist"
-          >
+          <div className="gs-reveal mb-12 grid gap-5 lg:grid-cols-[0.85fr_1.15fr] lg:items-stretch">
+            <div className="rounded-lg border border-primary/8 bg-white p-6 shadow-xl shadow-primary/8">
+              <p className="eyebrow">{c.matcherLabel}</p>
+              <h3 className="font-display text-3xl leading-tight text-primary">{c.matcherTitle}</h3>
+              <p className="mt-3 text-sm leading-6 text-secondary">{c.matcherBody}</p>
+              <div className="mt-6 grid gap-2">
+                {treatmentMatcher.map((option) => (
+                  <button
+                    key={option.id}
+                    type="button"
+                    onClick={() => handleMatcherSelect(option.id, option.serviceId)}
+                    className={`group flex min-h-12 items-center justify-between gap-3 rounded-lg border px-4 text-left text-sm font-bold transition-all ${
+                      matcherId === option.id
+                        ? "border-cta bg-highlight text-primary shadow-sm"
+                        : "border-primary/8 bg-white text-primary/66 hover:border-gold/70 hover:text-primary"
+                    }`}
+                  >
+                    {t(option.label)}
+                    <Icon name={matcherId === option.id ? "check" : "chevron"} className="h-4 w-4 text-cta" />
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="relative overflow-hidden rounded-lg bg-primary p-6 text-white shadow-2xl shadow-primary/16">
+              <Image src={siteAssets.techTexture} alt="" fill sizes="(min-width: 1024px) 55vw, 100vw" className="object-cover opacity-25" />
+              <div className="absolute inset-0 bg-primary/76" />
+              <div className="relative grid h-full gap-5 md:grid-cols-[0.75fr_1fr] md:items-center">
+                <div className="relative aspect-square overflow-hidden rounded-lg border border-white/10">
+                  <Image src={siteAssets.smileTransform} alt={c.beforeAfterTitle} fill sizes="(min-width: 768px) 30vw, 100vw" className="object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/70 to-transparent" />
+                </div>
+                <div>
+                  <p className="eyebrow text-gold">{t(selectedMatcher.label)}</p>
+                  <p className="text-lg leading-8 text-white/80">{t(selectedMatcher.result)}</p>
+                  <a href={buildWhatsAppUrl(matcherMessage)} className="mt-6 inline-flex min-h-12 items-center gap-2 rounded-full bg-gold px-5 text-sm font-bold text-primary transition-all hover:-translate-y-0.5 hover:bg-white">
+                    <Icon name="message" className="h-5 w-5" />
+                    {c.matcherCta}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mx-auto mb-10 flex max-w-3xl gap-2 overflow-x-auto rounded-full border border-primary/10 bg-white/80 p-2 shadow-sm backdrop-blur no-scrollbar" role="tablist">
             {serviceCategories.map((category) => (
               <button
                 key={category.id}
@@ -889,9 +892,7 @@ export function ArcadeDentalSite() {
                 aria-selected={serviceFilter === category.id}
                 onClick={() => setServiceFilter(category.id)}
                 className={`min-h-11 flex-1 whitespace-nowrap rounded-full px-5 text-sm font-bold transition-all duration-200 ${
-                  serviceFilter === category.id
-                    ? "bg-primary text-white shadow-lg shadow-primary/20"
-                    : "text-primary/65 hover:bg-surface-2 hover:text-primary"
+                  serviceFilter === category.id ? "bg-primary text-white shadow-lg shadow-primary/20" : "text-primary/65 hover:bg-surface-2 hover:text-primary"
                 }`}
               >
                 {t(category.label)}
@@ -899,12 +900,11 @@ export function ArcadeDentalSite() {
             ))}
           </div>
 
-          {/* Cards */}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filteredServices.map((service) => (
-              <article key={service.id} className="gs-card reveal-card group min-h-[220px]">
-                <div className="grid h-12 w-12 place-items-center rounded-xl bg-highlight text-cta transition-all duration-300 group-hover:bg-cta group-hover:text-white group-hover:shadow-lg group-hover:shadow-cta/20">
-                  <Icon name={service.icon} className="h-5.5 w-5.5" />
+              <article key={service.id} className="gs-card tilt-card reveal-card group min-h-[220px]">
+                <div className="grid h-12 w-12 place-items-center rounded-lg bg-highlight text-cta transition-all duration-300 group-hover:bg-cta group-hover:text-white group-hover:shadow-lg group-hover:shadow-cta/20">
+                  <Icon name={service.icon} className="h-5 w-5" />
                 </div>
                 <h3 className="mt-5 font-display text-xl leading-snug text-primary">{t(service.title)}</h3>
                 <p className="mt-2.5 text-sm leading-6 text-secondary">{t(service.description)}</p>
@@ -914,18 +914,59 @@ export function ArcadeDentalSite() {
         </div>
       </section>
 
-      {/* ══ WHY US ════════════════════════════════════════ */}
-      <section id="why-us" ref={whyRef} className="relative overflow-hidden bg-surface-2 py-20 md:py-28">
-        {/* Decorative element */}
-        <div className="pointer-events-none absolute right-0 top-0 h-80 w-80 rounded-bl-full bg-gold/5" />
-        <div className="mx-auto max-w-7xl px-5 md:px-8">
+      <section id="journey" ref={journeyRef} className="relative bg-surface-2">
+        <div className="journey-pin min-h-screen overflow-hidden py-20 md:py-28">
+          <div className="mx-auto grid max-w-7xl gap-10 px-5 md:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+            <div className="gs-reveal">
+              <p className="eyebrow">{c.journeyLabel}</p>
+              <h2 className="font-display text-4xl leading-tight text-primary md:text-5xl">{c.journeyTitle}</h2>
+              <p className="mt-5 text-lg leading-8 text-secondary">{c.journeyBody}</p>
+              <div className="mt-8 h-1 overflow-hidden rounded-full bg-primary/10">
+                <div className="journey-progress-bar h-full origin-left scale-x-0 bg-gradient-to-r from-cta to-gold" />
+              </div>
+              <div className="mt-6 overflow-hidden rounded-lg border border-primary/8 bg-white shadow-xl shadow-primary/8">
+                <div className="journey-image relative aspect-[4/3]">
+                  <Image src={siteAssets.careJourney} alt="Arcade Dental consultation journey" fill sizes="(min-width: 1024px) 44vw, 100vw" className="object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/62 via-transparent to-transparent" />
+                  <div className="absolute bottom-4 left-4 rounded-lg bg-white/90 px-4 py-3 shadow-lg backdrop-blur">
+                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-cta">{careJourney[activeJourney].metric}</p>
+                    <p className="font-display text-xl text-primary">{t(careJourney[activeJourney].title)}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="grid gap-3">
+              {careJourney.map((step, index) => (
+                <article
+                  key={step.id}
+                  className={`journey-step gs-card grid gap-4 rounded-lg border p-5 transition-all duration-300 sm:grid-cols-[56px_1fr] ${
+                    activeJourney === index
+                      ? "border-gold bg-white shadow-xl shadow-primary/10"
+                      : "border-primary/8 bg-white/70 shadow-sm"
+                  }`}
+                >
+                  <div className={`grid h-12 w-12 place-items-center rounded-lg ${activeJourney === index ? "bg-primary text-gold" : "bg-highlight text-cta"}`}>
+                    <Icon name={step.icon} className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="font-accent text-[10px] font-bold uppercase tracking-[0.22em] text-gold">{t(step.eyebrow)}</p>
+                    <h3 className="mt-1 font-display text-2xl text-primary">{t(step.title)}</h3>
+                    <p className="mt-2 text-sm leading-6 text-secondary">{t(step.body)}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="why-us" className="relative overflow-hidden bg-white py-20 md:py-28">
+        <div className="absolute inset-0 opacity-[0.04] [background-image:linear-gradient(90deg,#1a2332_1px,transparent_1px),linear-gradient(#1a2332_1px,transparent_1px)] [background-size:42px_42px]" />
+        <div className="relative mx-auto max-w-7xl px-5 md:px-8">
           <SectionHeading eyebrow={c.whyLabel} title={c.whyTitle} />
           <div className="grid gap-5 lg:grid-cols-2">
             {whyUs.map((item, index) => (
-              <article
-                key={item.title.id}
-                className="gs-why group grid gap-5 rounded-2xl border border-primary/8 bg-white p-7 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-gold/60 hover:shadow-xl hover:shadow-primary/8 sm:grid-cols-[88px_1fr]"
-              >
+              <article key={item.title.id} className="gs-card group grid gap-5 rounded-lg border border-primary/8 bg-white p-7 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-gold/60 hover:shadow-xl hover:shadow-primary/8 sm:grid-cols-[88px_1fr]">
                 <div className="font-display text-6xl font-bold text-gold/50 transition-colors duration-300 group-hover:text-gold">
                   {String(index + 1).padStart(2, "0")}
                 </div>
@@ -939,72 +980,77 @@ export function ArcadeDentalSite() {
         </div>
       </section>
 
-      {/* ══ TECHNOLOGY ════════════════════════════════════ */}
-      <section id="technology" ref={techRef} className="relative overflow-hidden bg-primary py-20 text-white md:py-28">
-        {/* Background rings */}
-        <div className="pointer-events-none absolute right-0 top-0 h-[600px] w-[600px] translate-x-1/3 -translate-y-1/4">
-          <div className="absolute inset-0 rounded-full border border-white/[0.06]" />
-          <div className="absolute inset-[15%] rounded-full border border-gold/[0.12]" />
-          <div className="absolute inset-[30%] rounded-full border border-white/[0.08]" />
-          <div className="absolute inset-[45%] rounded-full border border-gold/[0.14]" />
-        </div>
-
+      <section id="technology" className="relative overflow-hidden bg-primary py-20 text-white md:py-28">
+        <Image src={siteAssets.techTexture} alt="" fill sizes="100vw" className="object-cover opacity-20" />
+        <div className="absolute inset-0 bg-primary/82" />
+        <div className="absolute inset-0 opacity-[0.10] [background-image:linear-gradient(rgba(255,255,255,0.16)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.12)_1px,transparent_1px)] [background-size:64px_64px]" />
         <div className="relative mx-auto max-w-7xl px-5 md:px-8">
           <SectionHeading eyebrow={c.techLabel} title={c.techTitle} body={c.techBody} dark />
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {technologies.map((technology, index) => (
-              <article
-                key={technology.title}
-                className={`gs-tech group rounded-2xl border border-white/10 bg-white/[0.06] p-7 backdrop-blur transition-all duration-300 hover:-translate-y-1.5 hover:border-gold/50 hover:bg-white/[0.1] hover:shadow-2xl ${
-                  index === 4 ? "lg:col-span-2" : ""
-                }`}
-              >
-                <div className="grid h-13 w-13 place-items-center rounded-xl bg-gold text-primary shadow-lg shadow-gold/20 transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl">
-                  <Icon name={technology.icon} className="h-6 w-6" />
-                </div>
-                <h3 className="mt-5 font-display text-2xl text-white">{technology.title}</h3>
-                <p className="mt-2.5 leading-7 text-white/65">{t(technology.benefit)}</p>
-                <div className="mt-5 flex items-center gap-2 text-gold/70 transition-colors duration-200 group-hover:text-gold">
-                  <div className="h-px flex-1 bg-current opacity-30" />
-                  <Icon name="spark" className="h-3 w-3" />
-                </div>
-              </article>
-            ))}
+          <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-stretch">
+            <div className="gs-reveal relative min-h-[520px] overflow-hidden rounded-lg border border-white/10 bg-white/[0.06] shadow-2xl shadow-black/20">
+              <Image src={siteAssets.techLab} alt="Arcade Dental technology lab" fill sizes="(min-width: 1024px) 52vw, 100vw" className="object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/22 to-transparent" />
+              <div className="tech-diagnostic-line absolute bottom-0 top-0 w-24 bg-[linear-gradient(90deg,transparent,rgba(200,169,110,0.24),transparent)]" />
+              <div className="absolute bottom-5 left-5 right-5 grid gap-3 sm:grid-cols-3">
+                {techMetrics.map((metric) => {
+                  const numeric = metric.value.match(/^(\d+)(.*)$/);
+                  return (
+                    <div key={metric.label.id} className="rounded-lg border border-white/12 bg-primary/62 p-4 backdrop-blur">
+                      <p className="font-display text-4xl text-gold">
+                        {numeric ? (
+                          <span className="gs-counter" data-count={numeric[1]} data-suffix={numeric[2]}>
+                            0{numeric[2]}
+                          </span>
+                        ) : (
+                          metric.value
+                        )}
+                      </p>
+                      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.14em] text-white/58">{t(metric.label)}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="grid gap-3">
+              {technologies.map((technology, index) => (
+                <button
+                  key={technology.title}
+                  type="button"
+                  onMouseEnter={() => setActiveTech(index)}
+                  onFocus={() => setActiveTech(index)}
+                  className={`gs-card group grid gap-4 rounded-lg border p-5 text-left transition-all sm:grid-cols-[56px_1fr] ${
+                    activeTech === index ? "border-gold bg-white text-primary shadow-xl shadow-gold/10" : "border-white/10 bg-white/[0.06] text-white hover:border-gold/40 hover:bg-white/[0.10]"
+                  }`}
+                >
+                  <div className={`grid h-12 w-12 place-items-center rounded-lg ${activeTech === index ? "bg-primary text-gold" : "bg-gold text-primary"}`}>
+                    <Icon name={technology.icon} className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className={`font-display text-2xl ${activeTech === index ? "text-primary" : "text-white"}`}>{technology.title}</h3>
+                    <p className={`mt-2 text-sm leading-6 ${activeTech === index ? "text-primary/68" : "text-white/62"}`}>{t(technology.benefit)}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ══ DOCTORS ═══════════════════════════════════════ */}
-      <section id="doctors" ref={doctorsRef} className="section-shell">
+      <section id="doctors" className="section-shell">
         <div className="mx-auto max-w-7xl px-5 md:px-8">
           <SectionHeading eyebrow={c.doctorsLabel} title={c.doctorsTitle} body={c.doctorsBody} />
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {doctors.map((doctor, index) => {
               const colorSet = doctorColors[index % doctorColors.length];
-              const initials = doctor.name
-                .split(" ")
-                .filter((w) => w !== "drg.")
-                .slice(0, 2)
-                .map((w) => w[0])
-                .join("");
               return (
-                <article
-                  key={doctor.name}
-                  className="gs-doctor doctor-card group rounded-2xl border border-primary/8 bg-white p-6 shadow-sm"
-                  style={{ perspective: "600px" }}
-                >
-                  {/* Avatar */}
-                  <div className={`mx-auto grid h-28 w-28 place-items-center rounded-2xl bg-gradient-to-br ${colorSet.bg} shadow-inner transition-all duration-300 group-hover:scale-105 group-hover:shadow-md`}>
-                    <span className={`font-display text-3xl font-bold ${colorSet.text}`}>{initials}</span>
+                <article key={doctor.name} className="gs-card doctor-card group rounded-lg border border-primary/8 bg-white p-6 shadow-sm">
+                  <div className={`mx-auto grid h-28 w-28 place-items-center rounded-lg bg-gradient-to-br ${colorSet.bg} shadow-inner transition-all duration-300 group-hover:scale-105 group-hover:shadow-md`}>
+                    <span className={`font-display text-3xl font-bold ${colorSet.text}`}>{getInitials(doctor.name)}</span>
                   </div>
                   <div className="mt-5 text-center">
-                    <p className="font-accent text-[10px] font-bold uppercase tracking-[0.22em] text-gold">
-                      {String(index + 1).padStart(2, "0")}
-                    </p>
+                    <p className="font-accent text-[10px] font-bold uppercase tracking-[0.22em] text-gold">{String(index + 1).padStart(2, "0")}</p>
                     <h3 className="mt-2 font-display text-xl leading-snug text-primary">{doctor.name}</h3>
-                    <span className="mt-2 inline-block rounded-full bg-highlight px-3 py-1 text-xs font-bold text-cta">
-                      {t(doctor.role)}
-                    </span>
+                    <span className="mt-2 inline-block rounded-full bg-highlight px-3 py-1 text-xs font-bold text-cta">{t(doctor.role)}</span>
                     <p className="mt-3 text-xs leading-5 text-secondary">{t(doctor.availability)}</p>
                   </div>
                 </article>
@@ -1014,10 +1060,8 @@ export function ArcadeDentalSite() {
         </div>
       </section>
 
-      {/* ══ TESTIMONIALS ══════════════════════════════════ */}
       <section
         id="testimonials"
-        ref={testimonialsRef}
         className="bg-[linear-gradient(145deg,#e8f4f0,#f0ece6)] py-20 md:py-28"
         onMouseEnter={() => setPausedCarousel(true)}
         onMouseLeave={() => setPausedCarousel(false)}
@@ -1028,10 +1072,8 @@ export function ArcadeDentalSite() {
             {testimonials.map((testimonial, index) => (
               <article
                 key={testimonial.name}
-                className={`gs-testi rounded-2xl border bg-white p-7 shadow-sm transition-all duration-500 ${
-                  testimonialIndex === index
-                    ? "border-gold shadow-xl shadow-primary/10 -translate-y-1"
-                    : "border-primary/8"
+                className={`gs-card rounded-lg border bg-white p-7 shadow-sm transition-all duration-500 ${
+                  testimonialIndex === index ? "-translate-y-1 border-gold shadow-xl shadow-primary/10" : "border-primary/8"
                 }`}
               >
                 <div className="flex gap-1 text-gold">
@@ -1045,7 +1087,7 @@ export function ArcadeDentalSite() {
                   <span className="text-gold/70">&rdquo;</span>
                 </p>
                 <div className="mt-6 flex items-center gap-3 border-t border-primary/6 pt-5">
-                  <div className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-gold">
+                  <div className="grid h-11 w-11 place-items-center rounded-lg bg-primary text-gold">
                     <Icon name="heart" className="h-5 w-5" />
                   </div>
                   <div>
@@ -1062,20 +1104,13 @@ export function ArcadeDentalSite() {
                 key={testimonial.name}
                 type="button"
                 onClick={() => setTestimonialIndex(index)}
-                className={`h-2.5 rounded-full transition-all duration-300 ${
-                  testimonialIndex === index ? "w-10 bg-cta" : "w-2.5 bg-primary/20 hover:bg-primary/30"
-                }`}
+                className={`h-2.5 rounded-full transition-all duration-300 ${testimonialIndex === index ? "w-10 bg-cta" : "w-2.5 bg-primary/20 hover:bg-primary/30"}`}
                 aria-label={`Show testimonial ${index + 1}`}
               />
             ))}
           </div>
           <div className="mt-8 text-center">
-            <a
-              href="https://www.google.com/search?q=Arcade+Dental+Bintaro+reviews"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-cta/20 bg-white/70 px-5 py-3 text-sm font-bold text-cta shadow-sm backdrop-blur transition-all duration-200 hover:bg-white hover:shadow-md"
-            >
+            <a href="https://www.google.com/search?q=Arcade+Dental+Bintaro+reviews" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-cta/20 bg-white/70 px-5 py-3 text-sm font-bold text-cta shadow-sm backdrop-blur transition-all duration-200 hover:bg-white hover:shadow-md">
               {c.googleReviews}
               <Icon name="chevron" className="h-4 w-4" />
             </a>
@@ -1083,8 +1118,7 @@ export function ArcadeDentalSite() {
         </div>
       </section>
 
-      {/* ══ GALLERY ═══════════════════════════════════════ */}
-      <section id="gallery" ref={galleryRef} className="section-shell">
+      <section id="gallery" className="section-shell overflow-hidden">
         <div className="mx-auto max-w-7xl px-5 md:px-8">
           <SectionHeading eyebrow={c.galleryLabel} title={c.galleryTitle} body={c.galleryBody} />
           <div className="grid gap-4 md:grid-cols-4">
@@ -1093,48 +1127,47 @@ export function ArcadeDentalSite() {
                 key={item.src}
                 type="button"
                 onClick={() => setGalleryIndex(index)}
-                className={`gs-gallery group relative overflow-hidden rounded-2xl border border-primary/8 bg-white text-left shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/12 ${
+                className={`gs-card group relative overflow-hidden rounded-lg border border-primary/8 bg-white text-left shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 ${
                   index === 0 || index === 3 ? "md:col-span-2" : ""
                 }`}
               >
                 <div className="overflow-hidden">
-                  <Image
-                    src={item.src}
-                    alt={t(item.alt)}
-                    width={720}
-                    height={480}
-                    className="h-72 w-full object-cover transition-transform duration-700 group-hover:scale-108"
-                  />
+                  <Image src={item.src} alt={t(item.alt)} width={900} height={620} className="h-72 w-full object-cover transition-transform duration-700 group-hover:scale-108" />
                 </div>
-                {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/60 via-primary/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                <span className="absolute inset-x-4 bottom-4 rounded-xl bg-white/90 px-4 py-2.5 text-sm font-bold text-primary shadow-lg backdrop-blur transition-all duration-300 group-hover:bg-white">
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/62 via-primary/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <span className="absolute inset-x-4 bottom-4 rounded-lg bg-white/90 px-4 py-2.5 text-sm font-bold text-primary shadow-lg backdrop-blur transition-all duration-300 group-hover:bg-white">
                   {t(item.label)}
                 </span>
-                {/* Zoom icon */}
-                <span className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full bg-white/90 text-primary shadow-lg opacity-0 backdrop-blur transition-all duration-300 group-hover:opacity-100 group-hover:scale-100 scale-75">
+                <span className="absolute right-4 top-4 grid h-9 w-9 scale-75 place-items-center rounded-full bg-white/90 text-primary opacity-0 shadow-lg backdrop-blur transition-all duration-300 group-hover:scale-100 group-hover:opacity-100">
                   <Icon name="scope" className="h-4 w-4" />
                 </span>
               </button>
             ))}
           </div>
         </div>
+        <div className="mt-12 overflow-hidden border-y border-primary/8 bg-white/60 py-4">
+          <div className="gallery-marquee-track flex w-[200%] gap-4">
+            {[...gallery, ...gallery].map((item, index) => (
+              <div key={`${item.src}-${index}`} className="relative h-24 w-44 shrink-0 overflow-hidden rounded-lg">
+                <Image src={item.src} alt="" fill sizes="176px" className="object-cover" />
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
-
-      {/* ══ INSURANCE ═════════════════════════════════════ */}
       <section id="insurance" className="bg-surface-2 py-20 md:py-28">
         <div className="mx-auto grid max-w-7xl gap-10 px-5 md:px-8 lg:grid-cols-[0.7fr_1fr] lg:items-center">
-          <div className="rounded-2xl border border-primary/8 bg-white p-8 shadow-xl shadow-primary/8">
+          <div className="gs-reveal rounded-lg border border-primary/8 bg-white p-8 shadow-xl shadow-primary/8">
             <p className="eyebrow">{c.insuranceLabel}</p>
-            <div className="mt-6 inline-flex items-center gap-3 rounded-xl border border-[#0b4ea2]/12 bg-gradient-to-br from-white to-blue-50/50 px-7 py-5 shadow-sm">
+            <div className="mt-6 inline-flex items-center gap-3 rounded-lg border border-[#0b4ea2]/12 bg-gradient-to-br from-white to-blue-50/50 px-7 py-5 shadow-sm">
               <span className="font-display text-4xl font-black tracking-tight text-[#0b4ea2]">BCA</span>
               <div className="h-8 w-px bg-primary/10" />
               <span className="text-2xl font-bold text-[#2ca3dc]">Life</span>
             </div>
             <p className="mt-5 text-sm leading-6 text-secondary">{c.insuranceBody}</p>
           </div>
-          <div>
+          <div className="gs-reveal">
             <h2 className="font-display text-4xl leading-tight text-primary md:text-5xl">{c.insuranceTitle}</h2>
             <a href="#contact" className="mt-8 inline-flex min-h-14 items-center gap-2.5 rounded-full bg-primary px-7 font-bold text-white shadow-lg shadow-primary/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-cta hover:shadow-xl">
               <Icon name="shield" className="h-5 w-5" />
@@ -1144,102 +1177,113 @@ export function ArcadeDentalSite() {
         </div>
       </section>
 
-      {/* ══ ENGAGEMENT ════════════════════════════════════ */}
       <section id="engagement" className="bg-primary py-20 text-white md:py-28">
         <div className="mx-auto grid max-w-7xl gap-5 px-5 md:px-8 lg:grid-cols-3">
-          <article className="rounded-2xl border border-white/10 bg-white/[0.06] p-7 backdrop-blur">
+          <article className="gs-card rounded-lg border border-white/10 bg-white/[0.06] p-7 backdrop-blur">
             <p className="eyebrow text-gold">{c.quizLabel}</p>
             <h2 className="font-display text-3xl leading-tight">{c.quizTitle}</h2>
             <p className="mt-3 text-sm leading-6 text-white/65">{c.quizBody}</p>
-            <label className="mt-6 block text-sm font-bold text-white" htmlFor="fear-range">{c.quizFear}: {quizFear}/5</label>
-            <input id="fear-range" type="range" min="1" max="5" value={quizFear} onChange={(e) => setQuizFear(Number(e.target.value))} className="mt-3 w-full accent-gold" />
+            <label className="mt-6 block text-sm font-bold text-white" htmlFor="fear-range">
+              {c.quizFear}: {quizFear}/5
+            </label>
+            <input id="fear-range" type="range" min="1" max="5" value={quizFear} onChange={(event) => setQuizFear(Number(event.target.value))} className="mt-3 w-full accent-gold" />
             <p className="mt-4 text-xs font-bold uppercase tracking-[0.2em] text-white/55">{c.quizBadExperience}</p>
             <div className="mt-2 grid grid-cols-2 gap-3">
               <button type="button" onClick={() => setBadExperience(false)} className={`choice-button ${!badExperience ? "choice-active" : ""}`}>{c.no}</button>
               <button type="button" onClick={() => setBadExperience(true)} className={`choice-button ${badExperience ? "choice-active" : ""}`}>{c.yes}</button>
             </div>
-            <select value={quizConcern} onChange={(e) => setQuizConcern(e.target.value as "pain" | "cost" | "time")} className="mt-3 w-full rounded-xl border border-white/15 bg-white/[0.08] px-4 py-3 text-sm font-semibold text-white outline-none focus:border-gold" aria-label={c.quizConcern}>
+            <select value={quizConcern} onChange={(event) => setQuizConcern(event.target.value as "pain" | "cost" | "time")} className="mt-3 w-full rounded-lg border border-white/15 bg-white/[0.08] px-4 py-3 text-sm font-semibold text-white outline-none focus:border-gold" aria-label={c.quizConcern}>
               <option value="pain">{c.pain}</option>
               <option value="cost">{c.cost}</option>
               <option value="time">{c.time}</option>
             </select>
-            <p className="mt-5 rounded-xl bg-white/10 p-4 text-sm leading-6 text-white/80">{quizResult}</p>
+            <p className="mt-5 rounded-lg bg-white/10 p-4 text-sm leading-6 text-white/80">{quizResult}</p>
             <a href={buildWhatsAppUrl(quizMessage)} className="mt-5 inline-flex min-h-12 items-center gap-2 rounded-full bg-gold px-5 text-sm font-bold text-primary transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-gold/25">
-              <Icon name="message" className="h-5 w-5" />{c.messageCta}
+              <Icon name="message" className="h-5 w-5" />
+              {c.messageCta}
             </a>
           </article>
 
-          <article className="rounded-2xl border border-white/10 bg-white/[0.06] p-7 backdrop-blur">
+          <article className="gs-card rounded-lg border border-white/10 bg-white/[0.06] p-7 backdrop-blur">
             <p className="eyebrow text-gold">{c.analyzerLabel}</p>
             <h2 className="font-display text-3xl leading-tight">{c.analyzerTitle}</h2>
             <p className="mt-3 text-sm leading-6 text-white/65">{c.analyzerBody}</p>
-            <label className="mt-6 flex min-h-36 cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-white/20 bg-white/5 p-4 text-center transition-all duration-200 hover:border-gold hover:bg-white/[0.08]" htmlFor="smile-upload">
+            <label className="mt-6 flex min-h-36 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-white/20 bg-white/5 p-4 text-center transition-all duration-200 hover:border-gold hover:bg-white/[0.08]" htmlFor="smile-upload">
               {preview ? (
                 <img src={preview} alt="Preview" className="max-h-36 rounded-lg object-contain" />
               ) : (
-                <><Icon name="upload" className="h-8 w-8 text-gold" /><span className="mt-3 text-sm font-bold">{c.chooseFile}</span><span className="mt-1 text-xs text-white/40">JPG, PNG, WEBP</span></>
+                <>
+                  <Icon name="upload" className="h-8 w-8 text-gold" />
+                  <span className="mt-3 text-sm font-bold">{c.chooseFile}</span>
+                  <span className="mt-1 text-xs text-white/40">JPG, PNG, WEBP</span>
+                </>
               )}
             </label>
-            <input id="smile-upload" type="file" accept="image/*" className="sr-only" onChange={(e) => handlePreview(e.target.files?.[0])} />
+            <input id="smile-upload" type="file" accept="image/*" className="sr-only" onChange={(event) => handlePreview(event.target.files?.[0])} />
             <label className="mt-5 block text-sm font-bold text-white" htmlFor="smile-concern">{c.concernLabel}</label>
-            <select id="smile-concern" value={smileConcern} onChange={(e) => setSmileConcern(e.target.value)} className="mt-2 w-full rounded-xl border border-white/15 bg-white/[0.08] px-4 py-3 text-sm font-semibold text-white outline-none focus:border-gold">
-              {smileConcerns.map((concern) => (<option key={concern.id} value={concern.id}>{t(concern.label)}</option>))}
+            <select id="smile-concern" value={smileConcern} onChange={(event) => setSmileConcern(event.target.value)} className="mt-2 w-full rounded-lg border border-white/15 bg-white/[0.08] px-4 py-3 text-sm font-semibold text-white outline-none focus:border-gold">
+              {smileConcerns.map((concern) => (
+                <option key={concern.id} value={concern.id}>{t(concern.label)}</option>
+              ))}
             </select>
-            <p className="mt-5 rounded-xl bg-white/10 p-4 text-sm leading-6 text-white/80">{t(selectedSmileConcern.result)}</p>
+            <p className="mt-5 rounded-lg bg-white/10 p-4 text-sm leading-6 text-white/80">{t(selectedSmileConcern.result)}</p>
             <p className="mt-3 text-xs leading-5 text-white/45">{c.analyzerDisclaimer}</p>
           </article>
 
-          <article className="rounded-2xl border border-white/10 bg-white/[0.06] p-7 backdrop-blur">
+          <article className="gs-card rounded-lg border border-white/10 bg-white/[0.06] p-7 backdrop-blur">
             <p className="eyebrow text-gold">{c.beforeAfterLabel}</p>
             <h2 className="font-display text-3xl leading-tight">{c.beforeAfterTitle}</h2>
-            <div className="relative mt-6 aspect-[4/3] overflow-hidden rounded-xl border border-white/12">
-              <Image src="https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=720&q=80&auto=format&fit=crop" alt={c.before} width={720} height={540} className="absolute inset-0 h-full w-full object-cover" />
+            <div className="relative mt-6 aspect-[4/3] overflow-hidden rounded-lg border border-white/12">
+              <Image src={siteAssets.smileTransform} alt={c.before} fill sizes="(min-width: 1024px) 30vw, 100vw" className="object-cover object-left" />
               <div className="absolute inset-y-0 left-0 overflow-hidden" style={{ width: `${sliderValue}%` }}>
-                <Image src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=720&q=80&auto=format&fit=crop" alt={c.after} width={720} height={540} className="h-full w-[720px] max-w-none object-cover" />
+                <div className="relative h-full w-[720px] max-w-none">
+                  <Image src={siteAssets.smileTransform} alt={c.after} fill sizes="(min-width: 1024px) 30vw, 100vw" className="object-cover object-right" />
+                </div>
               </div>
               <div className="absolute inset-y-0 z-10 flex items-center justify-center" style={{ left: `calc(${sliderValue}% - 1px)` }}>
                 <div className="h-full w-0.5 bg-white shadow-[0_0_12px_rgba(255,255,255,0.8)]" />
-                <div className="absolute grid h-9 w-9 place-items-center rounded-full bg-white shadow-xl"><span className="text-xs font-bold text-primary">{"↔"}</span></div>
+                <div className="absolute grid h-9 w-9 place-items-center rounded-full bg-white shadow-xl">
+                  <Icon name="arrow" className="h-4 w-4 text-primary" />
+                </div>
               </div>
               <span className="absolute left-3 top-3 z-10 rounded-full bg-cta/90 px-3 py-1 text-xs font-bold text-white backdrop-blur">{c.after}</span>
               <span className="absolute right-3 top-3 z-10 rounded-full bg-primary/80 px-3 py-1 text-xs font-bold text-white backdrop-blur">{c.before}</span>
             </div>
             <label className="sr-only" htmlFor="before-after-slider">{c.beforeAfterLabel}</label>
-            <input id="before-after-slider" type="range" min="10" max="90" value={sliderValue} onChange={(e) => setSliderValue(Number(e.target.value))} className="mt-5 w-full accent-gold" />
+            <input id="before-after-slider" type="range" min="10" max="90" value={sliderValue} onChange={(event) => setSliderValue(Number(event.target.value))} className="mt-5 w-full accent-gold" />
           </article>
         </div>
       </section>
 
-      {/* ══ LOCATION ══════════════════════════════════════ */}
       <section id="location" className="section-shell">
         <div className="mx-auto max-w-7xl px-5 md:px-8">
           <SectionHeading eyebrow={c.locationLabel} title={c.locationTitle} />
           <div className="grid gap-6 lg:grid-cols-[1fr_0.85fr]">
-            <div className="overflow-hidden rounded-2xl border border-primary/8 bg-white shadow-xl shadow-primary/8">
+            <div className="gs-reveal overflow-hidden rounded-lg border border-primary/8 bg-white shadow-xl shadow-primary/8">
               <iframe title="Google Maps Arcade Dental Bintaro" src="https://www.google.com/maps?q=Arcade%20Dental%20Bintaro%20Kebayoran%20Arcade%202&output=embed" width="100%" height="460" loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="block border-0" allowFullScreen />
             </div>
-            <div className="grid gap-4 content-start">
-              <div className="rounded-2xl border border-primary/8 bg-white p-6 shadow-sm">
+            <div className="grid content-start gap-4">
+              <div className="gs-card rounded-lg border border-primary/8 bg-white p-6 shadow-sm">
                 <div className="flex items-center gap-3">
-                  <div className="grid h-12 w-12 place-items-center rounded-xl bg-highlight text-cta"><Icon name="map" className="h-6 w-6" /></div>
+                  <div className="grid h-12 w-12 place-items-center rounded-lg bg-highlight text-cta"><Icon name="map" className="h-6 w-6" /></div>
                   <h3 className="font-display text-2xl text-primary">Arcade Dental</h3>
                 </div>
                 <p className="mt-4 leading-7 text-secondary">{business.address}</p>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
-                <a href={`tel:${business.phoneDisplay.replace(/\s|-/g, "")}`} className="rounded-2xl border border-primary/8 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-gold hover:shadow-md">
+                <a href={`tel:${business.phoneDisplay.replace(/\s|-/g, "")}`} className="gs-card rounded-lg border border-primary/8 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-gold hover:shadow-md">
                   <Icon name="phone" className="h-6 w-6 text-cta" />
                   <p className="mt-4 text-sm font-bold text-primary">{business.phoneDisplay}</p>
                   <p className="text-xs text-secondary">Telp / WA</p>
                 </a>
-                <a href={business.instagram} target="_blank" rel="noreferrer" className="rounded-2xl border border-primary/8 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-gold hover:shadow-md">
+                <a href={business.instagram} target="_blank" rel="noreferrer" className="gs-card rounded-lg border border-primary/8 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-gold hover:shadow-md">
                   <Icon name="instagram" className="h-6 w-6 text-cta" />
                   <p className="mt-4 text-sm font-bold text-primary">@arcade_dental</p>
                   <p className="text-xs text-secondary">Instagram</p>
                 </a>
               </div>
-              <div className="rounded-2xl border border-primary/8 bg-white p-5 shadow-sm">
-                <Icon name="calendar" className="h-6 w-6 text-cta" />
+              <div className="gs-card rounded-lg border border-primary/8 bg-white p-5 shadow-sm">
+                <Icon name="clock" className="h-6 w-6 text-cta" />
                 <p className="mt-4 text-sm font-bold text-primary">{business.hours[lang]}</p>
                 <p className="text-xs text-secondary">{lang === "id" ? "Jam operasional" : "Operating hours"}</p>
               </div>
@@ -1248,10 +1292,9 @@ export function ArcadeDentalSite() {
         </div>
       </section>
 
-      {/* ══ CONTACT ═══════════════════════════════════════ */}
       <section id="contact" className="bg-surface-2 py-20 md:py-28">
         <div className="mx-auto grid max-w-7xl gap-10 px-5 md:px-8 lg:grid-cols-[0.85fr_1fr] lg:items-start">
-          <div>
+          <div className="gs-reveal">
             <p className="eyebrow">{c.locationLabel}</p>
             <h2 className="font-display text-4xl leading-tight text-primary md:text-5xl">{c.contactTitle}</h2>
             <p className="mt-5 text-lg leading-8 text-secondary">{c.contactBody}</p>
@@ -1268,41 +1311,41 @@ export function ArcadeDentalSite() {
               ))}
             </div>
           </div>
-          <form onSubmit={handleSmartSubmit} className="rounded-2xl border border-primary/8 bg-white p-7 shadow-xl shadow-primary/8">
+          <form onSubmit={handleSmartSubmit} className="gs-reveal rounded-lg border border-primary/8 bg-white p-7 shadow-xl shadow-primary/8">
             <label className="form-label" htmlFor="service-select">{c.servicesLabel}</label>
-            <select id="service-select" value={selectedService} onChange={(e) => setSelectedService(e.target.value)} className="form-control">
-              {services.map((s) => (<option key={s.id} value={s.id}>{t(s.title)}</option>))}
+            <select id="service-select" value={selectedService} onChange={(event) => setSelectedService(event.target.value)} className="form-control">
+              {services.map((service) => (
+                <option key={service.id} value={service.id}>{t(service.title)}</option>
+              ))}
             </select>
             <label className="form-label mt-5" htmlFor="patient-name">{lang === "id" ? "Nama" : "Name"}</label>
-            <input id="patient-name" value={patientName} onChange={(e) => setPatientName(e.target.value)} className="form-control" placeholder={c.namePlaceholder} />
+            <input id="patient-name" value={patientName} onChange={(event) => setPatientName(event.target.value)} className="form-control" placeholder={c.namePlaceholder} />
             <label className="form-label mt-5" htmlFor="schedule">{lang === "id" ? "Preferensi jadwal" : "Preferred schedule"}</label>
-            <input id="schedule" value={schedule} onChange={(e) => setSchedule(e.target.value)} className="form-control" placeholder={c.schedulePlaceholder} />
-            <div className="mt-5 rounded-xl bg-highlight p-4">
+            <input id="schedule" value={schedule} onChange={(event) => setSchedule(event.target.value)} className="form-control" placeholder={c.schedulePlaceholder} />
+            <div className="mt-5 rounded-lg bg-highlight p-4">
               <p className="whitespace-pre-line text-sm leading-6 text-primary/80">{smartMessage}</p>
             </div>
             <button type="submit" className="mt-6 inline-flex min-h-14 w-full items-center justify-center gap-2.5 rounded-full bg-cta px-6 font-bold text-white shadow-lg shadow-cta/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-primary hover:shadow-xl">
-              <Icon name="message" className="h-5 w-5" />{c.messageCta}
+              <Icon name="message" className="h-5 w-5" />
+              {c.messageCta}
             </button>
           </form>
         </div>
       </section>
 
-      {/* ══ FINAL CTA ═════════════════════════════════════ */}
       <section ref={ctaRef} id="booking-cta" className="relative overflow-hidden bg-primary px-5 py-16 text-white md:px-8 md:py-24">
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute right-0 top-0 h-80 w-80 translate-x-1/2 -translate-y-1/2 rounded-full border border-gold/10" />
-          <div className="absolute bottom-0 left-0 h-60 w-60 -translate-x-1/2 translate-y-1/2 rounded-full border border-white/5" />
-          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle, #c8a96e 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
-        </div>
+        <Image src={siteAssets.techTexture} alt="" fill sizes="100vw" className="object-cover opacity-20" />
+        <div className="absolute inset-0 bg-primary/82" />
         <div className="relative mx-auto flex max-w-7xl flex-col items-start justify-between gap-8 md:flex-row md:items-center">
-          <div>
-            <p className="gs-cta eyebrow text-gold">{business.hashtag}</p>
-            <h2 className="gs-cta font-display text-4xl leading-tight md:text-5xl lg:text-6xl">{c.finalTitle}</h2>
-            <p className="gs-cta mt-4 max-w-xl text-lg leading-8 text-white/70">{c.finalBody}</p>
+          <div className="gs-reveal">
+            <p className="eyebrow text-gold">{business.hashtag}</p>
+            <h2 className="font-display text-4xl leading-tight md:text-5xl lg:text-6xl">{c.finalTitle}</h2>
+            <p className="mt-4 max-w-xl text-lg leading-8 text-white/70">{c.finalBody}</p>
           </div>
-          <div className="gs-cta flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-            <a href={buildWhatsAppUrl(smartMessage)} className="inline-flex min-h-14 items-center justify-center gap-2.5 rounded-full bg-gold px-8 font-bold text-primary shadow-lg shadow-gold/25 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-              <Icon name="message" className="h-5 w-5" />WhatsApp
+          <div className="gs-reveal flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+            <a href={buildWhatsAppUrl(smartMessage)} className="inline-flex min-h-14 items-center justify-center gap-2.5 rounded-full bg-gold px-8 font-bold text-primary shadow-lg shadow-gold/25 transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-xl">
+              <Icon name="message" className="h-5 w-5" />
+              WhatsApp
             </a>
             <a href="#contact" className="inline-flex min-h-14 items-center justify-center rounded-full border border-white/20 px-8 font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:border-gold hover:text-gold">
               {c.formReservation}
@@ -1311,19 +1354,18 @@ export function ArcadeDentalSite() {
         </div>
       </section>
 
-      {/* ══ FOOTER ════════════════════════════════════════ */}
       <footer className="bg-[#0d1520] px-5 py-12 text-white md:px-8">
         <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-[1.2fr_0.8fr_0.8fr]">
           <div>
             <div className="flex items-center gap-3">
-              <span className="grid h-10 w-10 place-items-center rounded-xl bg-white/10 text-gold"><Icon name="spark" className="h-5 w-5" /></span>
+              <span className="grid h-10 w-10 place-items-center rounded-lg bg-white/10 text-gold"><Icon name="spark" className="h-5 w-5" /></span>
               <h2 className="font-display text-2xl">{business.name}</h2>
             </div>
             <p className="mt-4 max-w-sm text-sm leading-7 text-white/55">{business.tagline[lang]}</p>
             <p className="mt-5 font-accent text-[10px] font-bold uppercase tracking-[0.28em] text-gold">{business.hashtag}</p>
             <div className="mt-5 flex gap-3">
-              <a href={business.instagram} target="_blank" rel="noreferrer" className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 text-white/50 transition-all duration-200 hover:border-gold hover:text-gold"><Icon name="instagram" className="h-5 w-5" /></a>
-              <a href={business.facebook} target="_blank" rel="noreferrer" className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 text-white/50 transition-all duration-200 hover:border-gold hover:text-gold"><Icon name="facebook" className="h-5 w-5" /></a>
+              <a href={business.instagram} target="_blank" rel="noreferrer" className="grid h-10 w-10 place-items-center rounded-lg border border-white/10 text-white/50 transition-all duration-200 hover:border-gold hover:text-gold"><Icon name="instagram" className="h-5 w-5" /></a>
+              <a href={business.facebook} target="_blank" rel="noreferrer" className="grid h-10 w-10 place-items-center rounded-lg border border-white/10 text-white/50 transition-all duration-200 hover:border-gold hover:text-gold"><Icon name="facebook" className="h-5 w-5" /></a>
             </div>
           </div>
           <div>
@@ -1339,24 +1381,24 @@ export function ArcadeDentalSite() {
             </div>
           </div>
         </div>
-        <div className="mx-auto mt-10 flex max-w-7xl flex-col items-start justify-between gap-3 border-t border-white/8 pt-6 text-xs text-white/35 md:flex-row md:items-center">
-          <p>© 2026 Arcade Dental. All rights reserved.</p>
+        <div className="mx-auto mt-10 flex max-w-7xl flex-col items-start justify-between gap-3 border-t border-white/10 pt-6 text-xs text-white/35 md:flex-row md:items-center">
+          <p>(c) 2026 Arcade Dental. All rights reserved.</p>
           <a href={business.website} target="_blank" rel="noreferrer" className="hover:text-white/60">{business.website.replace("https://", "")}</a>
         </div>
       </footer>
 
-      {/* ══ FLOATING CTA ══════════════════════════════════ */}
       <a href={buildWhatsAppUrl(smartMessage)} className={`fixed bottom-5 right-5 z-50 inline-flex min-h-14 items-center gap-2.5 rounded-full bg-cta px-5 font-bold text-white shadow-2xl shadow-cta/35 transition-all duration-300 hover:-translate-y-1.5 hover:bg-primary ${showFloating ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-6 opacity-0"}`}>
         <Icon name="message" className="h-5 w-5" />
         <span className="hidden sm:inline">{c.book}</span>
       </a>
 
-      {/* ══ GALLERY LIGHTBOX ══════════════════════════════ */}
       {galleryIndex !== null ? (
         <div className="fixed inset-0 z-[70] grid place-items-center bg-primary/90 p-5 backdrop-blur-md" role="dialog" aria-modal="true" onClick={() => setGalleryIndex(null)}>
-          <button type="button" onClick={() => setGalleryIndex(null)} className="absolute right-5 top-5 rounded-full bg-white px-4 py-2 text-sm font-bold text-primary shadow-xl transition-all duration-200 hover:bg-gold">{c.close} ✕</button>
-          <div className="max-h-[88vh] max-w-5xl overflow-hidden rounded-2xl bg-white p-3 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-            <Image src={gallery[galleryIndex].src} alt={t(gallery[galleryIndex].alt)} width={1200} height={820} className="max-h-[78vh] w-full rounded-xl object-contain" />
+          <button type="button" onClick={() => setGalleryIndex(null)} className="absolute right-5 top-5 rounded-full bg-white px-4 py-2 text-sm font-bold text-primary shadow-xl transition-all duration-200 hover:bg-gold">
+            {c.close} x
+          </button>
+          <div className="max-h-[88vh] max-w-5xl overflow-hidden rounded-lg bg-white p-3 shadow-2xl" onClick={(event) => event.stopPropagation()}>
+            <Image src={gallery[galleryIndex].src} alt={t(gallery[galleryIndex].alt)} width={1200} height={820} className="max-h-[78vh] w-full rounded-lg object-contain" />
             <p className="px-2 py-3 text-center font-bold text-primary">{t(gallery[galleryIndex].label)}</p>
           </div>
         </div>

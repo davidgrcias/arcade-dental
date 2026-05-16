@@ -29,6 +29,27 @@ export type Testimonial = {
   quote: LocalizedText;
 };
 
+export type CareJourneyStep = {
+  id: string;
+  eyebrow: LocalizedText;
+  title: LocalizedText;
+  body: LocalizedText;
+  metric: string;
+  icon: "heart" | "scope" | "spark" | "shield" | "calendar";
+};
+
+export type TechMetric = {
+  value: string;
+  label: LocalizedText;
+};
+
+export type TreatmentMatcherOption = {
+  id: string;
+  label: LocalizedText;
+  result: LocalizedText;
+  serviceId: string;
+};
+
 export const business = {
   name: "Arcade Dental",
   tagline: {
@@ -51,9 +72,18 @@ export const business = {
   website: "https://arcadedentalclinic.com",
 };
 
+export const siteAssets = {
+  clinicInterior: "/assets/clinic-interior-premium.png",
+  techLab: "/assets/tech-lab-equipment.png",
+  careJourney: "/assets/care-journey-consult.png",
+  smileTransform: "/assets/smile-transform-preview.png",
+  techTexture: "/assets/dental-tech-texture.png",
+};
+
 export const navItems = [
   { id: "about", label: { id: "Tentang", en: "About" } },
   { id: "services", label: { id: "Layanan", en: "Services" } },
+  { id: "journey", label: { id: "Journey", en: "Journey" } },
   { id: "technology", label: { id: "Teknologi", en: "Technology" } },
   { id: "doctors", label: { id: "Dokter", en: "Doctors" } },
   { id: "location", label: { id: "Lokasi", en: "Location" } },
@@ -218,6 +248,54 @@ export const serviceCategories: { id: ServiceCategory; label: LocalizedText }[] 
   { id: "kids", label: { id: "Anak", en: "Kids" } },
 ];
 
+export const treatmentMatcher: TreatmentMatcherOption[] = [
+  {
+    id: "straighten",
+    label: { id: "Gigi ingin lebih rapi", en: "Straighter teeth" },
+    result: {
+      id: "Mulai dari evaluasi ortodonti. Tim akan cek susunan gigi, rahang, dan opsi ritme perawatan yang paling nyaman.",
+      en: "Start with an orthodontic evaluation. The team can review alignment, jaw position, and a comfortable treatment rhythm.",
+    },
+    serviceId: "ortodonti",
+  },
+  {
+    id: "brighten",
+    label: { id: "Senyum ingin lebih cerah", en: "Brighter smile" },
+    result: {
+      id: "Konsultasi estetika cocok untuk membahas whitening, bleaching, veneer, dan target senyum yang natural.",
+      en: "An aesthetic consultation can cover whitening, bleaching, veneers, and a natural smile target.",
+    },
+    serviceId: "estetika",
+  },
+  {
+    id: "pain",
+    label: { id: "Nyeri, lubang, atau ngilu", en: "Pain, cavities, sensitivity" },
+    result: {
+      id: "Evaluasi konservasi gigi membantu menentukan apakah cukup tambal, scaling, atau perlu perawatan saluran akar.",
+      en: "A conservative dentistry evaluation helps decide whether filling, scaling, or root canal care is needed.",
+    },
+    serviceId: "konservasi",
+  },
+  {
+    id: "replace",
+    label: { id: "Gigi hilang / ingin implan", en: "Missing tooth / implant" },
+    result: {
+      id: "Dokter dapat menilai tulang rahang, opsi implan, atau prostodonti sesuai kondisi dan prioritas Anda.",
+      en: "The doctor can assess jawbone condition, implant options, or prosthodontics based on your priorities.",
+    },
+    serviceId: "implan",
+  },
+  {
+    id: "kids",
+    label: { id: "Perawatan anak", en: "Kids dental care" },
+    result: {
+      id: "Pilih dokter gigi anak untuk pendekatan yang lebih ramah, bertahap, dan tidak menakutkan.",
+      en: "Choose pediatric dentistry for a friendlier, gradual, and less intimidating approach.",
+    },
+    serviceId: "anak",
+  },
+];
+
 export const whyUs = [
   {
     title: { id: "Painless Technology", en: "Painless Technology" },
@@ -246,6 +324,64 @@ export const whyUs = [
       id: "Arcade Dental terdaftar sebagai klinik rekanan BCA Life untuk kemudahan pasien.",
       en: "Arcade Dental is listed as a BCA Life provider for easier patient access.",
     },
+  },
+];
+
+export const careJourney: CareJourneyStep[] = [
+  {
+    id: "comfort",
+    eyebrow: { id: "Step 01", en: "Step 01" },
+    title: { id: "Comfort Check", en: "Comfort Check" },
+    body: {
+      id: "Kunjungan dimulai dengan mendengar keluhan, pengalaman sebelumnya, dan tingkat kenyamanan pasien.",
+      en: "Each visit starts by listening to your concern, past experience, and comfort level.",
+    },
+    metric: "01",
+    icon: "heart",
+  },
+  {
+    id: "scan",
+    eyebrow: { id: "Step 02", en: "Step 02" },
+    title: { id: "Digital Scan & Diagnosis", en: "Digital Scan & Diagnosis" },
+    body: {
+      id: "Pemeriksaan dibantu teknologi visual dan radiografi agar masalah terlihat lebih jelas.",
+      en: "Visual and radiography tools help make the concern clearer before treatment starts.",
+    },
+    metric: "02",
+    icon: "scope",
+  },
+  {
+    id: "plan",
+    eyebrow: { id: "Step 03", en: "Step 03" },
+    title: { id: "Specialist Plan", en: "Specialist Plan" },
+    body: {
+      id: "Dokter menyusun opsi perawatan yang realistis, personal, dan mudah dipahami.",
+      en: "The doctor maps realistic, personal, and easy-to-understand treatment options.",
+    },
+    metric: "03",
+    icon: "spark",
+  },
+  {
+    id: "treat",
+    eyebrow: { id: "Step 04", en: "Step 04" },
+    title: { id: "Precision Treatment", en: "Precision Treatment" },
+    body: {
+      id: "Tindakan dilakukan bertahap dengan kontrol kenyamanan dan standar sterilisasi klinik.",
+      en: "Treatment runs step by step with comfort control and clinical sterilization standards.",
+    },
+    metric: "04",
+    icon: "shield",
+  },
+  {
+    id: "aftercare",
+    eyebrow: { id: "Step 05", en: "Step 05" },
+    title: { id: "Aftercare Rhythm", en: "Aftercare Rhythm" },
+    body: {
+      id: "Pasien mendapat arahan kontrol, kebiasaan harian, dan jadwal lanjutan yang jelas.",
+      en: "Patients receive clear follow-up guidance, daily habits, and next-visit timing.",
+    },
+    metric: "05",
+    icon: "calendar",
   },
 ];
 
@@ -290,6 +426,12 @@ export const technologies: Technology[] = [
     },
     icon: "motor",
   },
+];
+
+export const techMetrics: TechMetric[] = [
+  { value: "5", label: { id: "perangkat utama", en: "core devices" } },
+  { value: "360", label: { id: "sudut pandang perawatan", en: "care perspective" } },
+  { value: "1:1", label: { id: "rencana personal", en: "personal plan" } },
 ];
 
 export const doctors: Doctor[] = [
@@ -356,36 +498,36 @@ export const testimonials: Testimonial[] = [
 
 export const gallery = [
   {
-    src: "https://images.unsplash.com/photo-1629909615184-74f495363b67?w=900&q=85&auto=format&fit=crop",
+    src: siteAssets.clinicInterior,
     alt: {
-      id: "Area resepsionis Arcade Dental yang modern dan nyaman",
-      en: "Arcade Dental modern and comfortable reception area",
+      id: "Area resepsionis premium Arcade Dental yang modern dan nyaman",
+      en: "Arcade Dental premium modern and comfortable reception area",
     },
-    label: { id: "Area resepsionis", en: "Reception area" },
+    label: { id: "Premium reception", en: "Premium reception" },
   },
   {
-    src: "https://images.unsplash.com/photo-1588776814546-1ffbb172d4e1?w=900&q=85&auto=format&fit=crop",
-    alt: {
-      id: "Ruang perawatan dental modern dengan teknologi terkini",
-      en: "Modern dental treatment room with latest technology",
-    },
-    label: { id: "Ruang perawatan", en: "Treatment room" },
-  },
-  {
-    src: "https://images.unsplash.com/photo-1609840114035-3c981b782dfe?w=900&q=85&auto=format&fit=crop",
+    src: siteAssets.techLab,
     alt: {
       id: "Peralatan teknologi dental canggih di Arcade Dental",
       en: "Advanced dental technology equipment at Arcade Dental",
     },
-    label: { id: "Teknologi klinik", en: "Clinic technology" },
+    label: { id: "Tech lab", en: "Tech lab" },
   },
   {
-    src: "https://images.unsplash.com/photo-1606811841689-23dfddce3e1c?w=900&q=85&auto=format&fit=crop",
+    src: siteAssets.careJourney,
     alt: {
-      id: "Dokter dan asisten gigi memberikan perawatan terbaik",
-      en: "Dentist and assistant delivering the best dental care",
+      id: "Momen konsultasi hangat dengan perencanaan perawatan dental",
+      en: "Warm consultation moment with dental care planning",
     },
-    label: { id: "Perawatan spesialis", en: "Specialist care" },
+    label: { id: "Care journey", en: "Care journey" },
+  },
+  {
+    src: siteAssets.smileTransform,
+    alt: {
+      id: "Preview transformasi senyum untuk perawatan estetika",
+      en: "Smile transformation preview for aesthetic dental care",
+    },
+    label: { id: "Smile preview", en: "Smile preview" },
   },
 ];
 
