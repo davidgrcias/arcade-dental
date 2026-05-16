@@ -27,7 +27,6 @@ export function useArcadeDental() {
   const [activeJourney, setActiveJourney] = useState(0);
   const [testimonialIndex, setTestimonialIndex] = useState(0);
   const [pausedCarousel, setPausedCarousel] = useState(false);
-  const [galleryIndex, setGalleryIndex] = useState<number | null>(null);
 
   // Derived state for WhatsApp messages
   const selectedServiceTitle = t(services.find((s) => s.id === selectedService)?.title ?? services[0].title);
@@ -85,7 +84,6 @@ export function useArcadeDental() {
       activeJourney,
       testimonialIndex,
       pausedCarousel,
-      galleryIndex,
     },
     actions: {
       setServiceFilter,
@@ -104,7 +102,6 @@ export function useArcadeDental() {
       setActiveJourney,
       setTestimonialIndex,
       setPausedCarousel,
-      setGalleryIndex,
     },
     languageReady,
   };

@@ -6,8 +6,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useArcadeDental } from "@/hooks/useArcadeDental";
 import { useLanguage } from "@/context/LanguageContext";
 import { Icon } from "@/components/ui/Icon";
-import Image from "next/image";
-import { gallery } from "@/lib/content";
 
 // Sections
 import { Navbar } from "./sections/Navbar";
@@ -29,7 +27,7 @@ import Engagement from "./sections/Engagement";
 
 export function ArcadeDentalSite() {
   const { state, actions, languageReady } = useArcadeDental();
-  const { c, t } = useLanguage();
+  const { c } = useLanguage();
   const mainRef = useRef<HTMLElement>(null);
   const ctaRef = useRef<HTMLElement | null>(null);
 
@@ -121,9 +119,7 @@ export function ArcadeDentalSite() {
         sliderValue={state.sliderValue}
         setSliderValue={actions.setSliderValue}
       />
-      <Gallery
-        setGalleryIndex={actions.setGalleryIndex}
-      />
+      <Gallery />
       <Insurance />
       <Location />
       <Contact
@@ -147,34 +143,6 @@ export function ArcadeDentalSite() {
         <Icon name="message" className="h-5 w-5" />
         <span className="hidden sm:inline">{c.book}</span>
       </a>
-
-      {/* Gallery Dialog */}
-      {state.galleryIndex !== null && (
-        <div 
-          className="fixed inset-0 z-[70] grid place-items-center bg-primary/90 p-5 backdrop-blur-md" 
-          role="dialog" 
-          aria-modal="true" 
-          onClick={() => actions.setGalleryIndex(null)}
-        >
-          <button 
-            type="button" 
-            onClick={() => actions.setGalleryIndex(null)} 
-            className="absolute right-5 top-5 rounded-full bg-white px-4 py-2 text-sm font-bold text-primary shadow-xl transition-all duration-200 hover:bg-gold"
-          >
-            {c.close} x
-          </button>
-          <div className="max-h-[88vh] max-w-5xl overflow-hidden rounded-lg bg-white p-3 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-            <Image 
-              src={gallery[state.galleryIndex].src} 
-              alt={t(gallery[state.galleryIndex].alt)} 
-              width={1200} 
-              height={820} 
-              className="max-h-[78vh] w-full rounded-lg object-contain" 
-            />
-            <p className="px-2 py-3 text-center font-bold text-primary">{t(gallery[state.galleryIndex].label)}</p>
-          </div>
-        </div>
-      )}
     </main>
   );
 }
