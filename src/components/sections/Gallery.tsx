@@ -2,7 +2,7 @@
 
 import { gallery } from "@/lib/content";
 import { useLanguage } from "@/context/LanguageContext";
-import SectionHeading from "@/components/ui/SectionHeading";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 import { GalleryCard } from "./gallery/GalleryCard";
 import { GalleryMarquee } from "./gallery/GalleryMarquee";
 

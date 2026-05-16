@@ -1,7 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/context/LanguageContext";
-import SectionHeading from "@/components/ui/SectionHeading";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 import { MapFrame } from "./location/MapFrame";
 import { LocationInfo } from "./location/LocationInfo";
 
