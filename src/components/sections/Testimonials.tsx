@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
+import gsap from "gsap";
 import { testimonials } from "@/lib/content";
 import { useLanguage } from "@/context/LanguageContext";
 import { getInitials } from "@/lib/utils";
@@ -28,6 +29,8 @@ export function Testimonials({
   const total = testimonials.length;
   const [progress, setProgress] = useState(0);
   const railRef = useRef<HTMLDivElement>(null);
+  const heroBodyRef = useRef<HTMLDivElement>(null);
+  const lastActiveRef = useRef(-1);
 
   const goTo = useCallback(
     (idx: number) => {
@@ -74,6 +77,25 @@ export function Testimonials({
     if (card) {
       card.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
     }
+  }, [testimonialIndex]);
+
+  // Animate hero body when the active testimonial changes
+  useEffect(() => {
+    if (lastActiveRef.current === testimonialIndex) return;
+    lastActiveRef.current = testimonialIndex;
+
+    const reduceMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return;
+
+    const node = heroBodyRef.current;
+    if (!node) return;
+    gsap.fromTo(
+      node,
+      { opacity: 0, y: 12, filter: "blur(6px)" },
+      { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.45, ease: "power3.out", overwrite: true },
+    );
   }, [testimonialIndex]);
 
   // Keyboard nav
@@ -172,62 +194,63 @@ export function Testimonials({
 
         {/* Hero featured testimonial */}
         <article
-          key={`hero-${testimonialIndex}`}
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
-          className="gs-reveal relative mx-auto max-w-4xl overflow-hidden rounded-2xl border border-primary/8 bg-white p-7 shadow-2xl shadow-primary/8 sm:p-10"
+          className="relative mx-auto max-w-4xl overflow-hidden rounded-2xl border border-primary/8 bg-white p-7 shadow-2xl shadow-primary/8 sm:p-10"
         >
           {/* Soft branded glow */}
           <span aria-hidden className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-gold/10 blur-2xl" />
           <span aria-hidden className="pointer-events-none absolute -left-16 -bottom-16 h-48 w-48 rounded-full bg-cta/10 blur-2xl" />
 
-          <div className="relative flex flex-wrap items-start justify-between gap-3">
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary/10 bg-white px-3 py-1.5 shadow-sm">
-              <GoogleMark className="h-4 w-4" />
-              <span className="font-accent text-[10px] font-bold uppercase tracking-[0.22em] text-primary/75">
-                {lang === "id" ? "Verified Google review" : "Verified Google review"}
+          <div ref={heroBodyRef} className="relative">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <span className="inline-flex items-center gap-2 rounded-full border border-primary/10 bg-white px-3 py-1.5 shadow-sm">
+                <GoogleMark className="h-4 w-4" />
+                <span className="font-accent text-[10px] font-bold uppercase tracking-[0.22em] text-primary/75">
+                  {lang === "id" ? "Verified Google review" : "Verified Google review"}
+                </span>
               </span>
-            </span>
 
-            <div className="flex items-center gap-1 text-gold">
-              {Array.from({ length: 5 }).map((_, star) => (
-                <Icon
-                  key={star}
-                  name="star"
-                  className={`h-4 w-4 ${star < featuredRating ? "fill-current" : "text-primary/15"}`}
-                />
-              ))}
-              <span className="ml-2 font-display text-base font-bold text-primary">{featuredRating.toFixed(1)}</span>
-            </div>
-          </div>
-
-          <Icon name="quote" className="relative mt-6 h-10 w-10 text-gold/45" />
-
-          <blockquote className="relative mt-2">
-            <p className="font-display text-2xl leading-snug text-primary sm:text-3xl sm:leading-snug">
-              {t(featured.quote)}
-            </p>
-          </blockquote>
-
-          <div className="relative mt-7 flex flex-wrap items-center justify-between gap-4 border-t border-primary/8 pt-5">
-            <div className="flex items-center gap-3">
-              <span className="grid h-12 w-12 place-items-center rounded-full bg-primary text-gold font-display text-base font-bold shadow-md">
-                {getInitials(featured.name) || featured.name.charAt(0)}
-              </span>
-              <div>
-                <p className="font-display text-lg leading-tight text-primary">{featured.name}</p>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-secondary">
-                  {lang === "id" ? "Pasien Arcade Dental" : "Arcade Dental patient"}
-                </p>
+              <div className="flex items-center gap-1 text-gold">
+                {Array.from({ length: 5 }).map((_, star) => (
+                  <Icon
+                    key={star}
+                    name="star"
+                    className={`h-4 w-4 ${star < featuredRating ? "fill-current" : "text-primary/15"}`}
+                  />
+                ))}
+                <span className="ml-2 font-display text-base font-bold text-primary">{featuredRating.toFixed(1)}</span>
               </div>
             </div>
 
-            {featured.service && (
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-cta/10 px-3 py-1.5 text-[11px] font-bold text-cta">
-                <Icon name="spark" className="h-3.5 w-3.5" />
-                {t(featured.service)}
-              </span>
-            )}
+            <Icon name="quote" className="mt-6 h-10 w-10 text-gold/45" />
+
+            <blockquote className="mt-2">
+              <p className="font-display text-2xl leading-snug text-primary sm:text-3xl sm:leading-snug">
+                {t(featured.quote)}
+              </p>
+            </blockquote>
+
+            <div className="mt-7 flex flex-wrap items-center justify-between gap-4 border-t border-primary/8 pt-5">
+              <div className="flex items-center gap-3">
+                <span className="grid h-12 w-12 place-items-center rounded-full bg-primary text-gold font-display text-base font-bold shadow-md">
+                  {getInitials(featured.name) || featured.name.charAt(0)}
+                </span>
+                <div>
+                  <p className="font-display text-lg leading-tight text-primary">{featured.name}</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-secondary">
+                    {lang === "id" ? "Pasien Arcade Dental" : "Arcade Dental patient"}
+                  </p>
+                </div>
+              </div>
+
+              {featured.service && (
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-cta/10 px-3 py-1.5 text-[11px] font-bold text-cta">
+                  <Icon name="spark" className="h-3.5 w-3.5" />
+                  {t(featured.service)}
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Autoplay progress bar */}
