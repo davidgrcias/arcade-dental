@@ -73,7 +73,18 @@ export function ServiceMatcher({
         <div className="absolute inset-0 opacity-[0.16] [background-image:linear-gradient(90deg,rgba(255,255,255,0.18)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.14)_1px,transparent_1px)] [background-size:44px_44px]" />
         <div className="relative grid h-full gap-5 md:grid-cols-[0.76fr_1fr] md:items-center">
           <div className="relative min-h-[250px] overflow-hidden rounded-lg border border-white/12 md:aspect-[4/5]">
-            <Image src={siteAssets.careJourney} alt={c.matcherTitle} fill sizes="(min-width: 768px) 30vw, 100vw" className="object-cover" />
+            {treatmentMatcher.map((option) => (
+              <Image
+                key={option.id}
+                src={option.image}
+                alt={t(option.label)}
+                fill
+                sizes="(min-width: 768px) 30vw, 100vw"
+                className={`object-cover transition-all duration-700 ease-out ${
+                  matcherId === option.id ? "opacity-100 scale-100" : "opacity-0 scale-105"
+                }`}
+              />
+            ))}
             <div className="absolute inset-0 bg-gradient-to-t from-primary/70 to-transparent" />
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-primary/86 to-transparent p-4">
               <p className="text-xs font-bold text-gold">{lang === "id" ? "Fokus layanan" : "Care focus"}</p>

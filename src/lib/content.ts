@@ -67,6 +67,7 @@ export type TreatmentMatcherOption = {
   label: LocalizedText;
   result: LocalizedText;
   serviceId: string;
+  image: string;
 };
 
 export const business = {
@@ -284,6 +285,7 @@ export const treatmentMatcher: TreatmentMatcherOption[] = [
       en: "Start with an orthodontic evaluation. The team can review alignment, jaw position, and a comfortable treatment rhythm.",
     },
     serviceId: "ortodonti",
+    image: "/assets/real/unnamed (2).webp",
   },
   {
     id: "brighten",
@@ -293,6 +295,7 @@ export const treatmentMatcher: TreatmentMatcherOption[] = [
       en: "An aesthetic consultation can cover whitening, bleaching, veneers, and a natural smile target.",
     },
     serviceId: "estetika",
+    image: "/assets/real/unnamed (5).webp",
   },
   {
     id: "pain",
@@ -302,6 +305,7 @@ export const treatmentMatcher: TreatmentMatcherOption[] = [
       en: "A conservative dentistry evaluation helps decide whether filling, scaling, or root canal care is needed.",
     },
     serviceId: "konservasi",
+    image: "/assets/real/20210914_202935.webp",
   },
   {
     id: "replace",
@@ -311,6 +315,7 @@ export const treatmentMatcher: TreatmentMatcherOption[] = [
       en: "The doctor can assess jawbone condition, implant options, or prosthodontics based on your priorities.",
     },
     serviceId: "implan",
+    image: "/assets/real/unnamed (4).webp",
   },
   {
     id: "kids",
@@ -320,6 +325,7 @@ export const treatmentMatcher: TreatmentMatcherOption[] = [
       en: "Choose pediatric dentistry for a friendlier, gradual, and less intimidating approach.",
     },
     serviceId: "anak",
+    image: "/assets/real/unnamed (9).webp",
   },
 ];
 
