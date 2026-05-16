@@ -18,10 +18,21 @@ export type Technology = {
   icon: "sterile" | "scope" | "light" | "xray" | "motor";
 };
 
+export type DoctorCategory = "specialist" | "general";
+
 export type Doctor = {
+  id: string;
   name: string;
   role: LocalizedText;
   availability: LocalizedText;
+  category: DoctorCategory;
+  accent: "cta" | "gold";
+  icon: "align" | "implant" | "spark" | "shield" | "child" | "scope" | "heart" | "surgery";
+  experience: LocalizedText;
+  expertise: LocalizedText[];
+  languages: string[];
+  education: LocalizedText[];
+  signature: LocalizedText;
 };
 
 export type Testimonial = {
@@ -528,39 +539,172 @@ export const techMetrics: TechMetric[] = [
 
 export const doctors: Doctor[] = [
   {
+    id: "ryan",
     name: "drg. Muhammad Ryan",
     role: { id: "Spesialis Periodonsia", en: "Periodontology Specialist" },
-    availability: { id: "Jadwal dikonfirmasi melalui admin.", en: "Schedule confirmed through admin." },
+    availability: { id: "Jadwal dikonfirmasi via admin.", en: "Schedule confirmed via admin." },
+    category: "specialist",
+    accent: "cta",
+    icon: "shield",
+    experience: { id: "Fokus periodonsia & kesehatan gusi", en: "Focus on periodontics & gum care" },
+    expertise: [
+      { id: "Perawatan gusi", en: "Gum therapy" },
+      { id: "Scaling lanjut", en: "Deep scaling" },
+      { id: "Bedah periodontal", en: "Periodontal surgery" },
+    ],
+    languages: ["ID", "EN"],
+    education: [
+      { id: "Spesialis Periodonsia", en: "Periodontology Specialist" },
+      { id: "Anggota Ikatan Periodontologi Indonesia", en: "Indonesian Periodontology Member" },
+    ],
+    signature: {
+      id: "Gusi sehat adalah fondasi senyum yang awet. Kita rawat dari akarnya.",
+      en: "Healthy gums are the foundation of a lasting smile. Let's care for them at the root.",
+    },
   },
   {
+    id: "chitra",
     name: "drg. Chitra Martalia",
     role: { id: "Spesialis Ortodonti", en: "Orthodontics Specialist" },
-    availability: { id: "Jadwal dikonfirmasi melalui admin.", en: "Schedule confirmed through admin." },
+    availability: { id: "Jadwal dikonfirmasi via admin.", en: "Schedule confirmed via admin." },
+    category: "specialist",
+    accent: "gold",
+    icon: "align",
+    experience: { id: "Fokus susunan gigi & ritme behel", en: "Focus on alignment & braces journey" },
+    expertise: [
+      { id: "Behel konvensional", en: "Conventional braces" },
+      { id: "Aligner clear", en: "Clear aligners" },
+      { id: "Ortodonti dewasa & remaja", en: "Adult & teen ortho" },
+    ],
+    languages: ["ID", "EN"],
+    education: [
+      { id: "Spesialis Ortodonti (Sp.Ort)", en: "Orthodontics Specialist (Sp.Ort)" },
+      { id: "Anggota Ikatan Ortodontis Indonesia", en: "Indonesian Orthodontist Member" },
+    ],
+    signature: {
+      id: "Setiap senyum punya cetakan unik. Kita rapikan tanpa terburu-buru.",
+      en: "Every smile has a unique blueprint. We straighten it without rushing.",
+    },
   },
   {
+    id: "indra",
     name: "drg. Indra Suherdian Topanesa",
     role: { id: "Spesialis Konservasi Gigi", en: "Conservative Dentistry Specialist" },
-    availability: { id: "Jadwal dikonfirmasi melalui admin.", en: "Schedule confirmed through admin." },
+    availability: { id: "Jadwal dikonfirmasi via admin.", en: "Schedule confirmed via admin." },
+    category: "specialist",
+    accent: "cta",
+    icon: "scope",
+    experience: { id: "Fokus tambal & saluran akar presisi", en: "Focus on fillings & precision endodontics" },
+    expertise: [
+      { id: "Saluran akar", en: "Root canal" },
+      { id: "Restorasi estetik", en: "Aesthetic restoration" },
+      { id: "Tambal microscope", en: "Microscope filling" },
+    ],
+    languages: ["ID", "EN"],
+    education: [
+      { id: "Spesialis Konservasi Gigi (Sp.KG)", en: "Conservative Dentistry Specialist (Sp.KG)" },
+      { id: "Pelatihan endodontik mikroskopik", en: "Microscopic endodontics training" },
+    ],
+    signature: {
+      id: "Pertahankan gigi alami selama mungkin. Itu prinsip pertama saya.",
+      en: "Preserve the natural tooth for as long as possible. That's my first rule.",
+    },
   },
   {
+    id: "yoana",
     name: "drg. Yoana",
     role: { id: "Spesialis Kedokteran Gigi Anak", en: "Pediatric Dentistry Specialist" },
-    availability: { id: "Jadwal dikonfirmasi melalui admin.", en: "Schedule confirmed through admin." },
+    availability: { id: "Jadwal dikonfirmasi via admin.", en: "Schedule confirmed via admin." },
+    category: "specialist",
+    accent: "gold",
+    icon: "child",
+    experience: { id: "Fokus perawatan ramah anak", en: "Focus on child-friendly care" },
+    expertise: [
+      { id: "Pendekatan ramah anak", en: "Child-friendly approach" },
+      { id: "Tambal gigi susu", en: "Baby tooth fillings" },
+      { id: "Edukasi orang tua", en: "Parent coaching" },
+    ],
+    languages: ["ID", "EN"],
+    education: [
+      { id: "Spesialis Kedokteran Gigi Anak (Sp.KGA)", en: "Pediatric Dentistry Specialist (Sp.KGA)" },
+      { id: "Pendekatan tell-show-do", en: "Tell-show-do approach" },
+    ],
+    signature: {
+      id: "Anak datang takut, pulang ingin balik lagi. Itu target saya.",
+      en: "Kids come scared and leave wanting to return. That's my target.",
+    },
   },
   {
+    id: "oktarina",
     name: "drg. Oktarina Anggeriani",
     role: { id: "Dokter Gigi Umum", en: "General Dentist" },
-    availability: { id: "Jadwal dikonfirmasi melalui admin.", en: "Schedule confirmed through admin." },
+    availability: { id: "Jadwal dikonfirmasi via admin.", en: "Schedule confirmed via admin." },
+    category: "general",
+    accent: "cta",
+    icon: "heart",
+    experience: { id: "Fokus pemeriksaan & perawatan dasar", en: "Focus on check-ups & general care" },
+    expertise: [
+      { id: "Scaling rutin", en: "Routine scaling" },
+      { id: "Tambal estetik", en: "Aesthetic filling" },
+      { id: "Konsultasi awal", en: "First consultation" },
+    ],
+    languages: ["ID", "EN"],
+    education: [
+      { id: "Dokter Gigi Umum", en: "General Dentist" },
+      { id: "Anggota PDGI", en: "Indonesian Dental Association member" },
+    ],
+    signature: {
+      id: "Datang rutin tiap 6 bulan. Itu rahasia gigi yang awet.",
+      en: "Visit every 6 months. That's the secret of long-lasting teeth.",
+    },
   },
   {
+    id: "kharisya",
     name: "drg. Kharisya Handayani Rahmansyah",
     role: { id: "Dokter Gigi Umum", en: "General Dentist" },
-    availability: { id: "Jadwal dikonfirmasi melalui admin.", en: "Schedule confirmed through admin." },
+    availability: { id: "Jadwal dikonfirmasi via admin.", en: "Schedule confirmed via admin." },
+    category: "general",
+    accent: "gold",
+    icon: "spark",
+    experience: { id: "Fokus estetika & perawatan harian", en: "Focus on aesthetics & daily care" },
+    expertise: [
+      { id: "Whitening", en: "Whitening" },
+      { id: "Veneer awal", en: "Entry veneer" },
+      { id: "Pencabutan ringan", en: "Simple extraction" },
+    ],
+    languages: ["ID", "EN"],
+    education: [
+      { id: "Dokter Gigi Umum", en: "General Dentist" },
+      { id: "Pelatihan whitening profesional", en: "Professional whitening training" },
+    ],
+    signature: {
+      id: "Senyum cerah dimulai dari kebiasaan kecil yang konsisten.",
+      en: "A bright smile starts from small habits done consistently.",
+    },
   },
   {
+    id: "amelia",
     name: "drg. Amelia Yasmine Kusuma",
     role: { id: "Dokter Gigi Umum", en: "General Dentist" },
-    availability: { id: "Jadwal dikonfirmasi melalui admin.", en: "Schedule confirmed through admin." },
+    availability: { id: "Jadwal dikonfirmasi via admin.", en: "Schedule confirmed via admin." },
+    category: "general",
+    accent: "cta",
+    icon: "heart",
+    experience: { id: "Fokus pasien cemas & onboarding", en: "Focus on anxious patients & onboarding" },
+    expertise: [
+      { id: "Pasien dental anxiety", en: "Dental anxiety patients" },
+      { id: "Pencabutan ringan", en: "Simple extraction" },
+      { id: "Edukasi pasien", en: "Patient education" },
+    ],
+    languages: ["ID", "EN"],
+    education: [
+      { id: "Dokter Gigi Umum", en: "General Dentist" },
+      { id: "Pendekatan pasien dental anxiety", en: "Dental anxiety approach" },
+    ],
+    signature: {
+      id: "Tidak ada pertanyaan yang konyol. Cerita aja, kita kerjakan bareng.",
+      en: "No question is silly here. Just share, we'll work it out together.",
+    },
   },
 ];
 

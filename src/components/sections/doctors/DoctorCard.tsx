@@ -2,39 +2,114 @@
 
 import { useLanguage } from "@/context/LanguageContext";
 import { getInitials } from "@/lib/utils";
-import type { LocalizedText } from "@/lib/content";
+import { Icon } from "@/components/ui/Icon";
+import type { Doctor } from "@/lib/content";
 
 interface DoctorCardProps {
-  name: string;
-  role: LocalizedText;
-  availability: LocalizedText;
+  doctor: Doctor;
   index: number;
+  onOpen: (doctor: Doctor) => void;
 }
 
-const doctorColors = [
-  { bg: "from-emerald-100 to-teal-200", text: "text-teal-800" },
-  { bg: "from-violet-100 to-purple-200", text: "text-purple-800" },
-  { bg: "from-amber-100 to-yellow-200", text: "text-amber-800" },
-  { bg: "from-sky-100 to-blue-200", text: "text-blue-800" },
-  { bg: "from-rose-100 to-pink-200", text: "text-rose-800" },
-  { bg: "from-lime-100 to-green-200", text: "text-green-800" },
-  { bg: "from-orange-100 to-red-100", text: "text-orange-800" },
-];
+const accentTokens = {
+  cta: {
+    avatarFrom: "from-cta/20",
+    avatarTo: "to-highlight",
+    avatarText: "text-primary",
+    rolePill: "bg-cta/12 text-cta",
+    iconBg: "bg-cta text-white",
+    bar: "from-cta to-cta",
+    soft: "bg-cta/8 text-cta",
+  },
+  gold: {
+    avatarFrom: "from-gold/30",
+    avatarTo: "to-amber-50",
+    avatarText: "text-primary",
+    rolePill: "bg-gold/15 text-amber-700",
+    iconBg: "bg-gold text-primary",
+    bar: "from-gold to-amber-500",
+    soft: "bg-gold/12 text-amber-700",
+  },
+} as const;
 
-export function DoctorCard({ name, role, availability, index }: DoctorCardProps) {
-  const { t } = useLanguage();
-  const colorSet = doctorColors[index % doctorColors.length];
+const categoryLabel = {
+  id: { specialist: "Spesialis", general: "Umum" },
+  en: { specialist: "Specialist", general: "General" },
+} as const;
+
+export function DoctorCard({ doctor, index, onOpen }: DoctorCardProps) {
+  const { t, lang } = useLanguage();
+  const tokens = accentTokens[doctor.accent];
+  const categoryText = categoryLabel[lang][doctor.category];
+
+  const visibleExpertise = doctor.expertise.slice(0, 3);
 
   return (
-    <article className="gs-card doctor-card group rounded-lg border border-primary/8 bg-white p-6 shadow-sm">
-      <div className={`mx-auto grid h-28 w-28 place-items-center rounded-lg bg-gradient-to-br ${colorSet.bg} shadow-inner transition-all duration-300 group-hover:scale-105 group-hover:shadow-md`}>
-        <span className={`font-display text-3xl font-bold ${colorSet.text}`}>{getInitials(name)}</span>
+    <article
+      className="gs-card doctor-card group relative flex h-full flex-col overflow-hidden rounded-xl border border-primary/8 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-gold/50 hover:shadow-xl"
+    >
+      {/* Top accent bar */}
+      <span
+        aria-hidden
+        className={`pointer-events-none absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r transition-transform duration-500 group-hover:scale-x-100 ${tokens.bar}`}
+      />
+
+      <div className="p-6">
+        <div className="flex items-start justify-between gap-3">
+          {/* Avatar */}
+          <div
+            className={`relative grid h-20 w-20 shrink-0 place-items-center rounded-2xl bg-gradient-to-br ${tokens.avatarFrom} ${tokens.avatarTo} shadow-inner`}
+          >
+            <span className={`font-display text-2xl font-bold ${tokens.avatarText}`}>
+              {getInitials(doctor.name)}
+            </span>
+            <span
+              className={`absolute -bottom-2 -right-2 grid h-9 w-9 place-items-center rounded-full ring-4 ring-white ${tokens.iconBg}`}
+            >
+              <Icon name={doctor.icon} className="h-4 w-4" />
+            </span>
+          </div>
+
+          <span
+            className={`shrink-0 rounded-full px-2.5 py-1 font-accent text-[10px] font-bold uppercase tracking-[0.18em] ${tokens.soft}`}
+          >
+            #{String(index + 1).padStart(2, "0")} · {categoryText}
+          </span>
+        </div>
+
+        <div className="mt-5">
+          <h3 className="font-display text-xl leading-tight text-primary">{doctor.name}</h3>
+          <span className={`mt-2 inline-block rounded-full px-3 py-1 text-xs font-bold ${tokens.rolePill}`}>
+            {t(doctor.role)}
+          </span>
+          <p className="mt-3 text-xs leading-5 text-secondary">{t(doctor.experience)}</p>
+        </div>
+
+        <ul className="mt-4 flex flex-wrap gap-1.5">
+          {visibleExpertise.map((tag) => (
+            <li
+              key={t(tag)}
+              className="rounded-full border border-primary/10 bg-surface-2 px-2.5 py-1 text-[11px] font-semibold text-primary/75"
+            >
+              {t(tag)}
+            </li>
+          ))}
+        </ul>
       </div>
-      <div className="mt-5 text-center">
-        <p className="font-accent text-[10px] font-bold uppercase tracking-[0.22em] text-gold">{String(index + 1).padStart(2, "0")}</p>
-        <h3 className="mt-2 font-display text-xl leading-snug text-primary">{name}</h3>
-        <span className="mt-2 inline-block rounded-full bg-highlight px-3 py-1 text-xs font-bold text-cta">{t(role)}</span>
-        <p className="mt-3 text-xs leading-5 text-secondary">{t(availability)}</p>
+
+      <div className="mt-auto flex items-center justify-between gap-3 border-t border-primary/8 bg-surface-2/40 px-6 py-3">
+        <div className="flex items-center gap-1.5 text-[11px] font-bold text-primary/70">
+          <Icon name="language" className="h-3.5 w-3.5 text-primary/50" />
+          <span>{doctor.languages.join(" · ")}</span>
+        </div>
+        <button
+          type="button"
+          onClick={() => onOpen(doctor)}
+          className="inline-flex items-center gap-1 rounded-full bg-primary px-3.5 py-1.5 text-xs font-bold text-white transition-all hover:bg-primary/85"
+        >
+          <span>{lang === "id" ? "Lihat profil" : "View profile"}</span>
+          <Icon name="arrow" className="h-3 w-3" />
+        </button>
       </div>
     </article>
   );
