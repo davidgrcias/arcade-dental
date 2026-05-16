@@ -28,7 +28,8 @@ export type IconName =
   | "arrow"
   | "check"
   | "clock"
-  | "scan";
+  | "scan"
+  | "quote";
 
 interface IconProps {
   name: IconName;
@@ -176,6 +177,12 @@ export function Icon({ name, className = "" }: IconProps) {
         <path d="M7 4H5a1 1 0 0 0-1 1v2M17 4h2a1 1 0 0 1 1 1v2M7 20H5a1 1 0 0 1-1-1v-2M17 20h2a1 1 0 0 0 1-1v-2" />
         <path d="M7 12h10" />
         <path d="M9 9h6M9 15h6" />
+      </>
+    ),
+    quote: (
+      <>
+        <path d="M7 7h4v4c0 3-2 5-4 5" />
+        <path d="M14 7h4v4c0 3-2 5-4 5" />
       </>
     ),
   };
