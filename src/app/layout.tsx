@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Sans, Playfair_Display, Space_Mono } from "next/font/google";
 import { business } from "@/lib/content";
+import { LanguageProvider } from "@/context/LanguageContext";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -115,7 +116,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
-        {children}
+        <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>
   );
