@@ -909,7 +909,7 @@ export function ArcadeDentalSite() {
 
           {/* Stats */}
           <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {stats.map((stat, i) => (
+            {stats.map((stat) => (
               <div
                 key={stat.label.id}
                 className="gs-stat group rounded-xl border border-white/10 bg-white/[0.07] p-6 backdrop-blur transition-all duration-300 hover:border-gold/40 hover:bg-white/[0.1]"
