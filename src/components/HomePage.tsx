@@ -5,6 +5,7 @@ import { PageShell } from "./PageShell";
 import { Hero } from "./sections/Hero";
 import { About } from "./sections/About";
 import { Credentials } from "./sections/Credentials";
+import { InsurancePartners } from "./sections/InsurancePartners";
 import { WhyUs } from "./sections/WhyUs";
 import { Testimonials } from "./sections/Testimonials";
 import { Gallery } from "./sections/Gallery";
@@ -19,6 +20,7 @@ export function HomePage() {
       <Hero />
       <About />
       <Credentials />
+      <InsurancePartners />
       <WhyUs />
       <Testimonials
         testimonialIndex={state.testimonialIndex}

@@ -283,6 +283,24 @@ label {
   animation-fill-mode: forwards;
 }
 
+/* Insurance-partner marquee — left + right variants. The track is the list
+   duplicated once, so a -50% translate produces a seamless loop. */
+@keyframes marquee-shift-left {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+@keyframes marquee-shift-right {
+  from { transform: translate3d(-50%, 0, 0); }
+  to   { transform: translate3d(0, 0, 0); }
+}
+.marquee-track {
+  will-change: transform;
+}
+/* Pause when the user hovers any marquee row so they can read brand names. */
+.group\/marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
 }
