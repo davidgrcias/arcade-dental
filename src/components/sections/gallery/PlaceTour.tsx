@@ -131,7 +131,7 @@ export function PlaceTour() {
         onTouchEnd={onTouchEnd}
         className="relative overflow-hidden rounded-2xl border border-primary/8 bg-primary shadow-2xl shadow-primary/15"
       >
-        <div className="relative aspect-[16/10] w-full sm:aspect-[16/9]">
+        <div className="relative aspect-[4/5] w-full sm:aspect-[16/10] lg:aspect-[16/9]">
           {/* Image stack: only render active ± 1 neighbour to avoid 10× decode */}
           {placeTour.map((s, idx) => {
             const isPrev = idx === (active - 1 + placeTour.length) % placeTour.length;
@@ -158,20 +158,20 @@ export function PlaceTour() {
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-primary/40 via-transparent to-transparent" />
 
           {/* Top: route status */}
-          <div className="pointer-events-none absolute inset-x-4 top-4 flex items-start justify-between gap-3 sm:inset-x-5 sm:top-5">
-            <div className="pointer-events-auto flex items-center gap-2 rounded-full bg-white/95 px-3 py-1.5 shadow-md backdrop-blur">
-              <span className="relative inline-flex h-2.5 w-2.5">
+          <div className="pointer-events-none absolute inset-x-3 top-3 flex items-start justify-between gap-2 sm:inset-x-5 sm:top-5">
+            <div className="pointer-events-auto flex items-center gap-2 rounded-full bg-white/95 px-2.5 py-1 shadow-md backdrop-blur sm:px-3 sm:py-1.5">
+              <span className="relative inline-flex h-2 w-2 sm:h-2.5 sm:w-2.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cta opacity-65" />
-                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-cta" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-cta sm:h-2.5 sm:w-2.5" />
               </span>
-              <span className="font-accent text-[10px] font-bold uppercase tracking-[0.22em] text-primary">
+              <span className="font-accent text-[9px] font-bold uppercase tracking-[0.18em] text-primary sm:text-[10px] sm:tracking-[0.22em]">
                 {youAreHere}
               </span>
             </div>
 
-            <div className="pointer-events-auto flex items-center gap-1.5 rounded-full bg-primary/85 px-3 py-1.5 text-white shadow-md backdrop-blur">
-              <Icon name="map" className="h-3.5 w-3.5" />
-              <span className="font-accent text-[11px] font-bold tracking-[0.18em]">
+            <div className="pointer-events-auto flex items-center gap-1.5 rounded-full bg-primary/85 px-2.5 py-1 text-white shadow-md backdrop-blur sm:px-3 sm:py-1.5">
+              <Icon name="map" className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+              <span className="font-accent text-[10px] font-bold tracking-[0.16em] sm:text-[11px] sm:tracking-[0.18em]">
                 {String(active + 1).padStart(2, "0")}
                 <span className="mx-1 text-white/40">{ofLabel}</span>
                 {String(total).padStart(2, "0")}
@@ -179,48 +179,12 @@ export function PlaceTour() {
             </div>
           </div>
 
-          {/* Bottom: caption card */}
-          <div className="absolute inset-x-4 bottom-4 sm:inset-x-5 sm:bottom-5">
-            <div ref={captionRef} className="rounded-xl bg-white/95 p-4 shadow-xl backdrop-blur sm:p-5">
-              <div className="flex flex-wrap items-start gap-3">
-                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-cta/12 text-cta">
-                  <Icon name={stop.icon} className="h-5 w-5" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="font-accent text-[10px] font-bold uppercase tracking-[0.22em] text-cta">
-                    {t(stop.cue)}
-                  </p>
-                  <h3 className="mt-0.5 font-display text-xl leading-tight text-primary sm:text-2xl">
-                    {t(stop.label)}
-                  </h3>
-                </div>
-                <div className="hidden shrink-0 items-center gap-1.5 rounded-full bg-primary/8 px-2.5 py-1 text-[11px] font-semibold text-primary/75 sm:flex">
-                  <Icon name="map" className="h-3.5 w-3.5 text-primary/55" />
-                  <span>{lang === "id" ? "Stop" : "Stop"} {String(active + 1).padStart(2, "0")}</span>
-                </div>
-              </div>
-
-              <p className="mt-3 text-sm leading-6 text-primary/80 sm:text-[15px] sm:leading-7">{t(stop.caption)}</p>
-
-              <ul className="mt-3 flex flex-wrap gap-1.5">
-                {stop.highlights.map((h) => (
-                  <li
-                    key={t(h)}
-                    className="rounded-full border border-primary/10 bg-surface-2 px-2.5 py-1 text-[11px] font-semibold text-primary/75"
-                  >
-                    {t(h)}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* Side prev/next */}
+          {/* Side prev/next — hidden on mobile (use swipe) */}
           <button
             type="button"
             onClick={prev}
             aria-label={lang === "id" ? "Stop sebelumnya" : "Previous stop"}
-            className="absolute left-3 top-1/2 z-10 hidden -translate-y-1/2 grid h-10 w-10 place-items-center rounded-full bg-white/90 text-primary shadow-lg backdrop-blur transition-all hover:-translate-y-1/2 hover:bg-white sm:grid"
+            className="absolute left-3 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-primary shadow-lg backdrop-blur transition-colors hover:bg-white md:grid"
           >
             <Icon name="chevron" className="h-4 w-4 rotate-180" />
           </button>
@@ -228,10 +192,44 @@ export function PlaceTour() {
             type="button"
             onClick={next}
             aria-label={lang === "id" ? "Stop berikutnya" : "Next stop"}
-            className="absolute right-3 top-1/2 z-10 hidden -translate-y-1/2 grid h-10 w-10 place-items-center rounded-full bg-white/90 text-primary shadow-lg backdrop-blur transition-all hover:-translate-y-1/2 hover:bg-white sm:grid"
+            className="absolute right-3 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-primary shadow-lg backdrop-blur transition-colors hover:bg-white md:grid"
           >
             <Icon name="chevron" className="h-4 w-4" />
           </button>
+        </div>
+
+        {/* Caption — sits below image on mobile, overlays at the bottom on desktop */}
+        <div ref={captionRef} className="bg-white p-4 sm:absolute sm:inset-x-5 sm:bottom-5 sm:rounded-xl sm:bg-white/95 sm:p-5 sm:shadow-xl sm:backdrop-blur">
+          <div className="flex flex-wrap items-start gap-3">
+            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-cta/12 text-cta sm:h-11 sm:w-11">
+              <Icon name={stop.icon} className="h-5 w-5" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="font-accent text-[10px] font-bold uppercase tracking-[0.22em] text-cta">
+                {t(stop.cue)}
+              </p>
+              <h3 className="mt-0.5 font-display text-lg leading-tight text-primary sm:text-2xl">
+                {t(stop.label)}
+              </h3>
+            </div>
+            <div className="hidden shrink-0 items-center gap-1.5 rounded-full bg-primary/8 px-2.5 py-1 text-[11px] font-semibold text-primary/75 sm:flex">
+              <Icon name="map" className="h-3.5 w-3.5 text-primary/55" />
+              <span>{lang === "id" ? "Stop" : "Stop"} {String(active + 1).padStart(2, "0")}</span>
+            </div>
+          </div>
+
+          <p className="mt-3 text-sm leading-6 text-primary/80 sm:text-[15px] sm:leading-7">{t(stop.caption)}</p>
+
+          <ul className="mt-3 flex flex-wrap gap-1.5">
+            {stop.highlights.map((h) => (
+              <li
+                key={t(h)}
+                className="rounded-full border border-primary/10 bg-surface-2 px-2.5 py-1 text-[11px] font-semibold text-primary/75"
+              >
+                {t(h)}
+              </li>
+            ))}
+          </ul>
         </div>
 
         {/* Progress strip */}

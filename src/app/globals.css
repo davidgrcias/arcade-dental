@@ -34,7 +34,9 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* Smooth scroll only for explicit hash anchors. Do NOT apply globally — it
+     fights with Next.js's "scroll to top on navigation" behaviour during
+     layout shifts, which makes long pages land at the bottom. */
   scroll-padding-top: 96px;
 }
 

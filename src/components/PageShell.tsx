@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
+import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLanguage } from "@/context/LanguageContext";
@@ -35,14 +36,14 @@ interface PageShellProps {
  * ScrollTrigger sometimes shifts layout after the browser's native fragment
  * scroll fires; one extra rAF after paint reliably re-centres the target.
  */
-function scrollToHash(hash: string) {
+function scrollToHash(hash: string, behavior: ScrollBehavior = "smooth") {
   if (!hash || hash === "#") return;
   const id = hash.slice(1);
   const el = document.getElementById(id);
   if (!el) return;
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      el.scrollIntoView({ behavior, block: "start" });
     });
   });
 }
@@ -51,16 +52,35 @@ export function PageShell({ children, smartMessage }: PageShellProps) {
   const shell = useShellState();
   const message = smartMessage ?? shell.smartMessage;
   const { languageReady } = useLanguage();
+  const pathname = usePathname();
   const mainRef = useRef<HTMLElement>(null);
   const ctaRef = useRef<HTMLElement | null>(null);
   const cleanupRef = useRef<(() => void) | null>(null);
 
-  // Scroll to a hash target whenever the URL hash changes, or the user
-  // clicks a link to the hash that is already current.
+  // Force scroll to top on every route change so cross-page links land at the
+  // top — Next.js's default scroll-on-navigation can leave the user mid-page
+  // when layout shifts during hydration. Skip when a hash is present so
+  // hash-anchor links still work.
   useEffect(() => {
-    scrollToHash(window.location.hash);
+    if (typeof window === "undefined") return;
+    if (window.location.hash) return;
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [pathname]);
 
-    const onHashChange = () => scrollToHash(window.location.hash);
+  // Scroll to a hash target whenever the URL hash changes, or the user
+  // clicks a link to the hash that is already current. On initial mount we
+  // use "auto" (instant) so a page that loads at /articles or /book lands at
+  // the top — smooth scrolling here causes layout-shift surprises.
+  useEffect(() => {
+    // Force-top on initial mount: layout shifts during hydration can leave
+    // the viewport mid-page when the user clicks an in-app link.
+    if (!window.location.hash) {
+      window.scrollTo(0, 0);
+    } else {
+      scrollToHash(window.location.hash, "auto");
+    }
+
+    const onHashChange = () => scrollToHash(window.location.hash, "smooth");
     window.addEventListener("hashchange", onHashChange);
 
     const onAnchorClick = (event: MouseEvent) => {
@@ -88,7 +108,7 @@ export function PageShell({ children, smartMessage }: PageShellProps) {
       if (!url.hash || url.hash === "#") return;
       if (url.hash !== window.location.hash) return;
       event.preventDefault();
-      scrollToHash(url.hash);
+      scrollToHash(url.hash, "smooth");
     };
     document.addEventListener("click", onAnchorClick);
 
