@@ -962,7 +962,7 @@ export const doctors: Doctor[] = [
 
 export const testimonials: Testimonial[] = [
   {
-    name: "Bu N***a",
+    name: "Novita",
     quote: {
       id: "Dokternya ok, penanganan dan penyampaian ke pasien jelas. Lokasi sangat bersih dan nyaman. Overall sudah ok.",
       en: "The doctor was great, treatment and explanations were clear. The place was very clean and comfortable.",
@@ -971,7 +971,7 @@ export const testimonials: Testimonial[] = [
     rating: 5,
   },
   {
-    name: "Bu M***a",
+    name: "Mega",
     quote: {
       id: "Pelayanannya sangat memuaskan mulai dari pendaftaran, dokter, perawat, sampai tim klinik. Tidak menyesal perawatan di Arcade Dental.",
       en: "The service was satisfying from registration to the doctors, nurses, and clinic team. A very positive care experience.",
@@ -980,7 +980,7 @@ export const testimonials: Testimonial[] = [
     rating: 5,
   },
   {
-    name: "Pak A***s",
+    name: "Andreas",
     quote: {
       id: "Tempatnya ok dan nyaman. Pelayanannya bagus, dokternya profesional. Recommended.",
       en: "The place is good and comfortable. Service is excellent, the doctors are professional. Recommended.",
@@ -989,7 +989,7 @@ export const testimonials: Testimonial[] = [
     rating: 5,
   },
   {
-    name: "Bu R***i",
+    name: "Rizki",
     quote: {
       id: "Dokter dan tim sangat sabar menjelaskan rencana behel saya. Tahapannya jelas dan tidak terburu-buru.",
       en: "The doctor and team were very patient explaining my braces plan. Each step was clear and unhurried.",
@@ -998,7 +998,7 @@ export const testimonials: Testimonial[] = [
     rating: 5,
   },
   {
-    name: "Pak D***o",
+    name: "Ditto",
     quote: {
       id: "Anak saya yang biasanya takut ke dokter gigi malah tenang banget di sini. Pendekatan dokter ramah ke anak.",
       en: "My kid who is usually scared of the dentist stayed calm here. Very child-friendly approach.",
@@ -1007,7 +1007,7 @@ export const testimonials: Testimonial[] = [
     rating: 5,
   },
   {
-    name: "Bu S***i",
+    name: "Sari",
     quote: {
       id: "Whitening hasilnya kelihatan natural, dokternya tidak menjual. Suasana kliniknya juga adem.",
       en: "Whitening results look natural and the doctor doesn't oversell. The clinic atmosphere is calm too.",
