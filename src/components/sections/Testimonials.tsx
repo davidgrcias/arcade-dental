@@ -18,6 +18,10 @@ interface TestimonialsProps {
 }
 
 const AUTOPLAY_MS = 6000;
+// How often the CSS animation keyframe is restarted (ms). Much cheaper than
+// a 60fps rAF loop — the progress bar itself uses a CSS animation, so we only
+// need JS to advance the slide when the timer fires.
+const TICK_INTERVAL = 100;
 
 export function Testimonials({
   testimonialIndex,
@@ -27,10 +31,11 @@ export function Testimonials({
 }: TestimonialsProps) {
   const { c, t, lang } = useLanguage();
   const total = testimonials.length;
-  const [progress, setProgress] = useState(0);
+  const [animating, setAnimating] = useState(false); // drives CSS animation restart
   const railRef = useRef<HTMLDivElement>(null);
   const heroBodyRef = useRef<HTMLDivElement>(null);
   const lastActiveRef = useRef(-1);
+  const elapsed = useRef(0);
 
   const goTo = useCallback(
     (idx: number) => {
@@ -47,26 +52,27 @@ export function Testimonials({
     setTestimonialIndex((current) => (current - 1 + total) % total);
   }, [setTestimonialIndex, total]);
 
-  // Autoplay with progress bar
+  // Autoplay via setInterval — only ~10 state updates/sec instead of 60.
+  // Progress is driven by a CSS animation on the bar, no JS per-frame update.
   useEffect(() => {
-    if (pausedCarousel) {
-      setProgress(0);
-      return;
-    }
-    const start = performance.now();
-    let raf = 0;
-    const tick = (now: number) => {
-      const elapsed = now - start;
-      const ratio = Math.min(1, elapsed / AUTOPLAY_MS);
-      setProgress(ratio);
-      if (ratio >= 1) {
+    elapsed.current = 0;
+    setAnimating(false);
+    if (pausedCarousel) return;
+
+    // Small delay so the CSS animation restarts cleanly after slide change.
+    const t0 = window.setTimeout(() => setAnimating(true), 16);
+
+    const id = window.setInterval(() => {
+      elapsed.current += TICK_INTERVAL;
+      if (elapsed.current >= AUTOPLAY_MS) {
         next();
-        return;
       }
-      raf = requestAnimationFrame(tick);
+    }, TICK_INTERVAL);
+
+    return () => {
+      window.clearTimeout(t0);
+      window.clearInterval(id);
     };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
   }, [pausedCarousel, testimonialIndex, next]);
 
   // Scroll active card into view in the rail (horizontal only, never the page)
@@ -91,10 +97,11 @@ export function Testimonials({
 
     const node = heroBodyRef.current;
     if (!node) return;
+    // No blur filter — too costly on mobile. Fade only.
     gsap.fromTo(
       node,
-      { opacity: 0, y: 12, filter: "blur(6px)" },
-      { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.45, ease: "power3.out", overwrite: true },
+      { opacity: 0, y: 10 },
+      { opacity: 1, y: 0, duration: 0.4, ease: "power2.out", overwrite: true },
     );
   }, [testimonialIndex]);
 
@@ -163,6 +170,12 @@ export function Testimonials({
       className="relative overflow-hidden bg-[linear-gradient(145deg,#e8f4f0,#f0ece6)] py-20 md:py-28"
       onMouseEnter={() => setPausedCarousel(true)}
       onMouseLeave={() => setPausedCarousel(false)}
+      onTouchStart={() => setPausedCarousel(true)}
+      onTouchEnd={() => {
+        // Resume after a short delay so swipe gesture plays out
+        const id = window.setTimeout(() => setPausedCarousel(false), 1200);
+        return () => window.clearTimeout(id);
+      }}
     >
       {/* Decorative quote watermark */}
       <span aria-hidden className="pointer-events-none absolute -left-16 top-12 hidden text-[18rem] font-display font-black leading-none text-primary/5 md:block">
@@ -253,14 +266,14 @@ export function Testimonials({
             </div>
           </div>
 
-          {/* Autoplay progress bar */}
+          {/* Autoplay progress bar — CSS animation, zero JS per frame */}
           <div className="relative mt-5 h-1 w-full overflow-hidden rounded-full bg-primary/8">
             <div
-              className="h-full bg-gradient-to-r from-cta to-gold"
-              style={{
-                width: `${progress * 100}%`,
-                transition: pausedCarousel ? "none" : "width 100ms linear",
-              }}
+              key={animating ? `playing-${testimonialIndex}` : `paused-${testimonialIndex}`}
+              className={`h-full bg-gradient-to-r from-cta to-gold ${
+                animating ? "testimonial-progress-bar" : ""
+              }`}
+              style={animating ? { animationDuration: `${AUTOPLAY_MS}ms` } : { width: 0 }}
             />
           </div>
         </article>

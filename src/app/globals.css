@@ -73,7 +73,18 @@ label {
 .gs-reveal,
 .gs-card {
   opacity: 0;
-  will-change: transform, opacity;
+}
+
+/* Limit GPU layer promotion to desktop — on mobile will-change spikes RAM */
+@media (min-width: 768px) {
+  .gs-word,
+  .gs-sub,
+  .hero-title-word,
+  .hero-chip,
+  .gs-reveal,
+  .gs-card {
+    will-change: transform, opacity;
+  }
 }
 
 .gs-reveal,
@@ -257,6 +268,17 @@ label {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* Testimonials progress bar — CSS keyframe, no JS per-frame update */
+@keyframes testimonial-fill {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+.testimonial-progress-bar {
+  animation-name: testimonial-fill;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
 }
 
 ::-webkit-scrollbar {

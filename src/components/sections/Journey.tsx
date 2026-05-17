@@ -86,10 +86,11 @@ export function Journey({ activeJourney, setActiveJourney }: JourneyProps) {
 
     const stage = journeyRef.current?.querySelector<HTMLElement>(".journey-stage-content");
     if (stage) {
+      // Avoid blur filter — too expensive on mobile compositors. Fade + slide only.
       gsap.fromTo(
         stage,
-        { opacity: 0, y: 16, filter: "blur(6px)" },
-        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.5, ease: "power3.out", overwrite: true },
+        { opacity: 0, y: 12 },
+        { opacity: 1, y: 0, duration: 0.4, ease: "power2.out", overwrite: true },
       );
     }
 

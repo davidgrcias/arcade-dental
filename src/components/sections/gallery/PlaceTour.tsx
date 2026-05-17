@@ -132,21 +132,26 @@ export function PlaceTour() {
         className="relative overflow-hidden rounded-2xl border border-primary/8 bg-primary shadow-2xl shadow-primary/15"
       >
         <div className="relative aspect-[16/10] w-full sm:aspect-[16/9]">
-          {/* Image stack with crossfade + ken burns */}
-          {placeTour.map((s, idx) => (
-            <Image
-              key={s.id}
-              src={s.src}
-              alt={t(s.label)}
-              fill
-              sizes="(min-width: 1024px) 80vw, 100vw"
-              priority={idx === 0}
-              style={{ objectPosition: s.focus ?? "center center" }}
-              className={`object-cover transition-all duration-[1100ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                active === idx ? "opacity-100 scale-100" : "opacity-0 scale-110"
-              }`}
-            />
-          ))}
+          {/* Image stack: only render active ± 1 neighbour to avoid 10× decode */}
+          {placeTour.map((s, idx) => {
+            const isPrev = idx === (active - 1 + placeTour.length) % placeTour.length;
+            const isNext = idx === (active + 1) % placeTour.length;
+            if (idx !== active && !isPrev && !isNext) return null;
+            return (
+              <Image
+                key={s.id}
+                src={s.src}
+                alt={t(s.label)}
+                fill
+                sizes="(min-width: 1024px) 80vw, 100vw"
+                priority={idx === 0}
+                style={{ objectPosition: s.focus ?? "center center" }}
+                className={`object-cover transition-opacity duration-700 ${
+                  active === idx ? "opacity-100" : "opacity-0"
+                }`}
+              />
+            );
+          })}
 
           {/* Vignettes */}
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-primary/85 via-primary/15 to-transparent" />

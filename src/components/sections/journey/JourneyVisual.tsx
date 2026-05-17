@@ -35,20 +35,25 @@ export function JourneyVisual({ activeJourney }: JourneyVisualProps) {
   return (
     <div className="relative overflow-hidden rounded-xl border border-primary/8 bg-white shadow-2xl shadow-primary/8">
       <div className="relative aspect-[5/4] w-full">
-        {/* Image stack with crossfade */}
-        {careJourney.map((s, index) => (
-          <Image
-            key={s.id}
-            src={s.image}
-            alt={t(s.imageAlt)}
-            fill
-            sizes="(min-width: 1024px) 50vw, 100vw"
-            priority={index === 0}
-            className={`object-cover transition-all duration-700 ease-out ${
-              activeJourney === index ? "scale-100 opacity-100" : "scale-105 opacity-0"
-            }`}
-          />
-        ))}
+        {/* Render only active + neighbours to avoid 5× image decode */}
+        {careJourney.map((s, index) => {
+          const isPrev = index === (activeJourney - 1 + careJourney.length) % careJourney.length;
+          const isNext = index === (activeJourney + 1) % careJourney.length;
+          if (index !== activeJourney && !isPrev && !isNext) return null;
+          return (
+            <Image
+              key={s.id}
+              src={s.image}
+              alt={t(s.imageAlt)}
+              fill
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              priority={index === 0}
+              className={`object-cover transition-opacity duration-500 ${
+                activeJourney === index ? "opacity-100" : "opacity-0"
+              }`}
+            />
+          );
+        })}
 
         {/* Vignette */}
         <div className="absolute inset-0 bg-gradient-to-t from-primary/75 via-primary/20 to-transparent" />

@@ -53,6 +53,7 @@ export function PageShell({ children, smartMessage }: PageShellProps) {
   const { languageReady } = useLanguage();
   const mainRef = useRef<HTMLElement>(null);
   const ctaRef = useRef<HTMLElement | null>(null);
+  const cleanupRef = useRef<(() => void) | null>(null);
 
   // Scroll to a hash target whenever the URL hash changes, or the user
   // clicks a link to the hash that is already current.
@@ -99,42 +100,63 @@ export function PageShell({ children, smartMessage }: PageShellProps) {
 
   useEffect(() => {
     if (!languageReady) return;
-    gsap.registerPlugin(ScrollTrigger);
 
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const root = mainRef.current;
-    if (!root) return;
+    // Defer ScrollTrigger setup until after the browser is idle so it doesn't
+    // compete with first contentful paint, especially on low-end mobile.
+    const ric = "requestIdleCallback" in window;
+    const scheduleId = ric
+      ? window.requestIdleCallback(run, { timeout: 1500 })
+      : (window.setTimeout(run, 200) as unknown as number);
 
-    if (reduceMotion) {
-      gsap.set(
-        root.querySelectorAll(
-          ".gs-word, .gs-sub, .hero-title-word, .hero-chip, .gs-reveal, .gs-card, .gs-counter",
-        ),
-        { clearProps: "all", opacity: 1 },
-      );
-      return;
+    function run() {
+      gsap.registerPlugin(ScrollTrigger);
+
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const root = mainRef.current;
+      if (!root) return;
+
+      if (reduceMotion) {
+        gsap.set(
+          root.querySelectorAll(
+            ".gs-word, .gs-sub, .hero-title-word, .hero-chip, .gs-reveal, .gs-card, .gs-counter",
+          ),
+          { clearProps: "all", opacity: 1 },
+        );
+        return;
+      }
+
+      const ctx = gsap.context(() => {
+        ScrollTrigger.batch(".gs-reveal, .gs-card", {
+          start: "top 92%",
+          once: true,
+          onEnter: (batch) => {
+            gsap.to(batch, {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              rotateX: 0,
+              duration: 0.65,
+              stagger: 0.055,
+              ease: "power2.out",
+            });
+          },
+        });
+        // Only refresh after a frame so layout is stable
+        requestAnimationFrame(() => ScrollTrigger.refresh());
+      }, root);
+
+      cleanupRef.current = () => ctx.revert();
     }
 
-    const ctx = gsap.context(() => {
-      ScrollTrigger.batch(".gs-reveal, .gs-card", {
-        start: "top 92%",
-        once: true,
-        onEnter: (batch) => {
-          gsap.to(batch, {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            rotateX: 0,
-            duration: 0.72,
-            stagger: 0.07,
-            ease: "power2.out",
-          });
-        },
-      });
-      ScrollTrigger.refresh();
-    }, root);
-
-    return () => ctx.revert();
+    return () => {
+      if (ric) {
+        (window as Window & { cancelIdleCallback?: (id: number) => void })
+          .cancelIdleCallback?.(scheduleId);
+      } else {
+        window.clearTimeout(scheduleId);
+      }
+      cleanupRef.current?.();
+    };
   }, [languageReady]);
 
   return (
