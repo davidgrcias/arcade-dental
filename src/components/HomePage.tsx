@@ -6,7 +6,6 @@ import { Hero } from "./sections/Hero";
 import { About } from "./sections/About";
 import { Credentials } from "./sections/Credentials";
 import { WhyUs } from "./sections/WhyUs";
-import { Articles } from "./sections/Articles";
 import { Testimonials } from "./sections/Testimonials";
 import { Gallery } from "./sections/Gallery";
 import { Location } from "./sections/Location";
@@ -21,7 +20,6 @@ export function HomePage() {
       <About />
       <Credentials />
       <WhyUs />
-      <Articles />
       <Testimonials
         testimonialIndex={state.testimonialIndex}
         setTestimonialIndex={actions.setTestimonialIndex}

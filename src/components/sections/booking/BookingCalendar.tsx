@@ -157,7 +157,7 @@ export function BookingCalendar({
 
   return (
     <section className="section-shell">
-      <div className="mx-auto max-w-7xl px-5 md:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
         <SectionHeading
           eyebrow={c.bookingLabel}
           title={c.bookingTitle}
@@ -169,12 +169,12 @@ export function BookingCalendar({
           {heroStats.map((stat) => (
             <div
               key={stat.label}
-              className="flex items-center gap-3 rounded-xl bg-surface-2/45 px-4 py-3"
+              className="flex items-center gap-3 rounded-xl bg-surface-2/45 px-3 py-3 sm:px-4"
             >
-              <span className="grid h-10 w-10 place-items-center rounded-lg bg-primary text-gold">
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-primary text-gold">
                 <Icon name={stat.icon} className="h-5 w-5" />
               </span>
-              <div>
+              <div className="min-w-0">
                 <p className="font-display text-2xl leading-none text-primary">{stat.value}</p>
                 <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.18em] text-primary/55">
                   {stat.label}
@@ -184,13 +184,13 @@ export function BookingCalendar({
           ))}
         </div>
 
-        {/* Stepper */}
-        <ol className="mt-8 flex flex-wrap items-center gap-2 text-sm">
+        {/* Stepper — compact pills on mobile (number only), full label on sm+ */}
+        <ol className="no-scrollbar mt-6 flex items-center gap-2 overflow-x-auto pb-1 text-sm sm:mt-8 sm:flex-wrap sm:overflow-visible">
           {stepOrder.map((s, i) => {
             const active = i === stepIndex;
             const done = i < stepIndex;
             return (
-              <li key={s} className="flex items-center gap-2">
+              <li key={s} className="flex shrink-0 items-center gap-2">
                 <button
                   type="button"
                   onClick={() => {
@@ -198,7 +198,7 @@ export function BookingCalendar({
                     if (done) setStep(s);
                   }}
                   disabled={!done}
-                  className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold transition-colors ${
+                  className={`inline-flex items-center gap-2 rounded-full px-2.5 py-1.5 text-xs font-bold transition-colors sm:px-3 ${
                     active
                       ? "bg-primary text-white shadow-md"
                       : done
@@ -207,7 +207,7 @@ export function BookingCalendar({
                   }`}
                 >
                   <span
-                    className={`grid h-5 w-5 place-items-center rounded-full font-accent text-[10px] ${
+                    className={`grid h-5 w-5 shrink-0 place-items-center rounded-full font-accent text-[10px] ${
                       active
                         ? "bg-gold text-primary"
                         : done
@@ -217,7 +217,9 @@ export function BookingCalendar({
                   >
                     {done ? <Icon name="check" className="h-2.5 w-2.5" /> : i + 1}
                   </span>
-                  {stepLabels[s][lang]}
+                  <span className={active ? "inline" : "hidden sm:inline"}>
+                    {stepLabels[s][lang]}
+                  </span>
                 </button>
                 {i < stepOrder.length - 1 && (
                   <span aria-hidden className="hidden h-px w-8 bg-primary/15 sm:inline-block" />
@@ -227,9 +229,9 @@ export function BookingCalendar({
           })}
         </ol>
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+        <div className="mt-6 grid gap-6 sm:mt-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
           {/* Left: step content */}
-          <div className="rounded-2xl border border-primary/8 bg-white p-5 shadow-sm sm:p-6">
+          <div className="rounded-2xl border border-primary/8 bg-white p-4 shadow-sm sm:p-5 md:p-6">
             {step === "doctor" && (
               <DoctorPicker
                 onSelect={selectDoctor}
@@ -432,7 +434,9 @@ function SchedulePicker({
           : `${doctor.name}'s schedule for the next 14 days. Greyed slots are already booked.`}
       </p>
 
-      <div className="no-scrollbar mt-5 -mx-1 flex gap-2 overflow-x-auto pb-2 pl-1">
+      {/* Horizontal-scroll date strip — extra inline padding so first/last
+          chip aren't flush against the card edge on mobile. */}
+      <div className="no-scrollbar mt-5 -mx-4 flex gap-2 overflow-x-auto px-4 pb-2 sm:-mx-5 sm:px-5 md:-mx-6 md:px-6">
         {schedule.map((d) => {
           const open = d.slots.filter((s) => !s.booked).length;
           const isSelected = dateIso === d.dateIso;
